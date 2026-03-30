@@ -1,4 +1,5 @@
-import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 import "./ArticleCard.css";
 
 export type ArticleCardProps = {
@@ -33,9 +34,7 @@ export function ArticleCard({
       <div className="article-card__content">
         <h3 className="article-card__title">{title}</h3>
 
-        {summary ? (
-          <p className="article-card__summary">{summary}</p>
-        ) : null}
+        {summary ? <p className="article-card__summary">{summary}</p> : null}
 
         <div className="article-card__meta">
           <span className="article-card__author">{author}</span>
@@ -44,19 +43,23 @@ export function ArticleCard({
       </div>
 
       <div className="article-card__media">
-        <img src={imageSrc} alt={imageAlt} />
-        {caption ? (
-          <p className="article-card__caption">{caption}</p>
-        ) : null}
+        <Image
+          src={imageSrc}
+          alt={imageAlt}
+          width={320}
+          height={180}
+          className="article-card__image"
+        />
+        {caption ? <p className="article-card__caption">{caption}</p> : null}
       </div>
     </article>
   );
 
   if (href) {
     return (
-      <a href={href} className="article-card__link">
+      <Link href={href} className="article-card__link">
         {content}
-      </a>
+      </Link>
     );
   }
 

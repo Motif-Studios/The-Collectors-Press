@@ -1,3 +1,5 @@
-export default function HomePage() {
-  return <div>HomePage</div>;
+import { HomePageView } from "@/features/home";
+
+export default function Page() {
+  return <HomePageView />;
 }

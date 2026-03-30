@@ -7,6 +7,8 @@ import {
   faChevronDown,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
+import Link from "next/link";
 
 type NavItem = {
   label: string;
@@ -16,6 +18,8 @@ type NavItem = {
 
 type HeaderProps = {
   navItems?: NavItem[];
+  user: { name: string } | null;
+  isSubscriber?: boolean;
   children?: React.ReactNode;
 };
 
@@ -57,7 +61,7 @@ export function Header({
 
 export function HeaderTopBar({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center border-b border-white/20 px-3 py-2 md:px-4 md:py-2.5">
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center border-b border-white/20 px-3 py-3 md:px-9 md:py-2.5">
       {children}
     </div>
   );
@@ -78,9 +82,16 @@ export function HeaderRight({ children }: { children: React.ReactNode }) {
 export function HeaderCenter() {
   return (
     <div className="flex items-center justify-center text-center">
-      <span className="font-serif text-[28px] leading-none">
-        The New Zealand Herald
-      </span>
+      <Link href="/" className="inline-flex items-center justify-center">
+        <Image
+          src="/brand/logo/white.png"
+          alt="Motif"
+          width={100}
+          height={40}
+          className="h-auto w-[120px] md:w-[130px] my-3"
+          priority
+        />
+      </Link>
     </div>
   );
 }
@@ -101,7 +112,7 @@ export function HeaderNav({ items }: { items: NavItem[] }) {
             {item.label}
 
             {item.isActive ? (
-              <span className="absolute left-1/2 top-full mt-3 h-[2px] w-8 -translate-x-1/2 bg-white" />
+              <span className="absolute left-1/2 top-full mt-3 h-0.5 w-8 -translate-x-1/2 bg-white" />
             ) : null}
           </a>
         ))}

@@ -1,0 +1,1 @@
+export { CategoryPageView } from "./CategoryPageView";

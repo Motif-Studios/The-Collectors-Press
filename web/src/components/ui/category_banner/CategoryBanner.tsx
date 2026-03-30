@@ -1,6 +1,6 @@
 import React from "react";
 
-export type CategoryBannerProps = { category: string, className: string };
+export type CategoryBannerProps = { category: string, className?: string };
 
 function classNameHelper(...classes: Array<string | undefined | false>) {
   return classes.filter(Boolean).join(" ");
@@ -9,7 +9,7 @@ function classNameHelper(...classes: Array<string | undefined | false>) {
 export function CategoryBanner({ category, className }: CategoryBannerProps) {
   return (
     <div
-      className="border-t border-b border-[#a8a8a8] px-5 pt-12 pb-12.5 sm:px-4 sm:pt-10.5 sm:pb-11"
+      className="border-t border-b border-[#a8a8a8] bg-gray-100 px-5 pt-12 pb-12.5 sm:px-4 sm:pt-10.5 sm:pb-11"
     >
       <div className="mx-auto max-w-300 text-center">
         <h1 className={classNameHelper("font-serif text-black text-[30px] font-normal leading-none tracking-[1px] sm:text-[52px] md:text-[68px]", className)}>
@@ -17,5 +17,16 @@ export function CategoryBanner({ category, className }: CategoryBannerProps) {
         </h1>
       </div>
     </div>
+  );
+}
+
+
+export type CategoryTitleProps = { title: string, className?: string };
+
+export function CategoryTitle({ title, className }: CategoryTitleProps) {
+  return (
+    <h1 className={classNameHelper("flex font-serif text-black text-[30px] font-normal leading-none tracking-[1px] sm:text-[26px] md:text-[34px] border-b pb-6", className)}>
+      {title.toUpperCase()}
+    </h1>
   );
 }
