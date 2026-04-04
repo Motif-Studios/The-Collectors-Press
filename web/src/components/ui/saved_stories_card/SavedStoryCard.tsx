@@ -20,7 +20,7 @@ export function SavedStoryCard({
   return (
     <article className="saved-story-item">
       <div className="saved-story-image">
-        <Image src={image} alt={imageAlt} fill className="object-cover" />
+        <Image src={image} alt={imageAlt} fill sizes="(max-width: 700px) 100vw, 160px" className="object-cover" />
       </div>
 
       <div className="saved-story-item__content">

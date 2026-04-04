@@ -7,6 +7,7 @@ type ButtonProps = {
   size?: "sm" | "md" | "lg";
   disabled?: boolean;
   onClick?: () => void;
+  className?: string;
 };
 
 export function Button({
@@ -15,13 +16,14 @@ export function Button({
   size = "md",
   disabled,
   onClick,
+  className,
 }: ButtonProps) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        "rounded-xl font-medium transition",
+        "rounded-sm font-medium transition",
         "flex items-center justify-center",
 
         // sizes
@@ -42,7 +44,9 @@ export function Button({
         },
 
         // disabled
-        disabled && "opacity-50 cursor-not-allowed"
+        disabled && "opacity-50 cursor-not-allowed",
+
+        className
       )}
     >
       {children}

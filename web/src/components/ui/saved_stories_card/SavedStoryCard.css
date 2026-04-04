@@ -2,8 +2,8 @@
   display: grid;
   grid-template-columns: 160px minmax(0, 1fr) 28px;
   gap: 24px;
+  width: 100%;
   align-items: center;
-  padding: 24px;
 }
 
 .saved-story-image {
@@ -37,6 +37,7 @@
   line-height: 1;
   cursor: pointer;
   padding: 0;
+  justify-self: end;
   align-self: center;
 }
 

@@ -3,7 +3,7 @@ import { PricingCard } from "./PricingCard";
 
 export function PricingSection() {
   return (
-    <section className="min-h-screen bg-blue-600 py-10 px-6">
+    <section className="min-h-10 bg-blue-600 py-10 px-6">
       <div className="max-w-[1180px] mx-auto">
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 place-items-center">
