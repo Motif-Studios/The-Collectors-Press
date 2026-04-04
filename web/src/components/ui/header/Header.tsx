@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
+import { logout } from "@/features/auth/lib/client";
 
 type NavItem = {
   label: string;
@@ -23,6 +26,10 @@ type HeaderProps = {
   children?: React.ReactNode;
 };
 
+type AccountActionProps = {
+  name: string;
+};
+
 function classNameHelper(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -33,6 +40,7 @@ export function Header({
   isSubscriber = false,
   children,
 }: HeaderProps) {
+  
   if (children) {
     return <header className="w-full bg-black text-white">{children}</header>;
   }
@@ -124,12 +132,12 @@ export function HeaderNav({ items }: { items: NavItem[] }) {
 export function SubscribeButton() {
   return (
     <>
-      <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#f4b73f] px-4 py-2 text-sm font-semibold text-black">
+      <button onClick={() => (window.location.href = "/register")} className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#f4b73f] px-4 py-2 text-sm font-semibold text-black">
         <FontAwesomeIcon icon={faPlus} className="text-xs" />
         <span>Subscribe</span>
       </button>
 
-      <button className="inline-flex lg:hidden text-sm font-semibold text-[#f4b73f]">
+      <button onClick={() => (window.location.href = "/register")} className="inline-flex lg:hidden text-sm font-semibold text-[#f4b73f]">
         Subscribe
       </button>
     </>
@@ -139,21 +147,17 @@ export function SubscribeButton() {
 export function SignInButton() {
   return (
     <>
-      <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
+      <button onClick={() => (window.location.href = "/login")} className="hidden lg:inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
         <FontAwesomeIcon icon={faUser} />
         <span>Sign In</span>
       </button>
 
-      <button className="inline-flex lg:hidden text-sm font-semibold text-white">
+    <button onClick={() => (window.location.href = "/login")} className="inline-flex lg:hidden text-sm font-semibold text-white">
         Sign In
       </button>
     </>
   );
 }
-
-type AccountActionProps = {
-  name: string;
-};
 
 export function AccountAction({ name }: AccountActionProps) {
   return (
@@ -167,6 +171,9 @@ export function AccountAction({ name }: AccountActionProps) {
       <span className="flex lg:hidden">
         <FontAwesomeIcon icon={faUser} />
       </span>
+      <button onClick={logout} className="text-sm font-semibold text-white">
+        Logout
+      </button>
     </button>
   );
 }

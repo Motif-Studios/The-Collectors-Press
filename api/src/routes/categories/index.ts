@@ -9,4 +9,8 @@ router.get("/:category_id", (req, res) => {
     res.json({ message: "Category by Id" })
 })
 
+router.get("/:category_name", (req, res) => {
+    res.json({ message: "Category by Name" })
+})
+
 export default router;

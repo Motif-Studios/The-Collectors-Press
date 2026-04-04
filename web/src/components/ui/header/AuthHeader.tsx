@@ -9,7 +9,7 @@ import {
 
 export function AuthHeader() {
   return (
-    <Header>
+    <Header user={null} isSubscriber={false}>
       <HeaderTopBar>
         <HeaderLeft>{null}</HeaderLeft>
         <HeaderCenter />
