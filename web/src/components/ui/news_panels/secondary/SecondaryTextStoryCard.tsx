@@ -1,10 +1,7 @@
 import React from "react";
 import { CategoryRow } from "./CategoryRow";
 import type { SecondaryTextStoryItem } from "./types";
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export type SecondaryTextStoryCardProps = SecondaryTextStoryItem & {
   className?: string;

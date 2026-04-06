@@ -1,10 +1,7 @@
 import React from "react";
 import type { FeatureStoryItem } from "./types";
 import Image from "next/image";
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export type FeatureStoryCardProps = FeatureStoryItem & {
   className?: string;

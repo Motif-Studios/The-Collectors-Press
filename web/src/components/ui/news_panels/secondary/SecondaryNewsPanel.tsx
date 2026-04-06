@@ -4,10 +4,7 @@ import { SecondaryTextStoryCard } from "./SecondaryTextStoryCard";
 import { SecondaryMiniCard } from "./SecondaryMiniCard";
 import type { SecondaryNewsPanelProps } from "./types";
 import { Wrapper } from "@/components/layout/wrapper/Wrapper";
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export function SecondaryNewsPanel({
   topStories,

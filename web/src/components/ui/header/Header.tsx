@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { faReadme } from "@fortawesome/free-brands-svg-icons";
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 type NavItem = {
   label: string;
@@ -22,10 +23,6 @@ type HeaderProps = {
   isSubscriber?: boolean;
   children?: React.ReactNode;
 };
-
-function classNameHelper(...classes: Array<string | false | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export function Header({
   navItems = [],

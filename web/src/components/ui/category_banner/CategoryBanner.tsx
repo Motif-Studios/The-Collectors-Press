@@ -1,10 +1,7 @@
 import React from "react";
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export type CategoryBannerProps = { category: string, className?: string };
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export function CategoryBanner({ category, className }: CategoryBannerProps) {
   return (

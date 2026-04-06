@@ -1,10 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import type { SecondaryMiniCardItem } from "./types";
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export type SecondaryMiniCardProps = SecondaryMiniCardItem & {
   className?: string;

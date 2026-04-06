@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import "./ArticleCard.css";
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export type ArticleCardProps = {
   title: string;
@@ -13,10 +14,6 @@ export type ArticleCardProps = {
   href?: string;
   className?: string;
 };
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export function ArticleCard({
   title,
