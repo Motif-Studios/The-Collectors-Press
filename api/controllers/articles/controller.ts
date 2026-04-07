@@ -11,7 +11,7 @@ export async function getAllArticles() {
     return data;
 }
 
-export async function getArticleByCategoryName(categoryName: string) {
+export async function getArticleByCategoryName(categoryName: string, limit?: number, offset?: number) {
     const { data: categoryData, error: categoryError } = await supabase
         .from("category")
         .select("category_id")
@@ -32,6 +32,7 @@ export async function getArticleByCategoryName(categoryName: string) {
         return error;
     }
 
+
     const { data: articlesData, error: articlesError } = await supabase
         .from("article")
         .select("*")
@@ -40,6 +41,11 @@ export async function getArticleByCategoryName(categoryName: string) {
     if (articlesError) {
         console.error("Error fetching articles by category name:", articlesError);
         return articlesError;
+    }
+
+    if(limit && offset) {
+        const paginatedData = articlesData.slice(offset, offset + limit);
+        return paginatedData;
     }
 
     return articlesData;
