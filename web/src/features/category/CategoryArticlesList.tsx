@@ -40,7 +40,7 @@ export function CategoryArticlesList({
 
     try {
       const response = await fetch(
-        `/api/category-articles?slug=${categorySlug}&limit=${BATCH_SIZE}&offset=${offset}`
+        `http://localhost:5001/articles/category/${categorySlug}/${BATCH_SIZE}/${offset}`
       );
 
       if (!response.ok) {
