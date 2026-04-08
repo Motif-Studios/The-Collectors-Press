@@ -30,7 +30,7 @@ export async function handleSearchQuery(searchQuery: string) {
     return uniqueData;
 }   
 
-export async function handleSearchCategorySearch(categoryName: string) {
+export async function handleSearchCategory(categoryName: string) {
     const { data, error } = await supabase
         .from("article")
         .select(`*, article_categories!inner(category!inner(category_id, category_name))`)
@@ -57,13 +57,7 @@ export async function handleSearchCategoryAndQuery(categoryName: string, searchQ
         return error;
     }
     
-    const filtered = data?.filter(item => 
-        item.title?.includes(searchTerm) || 
-        item.preview_text?.includes(searchTerm) || 
-        item.description?.includes(searchTerm)
-    ) || [];
-    
-    return filtered;
+    return data;
 }
 
 export async function handleSearchCategories() {

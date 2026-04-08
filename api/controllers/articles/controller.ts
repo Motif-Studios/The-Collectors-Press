@@ -50,3 +50,17 @@ export async function getArticleByCategoryName(categoryName: string, limit?: num
 
     return articlesData;
 }
+
+export async function getArticleById(articleId: string) {
+    const { data, error } = await supabase
+        .from("article")
+        .select("*")
+        .eq("article_id", articleId)
+        .single();
+
+    if (error) {
+        console.error("Error fetching article by ID:", error);
+        return error;
+    }
+    return data;
+}
