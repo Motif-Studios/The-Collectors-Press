@@ -64,3 +64,20 @@ export async function getArticleById(articleId: string) {
     }
     return data;
 }
+
+export async function getArticleBySlug(articleSlug: string) {
+    const decodedSlug = decodeURIComponent(articleSlug);
+            
+    const { data, error } = await supabase
+        .from("article")
+        .select("*")
+        .eq("slug", decodedSlug)
+        .single();
+    
+    if (error) {
+        console.error("Error fetching article by slug:", error);
+        return error;
+
+    }
+    return data;
+}
