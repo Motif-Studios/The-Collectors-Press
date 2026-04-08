@@ -60,6 +60,21 @@ paths:
         "200":
           description: OK
 
+  /articles/category/{category_name}:
+    get:
+      summary: Get Articles by Category Name
+      parameters:
+        - name: category_name
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Name of the category
+
+      responses:
+        "200":
+          description: OK
+
   /signup:
     post:
       summary: Sign Up
@@ -91,6 +106,21 @@ paths:
           schema:
             type: string
             description: ID of the Category
+
+      responses:
+        "200":
+          description: OK
+
+  /categories/name/{category_name}:
+    get:
+      summary: Get Category by Name
+      parameters:
+        - name: category_name
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Name of the Category
 
       responses:
         "200":

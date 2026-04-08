@@ -15,6 +15,19 @@ import subscription from "./routes/subscription/index";
 const app = express();
 app.use(express.json());
 
+// cors setup
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200);
+    }
+
+    next();
+});
+
 const swaggerDocument = YAML.load("../api/swagger/swagger.yaml");
 const PORT = 5001;
 
@@ -26,7 +39,7 @@ app.use("/auth", auth);
 app.use("/categories", categories);
 app.use("/dashboard", dashboard);
 app.use("/search", search);
-app.use("subscription", subscription);
+app.use("/subscription", subscription);
 
 app.get("/", (req, res) =>{
     res.status(200).json({ message:"API RUNNING" });

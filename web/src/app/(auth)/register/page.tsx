@@ -1,3 +1,5 @@
+import { AuthForm } from "@/features/auth/components/AuthForm";
+
 export default function RegisterPage() {
-  return <div>Register Page</div>;
+  return <AuthForm mode="signup" />;
 }

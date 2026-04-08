@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { faReadme } from "@fortawesome/free-brands-svg-icons";
 import { classNameHelper } from "@/lib/utils/classNameHelper";
+import { logout } from "@/features/auth/lib/client";
 
 type NavItem = {
   label: string;
@@ -24,12 +27,21 @@ type HeaderProps = {
   children?: React.ReactNode;
 };
 
+type AccountActionProps = {
+  name: string;
+};
+
+function classNameHelper(...classes: Array<string | false | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
 export function Header({
   navItems = [],
   user = null,
   isSubscriber = false,
   children,
 }: HeaderProps) {
+  
   if (children) {
     return <header className="w-full bg-black text-white">{children}</header>;
   }
@@ -121,14 +133,14 @@ export function HeaderNav({ items }: { items: NavItem[] }) {
 export function SubscribeButton() {
   return (
     <>
-      <Link href={"/subscribe"}>
+      <Link href={"/register"}>
         <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#f4b73f] px-4 py-2 text-sm font-semibold text-black">
           <FontAwesomeIcon icon={faReadme} className="text-sm" />
           <span>Subscribe</span>
         </button>
       </Link>
 
-      <Link href={"/subscribe"}>
+      <Link href={"/register"}>
         <button className="inline-flex lg:hidden text-sm font-semibold text-[#f4b73f]">
           Subscribe
         </button>
@@ -147,17 +159,13 @@ export function SignInButton() {
         </button>
       </Link>
       <Link href={"/login"}>
-        <button className="inline-flex lg:hidden text-sm font-semibold text-white">
+      <button className="inline-flex lg:hidden text-sm font-semibold text-white">
           Sign In
         </button>
       </Link>
     </>
   );
 }
-
-type AccountActionProps = {
-  name: string;
-};
 
 export function AccountAction({ name }: AccountActionProps) {
   return (
@@ -171,6 +179,9 @@ export function AccountAction({ name }: AccountActionProps) {
       <span className="flex lg:hidden">
         <FontAwesomeIcon icon={faUser} />
       </span>
+      <button onClick={logout} className="text-sm font-semibold text-white">
+        Logout
+      </button>
     </button>
   );
 }
