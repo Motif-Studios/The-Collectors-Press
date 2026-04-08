@@ -29,3 +29,50 @@ export async function handleSearchQuery(searchQuery: string) {
 
     return uniqueData;
 }   
+
+export async function handleSearchCategorySearch(categoryName: string) {
+    const { data, error } = await supabase
+        .from("article")
+        .select(`*, article_categories!inner(category!inner(category_id, category_name))`)
+        .eq("article_categories.category.category_name", categoryName);
+    
+    if (error) {
+        console.error("Error fetching articles by category name:", error);
+        return error;
+    }
+
+    return data;
+}
+
+export async function handleSearchCategoryAndQuery(categoryName: string, searchQuery: string) {
+    const searchTerm = decodeURIComponent(searchQuery);
+    const { data, error } = await supabase
+        .from("article")
+        .select(`*, article_categories!inner(category!inner(category_id, category_name))`)
+        .eq("article_categories.category.category_name", categoryName)
+        .or(`title.ilike.%${searchTerm}%,preview_text.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`, { referencedTable: "article" });
+
+    if (error) {
+        console.error("Error fetching articles by category name and search query:", error);
+        return error;
+    }
+    
+    const filtered = data?.filter(item => 
+        item.title?.includes(searchTerm) || 
+        item.preview_text?.includes(searchTerm) || 
+        item.description?.includes(searchTerm)
+    ) || [];
+    
+    return filtered;
+}
+
+export async function handleSearchCategories() {
+    const { data, error } = await supabase
+        .from("category")
+        .select("*");
+    if (error) {
+        console.error("Error fetching categories:", error);
+        return error;
+    }
+    return data;
+}
