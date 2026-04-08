@@ -6,10 +6,22 @@ const mockStudioCreateArticleData: StudioCreateArticleData = {
   article: {
     title: "",
     subtitle: "",
-    selectedCategory: "News",
+    category: "News",
     status: "draft",
     lastSavedLabel: "2 minutes ago",
     coverImageCaption: "",
+    body: {
+      time: Date.now(),
+      version: "2.30.0",
+      blocks: [
+        {
+          type: "paragraph",
+          data: {
+            text: "Start writing your story here...",
+          },
+        },
+      ],
+    },
   },
 };
 
