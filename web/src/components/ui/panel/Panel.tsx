@@ -75,7 +75,7 @@ export function PanelFooter({ className, ...props }: PanelFooterProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4 border-t border-[#ddd6cb] px-6 py-4 text-[16px] text-black [&_a]:font-['Courier_New',Courier,monospace] [&_a]:text-[#2e6da9] [&_a]:underline",
+        "flex items-start justify-between gap-4 border-t border-[#ddd6cb] px-6 py-4 text-[16px] text-black [&_a]:font-['Courier_New',Courier,monospace] [&_a]:text-[#2e6da9] [&_a]:underline",
         className
       )}
       {...props}

@@ -1,10 +1,6 @@
 import React from "react";
 import Image from "next/image";
-
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export type ArticleAuthorSectionProps = {
   authorName: string;
@@ -29,7 +25,7 @@ export function ArticleAuthorSection({
       )}
     >
       <div className="mb-5 border-b border-[#333333] pb-2.5">
-        <h2 className="font-serif text-[28px] font-bold uppercase tracking-[1px] sm:text-[30px]">
+        <h2 className="font-serif text-[24px] font-bold uppercase tracking-[1px] sm:text-[20px]">
           ABOUT THE AUTHOR
         </h2>
       </div>

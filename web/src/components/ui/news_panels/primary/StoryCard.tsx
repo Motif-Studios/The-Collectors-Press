@@ -1,9 +1,6 @@
 import React from "react";
 import type { StoryCardItem } from "./types";
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export type StoryCardProps = StoryCardItem & {
   className?: string;
@@ -20,7 +17,7 @@ export function StoryCard({
     <>
       {kicker && <span className="block mb-2 text-[13px] font-bold text-[#5b83c4]">{kicker}</span>}
 
-      <h2 className="mb-3 font-serif text-[28px] leading-[1.02] font-bold tracking-[-0.4px] text-[#111]">
+      <h2 className="mb-3 font-serif text-[28px] leading-[1.02] wrap-break-word font-bold tracking-[-0.4px] text-[#111]">
         {title}
       </h2>
 

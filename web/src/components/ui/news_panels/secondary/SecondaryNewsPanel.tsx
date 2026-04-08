@@ -4,10 +4,7 @@ import { SecondaryTextStoryCard } from "./SecondaryTextStoryCard";
 import { SecondaryMiniCard } from "./SecondaryMiniCard";
 import type { SecondaryNewsPanelProps } from "./types";
 import { Wrapper } from "@/components/layout/wrapper/Wrapper";
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export function SecondaryNewsPanel({
   topStories,
@@ -16,8 +13,8 @@ export function SecondaryNewsPanel({
   className,
 }: SecondaryNewsPanelProps) {
   return (
-    <section className={className}>
-      <Wrapper>
+    <Wrapper>
+      <section className={className}>
         <div className="grid grid-cols-2 gap-x-[18px] max-[900px]:grid-cols-1">
           <div className="border-t-0 pt-0 pr-[18px] pb-[28px] max-[900px]:pr-0">
             <SecondaryTopStoryCard {...topStories[0]} />
@@ -51,7 +48,7 @@ export function SecondaryNewsPanel({
             <SecondaryMiniCard key={card.id} {...card} />
           ))}
         </div>
-      </Wrapper>
-    </section>
+      </section>
+    </Wrapper>
   );
 }

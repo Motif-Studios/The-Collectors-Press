@@ -1,8 +1,5 @@
 import React from "react";
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export type PaywallCTAProps = {
   className?: string;

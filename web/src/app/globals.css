@@ -1,6 +1,7 @@
 @import "tailwindcss";
+@source "..";
 
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -20,7 +21,49 @@
 }
 
 body {
-  /* background: var(--background); */
-  /* color: var(--foreground); */
-  /* font-family: Arial, Helvetica, sans-serif; */
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+} */
+
+@theme {
+  --font-space: var(--font-space-grotesk);
+  --font-montserrat: var(--font-montserrat);
+  --font-josefin: var(--font-josefin);
+  --font-alice: var(--font-alice);
+}
+
+.font-space {
+  font-family: var(--font-space-grotesk);
+}
+
+/* EDITORJS TOOL STYLING */
+
+.article-editor h2.ce-header {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 600;
+  margin: 0;
+}
+
+.article-editor h3.ce-header {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  font-weight: 600;
+  margin: 0;
+}
+
+.article-editor h4.ce-header {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 600;
+  margin: 0;
+}
+
+.article-editor .ce-paragraph {
+  font-size: 1.125rem;
+  line-height: 1.7;
 }

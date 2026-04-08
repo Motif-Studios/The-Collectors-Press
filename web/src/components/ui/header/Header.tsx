@@ -7,10 +7,11 @@ import {
   faSearch,
   faUser,
   faChevronDown,
-  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
+import { faReadme } from "@fortawesome/free-brands-svg-icons";
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 import { logout } from "@/features/auth/lib/client";
 
 type NavItem = {
@@ -81,7 +82,7 @@ export function HeaderLeft({ children }: { children: React.ReactNode }) {
 
 export function HeaderRight({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-end gap-2 md:gap-4">
+    <div className="flex items-center justify-end lg:gap-2 sm:gap-4">
       {children}
     </div>
   );
@@ -132,14 +133,18 @@ export function HeaderNav({ items }: { items: NavItem[] }) {
 export function SubscribeButton() {
   return (
     <>
-      <button onClick={() => (window.location.href = "/register")} className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#f4b73f] px-4 py-2 text-sm font-semibold text-black">
-        <FontAwesomeIcon icon={faPlus} className="text-xs" />
-        <span>Subscribe</span>
-      </button>
+      <Link href={"/register"}>
+        <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#f4b73f] px-4 py-2 text-sm font-semibold text-black">
+          <FontAwesomeIcon icon={faReadme} className="text-sm" />
+          <span>Subscribe</span>
+        </button>
+      </Link>
 
-      <button onClick={() => (window.location.href = "/register")} className="inline-flex lg:hidden text-sm font-semibold text-[#f4b73f]">
-        Subscribe
-      </button>
+      <Link href={"/register"}>
+        <button className="inline-flex lg:hidden text-sm font-semibold text-[#f4b73f]">
+          Subscribe
+        </button>
+      </Link>
     </>
   );
 }
@@ -147,14 +152,17 @@ export function SubscribeButton() {
 export function SignInButton() {
   return (
     <>
-      <button onClick={() => (window.location.href = "/login")} className="hidden lg:inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
-        <FontAwesomeIcon icon={faUser} />
-        <span>Sign In</span>
-      </button>
-
-    <button onClick={() => (window.location.href = "/login")} className="inline-flex lg:hidden text-sm font-semibold text-white">
-        Sign In
-      </button>
+      <Link href={"/login"} className="inline-flex items-center gap-2">
+        <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
+          <FontAwesomeIcon icon={faUser} />
+          <span>Sign In</span>
+        </button>
+      </Link>
+      <Link href={"/login"}>
+      <button className="inline-flex lg:hidden text-sm font-semibold text-white">
+          Sign In
+        </button>
+      </Link>
     </>
   );
 }

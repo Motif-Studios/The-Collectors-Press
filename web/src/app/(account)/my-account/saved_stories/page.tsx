@@ -1,3 +1,5 @@
+import { SavedStoriesPageView } from "@/features/saved_stories/SavedStoriesPageView";
+
 export default function SavedStoriesPage() {
-  return <div>Stories Page</div>;
+  return <SavedStoriesPageView />;
 }

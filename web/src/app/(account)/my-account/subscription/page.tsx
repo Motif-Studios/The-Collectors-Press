@@ -1,3 +1,5 @@
-export default function SubscriptionPage() {
-  return <div>Subscription Page</div>;
+import { AccountSubscriptionPageView } from "@/features/account_subscription/AccountSubscriptionPageView";
+
+export default function AccountSubscriptionPage() {
+  return <AccountSubscriptionPageView/>;
 }

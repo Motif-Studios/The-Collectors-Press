@@ -1,10 +1,7 @@
 import React from "react";
 import type { FeatureStoryItem } from "./types";
 import Image from "next/image";
-
-function classNameHelper(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNameHelper } from "@/lib/utils/classNameHelper";
 
 export type FeatureStoryCardProps = FeatureStoryItem & {
   className?: string;
@@ -46,7 +43,7 @@ export function FeatureStoryCard({
         </div>
       )}
 
-      <h1 className="mb-4.5 max-w-[90%] font-serif text-[36px] leading-[0.98] font-bold tracking-[-0.6px] text-[#111] max-[900px]:max-w-full max-[900px]:text-[32px] max-[600px]:text-[28px]">
+      <h1 className="mb-4.5 max-w-[90%] font-serif text-[36px] leading-[0.98] font-bold tracking-[-0.6px] text-[#111] max-[900px]:max-w-full max-[900px]:text-[32px] max-[600px]:text-[28px] wrap-break-word">
         {title}
       </h1>
 
