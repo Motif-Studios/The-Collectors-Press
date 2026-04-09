@@ -148,7 +148,9 @@ export async function getMockArticleBySlug(
 }
 
 
-export async function getMockArticleSecondaryPanelData(): Promise<ArticleSecondaryPanelData> {
+export async function getMockArticleSecondaryPanelData(articleCategory: string): Promise<ArticleSecondaryPanelData> {
+  // use categories parameters to return secondary panel articles that are part of that category.
+  // currently just returning hardcoded data for mock below 
   return {
     secondaryPanel: {
       topStories: [

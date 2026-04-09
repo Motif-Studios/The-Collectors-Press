@@ -12,10 +12,10 @@ export async function getArticleBySlug(articleSlug: string): Promise<Article> {
   return getArticlePageDataApi(articleSlug);
 }
 
-export async function getArticlePageData() {
+export async function getArticlePageData(articleCategory: string) {
   if (env.useMockApi) {
-    return getMockArticleSecondaryPanelData();
+    return getMockArticleSecondaryPanelData(articleCategory);
   }
 
-  return getArticleSecondaryPanelData();
+  return getArticleSecondaryPanelData(articleCategory);
 }

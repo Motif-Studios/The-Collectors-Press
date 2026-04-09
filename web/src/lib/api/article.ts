@@ -6,8 +6,8 @@ export async function getArticlePageDataApi(articleSlug: string) {
   return getMockArticleBySlug(articleSlug);
 }
 
-export async function getArticleSecondaryPanelData() {
+export async function getArticleSecondaryPanelData(articleCategory: string) {
   // TEMP: until backend is ready
   console.log("API CALL");
-  return getMockArticleSecondaryPanelData();
+  return getMockArticleSecondaryPanelData(articleCategory);
 }

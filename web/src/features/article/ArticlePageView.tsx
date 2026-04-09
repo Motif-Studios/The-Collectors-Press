@@ -5,7 +5,7 @@ import { SecondaryNewsPanel } from "@/components/ui/news_panels/secondary";
 import { getArticlePageData } from "./queries";
 
 export async function ArticlePageView({ article }: { article: Article }) {
-  const data = await getArticlePageData();
+  const data = await getArticlePageData(article.category ?? "");
   const { secondaryPanel } = data;
   return (
     <Wrapper>
