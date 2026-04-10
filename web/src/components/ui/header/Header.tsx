@@ -31,10 +31,6 @@ type AccountActionProps = {
   name: string;
 };
 
-function classNameHelper(...classes: Array<string | false | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export function Header({
   navItems = [],
   user = null,
