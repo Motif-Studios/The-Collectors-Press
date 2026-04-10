@@ -81,3 +81,30 @@ export async function getArticleBySlug(articleSlug: string) {
     }
     return data;
 }
+
+export async function getSavedArticles(userId: string) {
+    const { data, error } = await supabase
+        .from("saved_articles")
+        .select("article_id")
+        .eq("user_id", userId);
+
+    if (error) {
+        console.error("Error fetching saved articles for user:", error);
+        return error;
+    }
+
+    if (!data || data.length === 0) {
+        return [];
+    }
+
+    const { data: articlesData, error: articlesError } = await supabase
+        .from("article")
+        .select("*")
+        .in("article_id", data.map((item) => item.article_id));
+
+    if (articlesError) {
+        console.error("Error fetching saved articles for user:", articlesError);
+        return articlesError;
+    }
+    return articlesData;
+}

@@ -75,6 +75,21 @@ paths:
         "200":
           description: OK
 
+  /articles/saved:
+    get:
+      summary: Get Saved Articles for User
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: string
+            description: ID of the user
+
+      responses:
+        "200":
+          description: OK
+
   /signup:
     post:
       summary: Sign Up
