@@ -21,7 +21,7 @@ router.get("/category/:category_name/:limit/:offset", async (req, res) => {
   res.json(articles);
 });
 
-roouter.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
   const articles = await getAllArticles();
   res.json(articles);
 });
