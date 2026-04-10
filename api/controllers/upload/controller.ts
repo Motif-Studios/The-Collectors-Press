@@ -8,7 +8,7 @@ export async function uploadFile(formData: FormData): Promise<{ message: string 
     }
 
     const { error } = await supabase.storage
-        .from("article images"),
+        .from("article images")
         .upload(`temp/${file.name}`, file);
 
     if (error) {
