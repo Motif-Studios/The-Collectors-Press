@@ -165,7 +165,7 @@ export function SignInButton() {
 
 export function AccountAction({ name }: AccountActionProps) {
   return (
-    <button className="flex items-center gap-2 !bg-transparent !p-0 !border-0 !shadow-none text-sm font-semibold text-white">
+    <button className="flex items-center gap-2 bg-transparent! p-0! border-0! shadow-none! text-sm font-semibold text-white">
       <span className="hidden lg:flex items-center gap-2">
         <FontAwesomeIcon icon={faUser} />
         <span>{name}</span>

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/nextjs";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import * as React from "react";
 import { Panel, PanelHeader, PanelBody, PanelFooter } from "./Panel";
 

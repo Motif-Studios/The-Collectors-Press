@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/nextjs";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Table } from "./Table";
 
 const meta: Meta<typeof Table> = {
@@ -40,7 +40,7 @@ export const Default: Story = {
         <tr>
           <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
             <div className="flex flex-col gap-1.5">
-              <strong className="text-[15px] font-semibold leading-[1.5]">
+              <strong className="text-[15px] font-semibold leading-normal">
                 How small independent newsrooms are redesigning the reading
                 experience
               </strong>
@@ -84,7 +84,7 @@ export const Default: Story = {
         <tr>
           <td className="px-[18px] py-[18px] align-top text-sm text-black">
             <div className="flex flex-col gap-1.5">
-              <strong className="text-[15px] font-semibold leading-[1.5]">
+              <strong className="text-[15px] font-semibold leading-normal">
                 The future of long-form journalism in a fast-scroll world
               </strong>
               <span className="text-[13px] leading-[1.4] text-neutral-500">

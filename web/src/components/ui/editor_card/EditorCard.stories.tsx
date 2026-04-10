@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/nextjs";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { EditorCard } from "./EditorCard";
 
 const meta: Meta<typeof EditorCard> = {

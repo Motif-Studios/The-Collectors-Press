@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/nextjs";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { PrimaryNewsPanel } from "./PrimaryNewsPanel";
 import type { PrimaryNewsPanelProps } from "./types";
 

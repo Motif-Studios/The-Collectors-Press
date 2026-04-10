@@ -99,7 +99,7 @@ export async function StudioDashboardPageView() {
             <tr key={article.id}>
               <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black last:border-b-0">
                 <div className="flex flex-col gap-1.5">
-                  <strong className="text-[15px] font-semibold leading-[1.5]">
+                  <strong className="text-[15px] font-semibold leading-normal">
                     {article.title}
                   </strong>
 

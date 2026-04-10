@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/nextjs";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { ArticleMetaCard } from "./ArticleMetaCard";
 import { ArticleStatusBadge } from "@/components/ui/article_status_badge/ArticleStatusBadge";
 
