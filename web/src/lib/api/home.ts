@@ -20,12 +20,20 @@ type RawPrimaryFeature = {
 
 const homeData = await getHomePageDataApi();
 
-export async function normalisedPrimaryPanelFeaturedArticles(): Promise<FeatureStoryItem | null> {
-  // const homeData = await getHomePageDataApi();
+export async function normalisedPrimaryPanelFeaturedArticles(): Promise<FeatureStoryItem> {
   const featurePrimary = homeData?.primaryPanel?.feature as RawPrimaryFeature | undefined;
 
   if (!featurePrimary) {
-    return null;
+    return {
+      id: "",
+      imageSrc: "",
+      imageAlt: "",
+      type: "",
+      section: "primary",
+      title: "",
+      summary: "",
+      href: "",
+    };
   }
 
   const normalisedJson: FeatureStoryItem = {
@@ -43,11 +51,16 @@ export async function normalisedPrimaryPanelFeaturedArticles(): Promise<FeatureS
 }
 
 export async function normalisedPrimaryPanelStories(): Promise<StoryCardItem[]> {
-  // const homeData = await getHomePageDataApi();
   const primaryStories = homeData?.primaryPanel?.stories as RawPrimaryFeature[] | undefined;
 
   if (!primaryStories) {
-    return [];
+    return [{
+      id: "",
+      kicker: "",
+      title: "",
+      summary: "",
+      href: "",
+    }];
   }
 
   return primaryStories.map((story) => ({
@@ -60,11 +73,19 @@ export async function normalisedPrimaryPanelStories(): Promise<StoryCardItem[]> 
 }
 
 export async function normalisedSecondaryPanelTopStories(): Promise<SecondaryTopStoryItem[]> {
-  // const homeData = await getHomePageDataApi();
   const secondaryTopStories = homeData?.secondaryPanel?.topStories as RawPrimaryFeature[] | undefined;
 
   if (!secondaryTopStories) {
-    return [];
+    return [{
+      id: "",
+      categories: [],
+      title: "",
+    }, 
+    {
+      id: "",
+      categories: [],
+      title: "",
+    }];
   }
 
   return secondaryTopStories.map((story) => ({
@@ -79,7 +100,6 @@ export async function normalisedSecondaryPanelTopStories(): Promise<SecondaryTop
 }
 
 export async function normalisedSecondaryPanelStories(): Promise<SecondaryTextStoryItem[]> {
-  // const homeData = await getHomePageDataApi();
   const secondaryStories = homeData?.secondaryPanel?.stories as RawPrimaryFeature[] | undefined;
 
   if (!secondaryStories) {
@@ -96,7 +116,6 @@ export async function normalisedSecondaryPanelStories(): Promise<SecondaryTextSt
 }
 
 export async function normalisedSecondaryPanelMiniCards(): Promise<SecondaryMiniCardItem[]> {
-  // const homeData = await getHomePageDataApi();
   const secondaryMiniCards = homeData?.secondaryPanel?.miniCards as RawPrimaryFeature[] | undefined;
 
   if (!secondaryMiniCards) {
