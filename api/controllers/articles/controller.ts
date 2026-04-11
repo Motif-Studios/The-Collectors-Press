@@ -108,3 +108,144 @@ export async function getSavedArticles(userId: string) {
     }
     return articlesData;
 }
+
+export async function getLatestPrimaryArticle() {
+    const { data, error } = await supabase
+        .from("panels")
+        .select("id")
+        .eq("name", "primary_feature")
+        .single();
+
+    const { data: articleData, error: articleError } = await supabase
+        .from("article_panels")
+        .select("article_id")
+        .eq("panel_id", data?.id)
+        .order("created_at", { ascending: false })
+        .single();
+
+    const { data: article, error: articleFetchError } = await supabase
+        .from("article")
+        .select("*")
+        .eq("article_id", articleData?.article_id)
+        .single();
+    
+    if (error || articleError || articleFetchError) {
+        console.error("Error fetching latest primary article:", error || articleError || articleFetchError);
+        return error || articleError || articleFetchError;
+    }
+
+    return article;
+}
+
+export async function getLatestPrimaryStories(limit?: number) {
+    const { data, error } = await supabase
+        .from("panels")
+        .select("id")
+        .eq("name", "primary_stories")
+        .single();
+
+    const { data: articleData, error: articleError } = await supabase
+        .from("article_panels")
+        .select("article_id")
+        .eq("panel_id", data?.id)
+        .order("created_at", { ascending: false })
+        .limit(limit || 3);
+    
+    const articleIds = articleData?.map((item) => item.article_id) || [];
+
+    const { data: articles, error: articlesError } = await supabase
+        .from("article")
+        .select("*")
+        .in("article_id", articleIds);
+
+    if (error || articleError || articlesError) {
+        console.error("Error fetching latest primary stories:", error || articleError || articlesError);
+        return error || articleError || articlesError;
+    }
+
+    return articles;
+}
+
+export async function getLatestSecondaryTopStories(limit?: number) {
+    const { data, error } = await supabase
+        .from("panels")
+        .select("id")
+        .eq("name", "secondary_top_stories")
+        .single();
+
+    const { data: articleData, error: articleError } = await supabase
+        .from("article_panels")
+        .select("article_id")
+        .eq("panel_id", data?.id)
+        .order("created_at", { ascending: false })
+        .limit(limit || 2);
+
+    const articleIds = articleData?.map((item) => item.article_id) || [];
+
+    const { data: articles, error: articlesError } = await supabase
+        .from("article")
+        .select("*")
+        .in("article_id", articleIds);
+
+    if (error || articleError || articlesError) {
+        console.error("Error fetching latest secondary top stories:", error || articleError || articlesError);
+        return error || articleError || articlesError;
+    }
+
+    return articles;
+}
+
+export async function getLatestSecondaryStories(limit?: number) {
+    const { data, error } = await supabase
+        .from("panels")
+        .select("id")
+        .eq("name", "secondary_stories")
+        .single();
+
+    const { data: articleData, error: articleError } = await supabase
+        .from("article_panels")
+        .select("article_id")
+        .eq("panel_id", data?.id)
+        .order("created_at", { ascending: false })
+        .limit(limit || 4);
+
+    const articleIds = articleData?.map((item) => item.article_id) || [];
+
+    const { data: articles, error: articlesError } = await supabase
+        .from("article")
+        .select("*")
+        .in("article_id", articleIds);
+    
+    if (error || articleError || articlesError) {
+        console.error("Error fetching latest secondary stories:", error || articleError || articlesError);
+        return error || articleError || articlesError;
+    }
+}
+
+export async function getLatestSecondaryMiniCards(limit?: number) {
+    const { data, error } = await supabase
+        .from("panels")
+        .select("id")
+        .eq("name", "secondary_mini_cards")
+        .single();
+
+    const { data: articleData, error: articleError } = await supabase
+        .from("article_panels")
+        .select("article_id")
+        .eq("panel_id", data?.id)
+        .order("created_at", { ascending: false })
+        .limit(limit || 4);
+
+    const articleIds = articleData?.map((item) => item.article_id) || [];
+
+    const { data: articles, error: articlesError } = await supabase
+        .from("article")
+        .select("*")
+        .in("article_id", articleIds);
+
+    if (error || articleError || articlesError) {
+        console.error("Error fetching latest secondary mini cards:", error || articleError || articlesError);
+        return error || articleError || articlesError;
+    }
+    return articles;
+}

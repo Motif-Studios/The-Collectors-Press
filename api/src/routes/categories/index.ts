@@ -3,6 +3,18 @@ import { getAllCategories, getCategoryById, getCategoriesByName } from "../../..
 
 const router = Router();
 
+/**
+ * @openapi
+ * /categories/all:
+ *   get:
+ *     tags: [Categories]
+ *     summary: Get all categories
+ *     responses:
+ *       200:
+ *         description: Categories list
+ *       500:
+ *         description: Failed to fetch categories
+ */
 router.get("/all", async (req, res) => {
     try {
         const categories = await getAllCategories();
@@ -12,6 +24,24 @@ router.get("/all", async (req, res) => {
     }
 });
 
+/**
+ * @openapi
+ * /categories/{category_id}:
+ *   get:
+ *     tags: [Categories]
+ *     summary: Get category by ID
+ *     parameters:
+ *       - in: path
+ *         name: category_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Category data
+ *       500:
+ *         description: Failed to fetch category
+ */
 router.get("/:category_id", async (req, res) => {
     try {
         const category = await getCategoryById(parseInt(req.params.category_id));
@@ -21,6 +51,24 @@ router.get("/:category_id", async (req, res) => {
     }
 });
 
+/**
+ * @openapi
+ * /categories/name/{category_name}:
+ *   get:
+ *     tags: [Categories]
+ *     summary: Get categories by name
+ *     parameters:
+ *       - in: path
+ *         name: category_name
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Matching categories
+ *       500:
+ *         description: Failed to fetch category
+ */
 router.get("/name/:category_name", async (req, res) => {
     try {
         const category = await getCategoriesByName(req.params.category_name);

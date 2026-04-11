@@ -1,6 +1,7 @@
 import express from "express";
 import swaggerUi from "swagger-ui-express";
-import YAML from "yamljs";
+import swaggerJSDoc from "swagger-jsdoc";
+import path from "path";
 
 // routes
 import home from "./routes/home/index"; 
@@ -16,6 +17,24 @@ import upload from "./routes/upload/index";
 const app = express();
 app.use(express.json());
 
+const openApiOptions: swaggerJSDoc.Options = {
+    definition: {
+        openapi: "3.0.3",
+        info: {
+            title: "The Collectors Press API",
+            version: "1.0.0",
+            description: "Annotated Swagger APIs for The Collectors Press backend",
+        },
+        servers: [{ url: "http://localhost:5001" }],
+    },
+    apis: [
+        path.join(__dirname, "routes/**/*.ts"),
+        path.join(__dirname, "routes/**/*.js"),
+    ],
+};
+
+const swaggerDocument = swaggerJSDoc(openApiOptions);
+
 // cors setup
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -29,7 +48,6 @@ app.use((req, res, next) => {
     next();
 });
 
-const swaggerDocument = YAML.load("../api/swagger/swagger.yaml");
 const PORT = 5001;
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
