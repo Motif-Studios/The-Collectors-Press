@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/nextjs";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { ArticleCard } from "./ArticleCard";
 
-const meta: Meta<typeof Footer> = {
+const meta: Meta<typeof ArticleCard> = {
   title: "UI/ArticleCard",
   component: ArticleCard,
   tags: ["autodocs"],

@@ -1,1 +1,1 @@
-export { CategoryPageView } from "./SearchPageView";
+export { SearchPageView } from "./SearchPageView";
