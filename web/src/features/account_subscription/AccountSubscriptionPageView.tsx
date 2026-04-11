@@ -105,10 +105,10 @@ export async function AccountSubscriptionPageView() {
               </Button>
             </div>
 
-            <div className="flex items-center gap-[26px] max-[640px]:flex-wrap max-[640px]:gap-[18px]">
+            <div className="flex items-center gap-6.5 max-[640px]:flex-wrap max-[640px]:gap-4.5">
               <button
                 type="button"
-                className="inline-flex items-center gap-[7px] font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition cursor-pointer"
+                className="inline-flex items-center gap-1.75 font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition cursor-pointer"
               >
                 <span>Share</span>
                 <Icon icon={faArrowUpFromBracket} className="text-[14px]" />
@@ -116,7 +116,7 @@ export async function AccountSubscriptionPageView() {
 
               <button
                 type="button"
-                className="inline-flex items-center gap-[7px] font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition cursor-pointer"
+                className="inline-flex items-center gap-1.75 font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition cursor-pointer"
               >
                 <span>Save</span>
                 <Icon icon={faBookmark} className="text-[14px]" />
