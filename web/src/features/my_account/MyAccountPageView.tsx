@@ -6,12 +6,15 @@ import {
   PanelHeader,
 } from "@/components/ui/panel/Panel";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons/faGoogle";
+import { getMyAccountData } from "./queries";
 
 export async function MyAccountPageView() {
+  const data = await getMyAccountData();
+
   return (
     <div>
       <div className="w-165 max-w-full">
-        <h2 className="mb-4 text-3xl font-bold">Hello, Motif</h2>
+        <h2 className="mb-4 text-3xl font-bold">Hello, {data.firstName}</h2>
         <Panel>
           <PanelHeader
             title="Subscribe to The Collectors Press"
@@ -43,17 +46,17 @@ export async function MyAccountPageView() {
                 <div className="flex flex-row">
                     <div className="flex flex-col items-start flex-1">
                         <strong className="w-full">First Name</strong>
-                        <div className="w-full">Motif</div>
+                        <div className="w-full">{data.firstName}</div>
                     </div>
                     <div className="flex flex-col items-start flex-1">
                         <strong className="w-full">Last Name</strong>
-                        <div className="w-full">Studios</div>
+                        <div className="w-full">{data.lastName}</div>
                     </div>
                 </div>
                 <div>
                     <div>
                         <strong>Email Address</strong>
-                        <div>motif.studios.nz@gmail.com</div>
+                        <div>{data.email}</div>
                     </div>
                 </div>
             </div>
