@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllCategories, getCategoryById, getCategoriesByName } from "../../../controllers/category/controller";
+import { getAllCategories, getCategoryById, getCategoriesByName, getCategoryByArticleId } from "../../../controllers/category/controller";
 
 const router = Router();
 
@@ -72,6 +72,34 @@ router.get("/:category_id", async (req, res) => {
 router.get("/name/:category_name", async (req, res) => {
     try {
         const category = await getCategoriesByName(req.params.category_name);
+        res.json(category);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch category" });
+    }
+});
+
+
+/**
+ * @openapi
+ * /categories/article/{article_id}:
+ *   get:
+ *     tags: [Categories]
+ *     summary: Get category by article ID
+ *     parameters:
+ *       - in: path
+ *         name: article_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Category data
+ *       500:
+ *         description: Failed to fetch category
+ */
+router.get("/article/:article_id", async (req, res) => {
+    try {
+        const category = await getCategoryByArticleId(req.params.article_id);
         res.json(category);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch category" });

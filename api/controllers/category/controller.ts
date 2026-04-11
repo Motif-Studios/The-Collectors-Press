@@ -28,6 +28,31 @@ export async function getCategoryById(categoryId: number) {
     return data;
 }
 
+export async function getCategoryByArticleId(articleId: string) {
+    const { data, error } = await supabase
+        .from("article_categories")
+        .select("category_id")
+        .eq("article_id", articleId);
+    
+    if (error) {
+        console.error("Error fetching category by article ID:", error);
+        return error;
+    }
+
+    const categoryIds = data.map((item) => item.category_id);
+
+    const { data: categoriesData, error: categoriesError } = await supabase
+        .from("category")
+        .select("*")
+        .in("category_id", categoryIds);
+
+    if (categoriesError) {
+        console.error("Error fetching categories by article ID:", categoriesError);
+        return categoriesError;
+    }
+    return categoriesData;
+}
+
 export async function getAllCategories() {
     const { data, error } = await supabase
         .from("category")

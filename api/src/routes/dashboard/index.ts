@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { get } from "node:http";
+import { getDashboardArticles } from "../../../controllers/dashboard/controller";
 const router = Router();
 
 /**
@@ -18,16 +20,24 @@ router.get("/", (req, res) => {
 
 /**
  * @openapi
- * /dashboard/articles:
+ * /dashboard/articles/{user_id}:
  *   get:
  *     tags: [Dashboard]
  *     summary: Dashboard articles list
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Dashboard articles response
  */
-router.get("/articles", (req, res) => {
-  res.json({ message: "Dashboard Articles" });
+router.get("/articles/:user_id", async (req, res) => {
+   const { user_id } = req.params;
+   const articles = await getDashboardArticles(user_id);
+   res.json(articles);
 });
 
 /**
@@ -107,7 +117,7 @@ router.post("/publish_article", (req, res) => {
  *         description: Deleted article response
  */
 router.post("/delete_article", (req, res) => {
-  res.json({ message: "Published Article" });
+  res.json({ message: "Deleted Article" });
 });
 
 export default router;
