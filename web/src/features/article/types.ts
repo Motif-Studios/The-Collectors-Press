@@ -38,6 +38,14 @@ export type EditorJsContent = {
   blocks: EditorJsBlock[];
 };
 
+export type EditorJsListItem = {
+  content: string;
+  meta?: {
+    checked?: boolean;
+  };
+  items: EditorJsListItem[];
+};
+
 export type EditorJsBlock =
   | {
       id?: string;
@@ -56,10 +64,15 @@ export type EditorJsBlock =
     }
   | {
       id?: string;
-      type: "simpleImage";
+      type: "image";
       data: {
-        url: string;
+        file: {
+          url: string;
+        };
         caption?: string;
+        withBorder?: boolean;
+        withBackground?: boolean;
+        stretched?: boolean;
       };
     }
   | {
@@ -85,10 +98,18 @@ export type EditorJsBlock =
     }
   | {
       id?: string;
+      type: "delimiter";
+      data: Record<string, never>;
+    }
+  | {
+      id?: string;
       type: "list";
       data: {
-        style: "ordered" | "unordered";
-        items: string[];
+        style: "ordered" | "unordered" | "checklist";
+        meta?: {
+          counterType?: string;
+        };
+        items: EditorJsListItem[];
       };
     };
 

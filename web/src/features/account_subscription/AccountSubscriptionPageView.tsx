@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button/Button";
 import { Icon } from "@/components/ui/icon/Icon";
+import { Panel, PanelBody, PanelHeader } from "@/components/ui/panel/Panel";
 import {
-  Panel,
-  PanelBody,
-  PanelFooter,
-  PanelHeader,
-} from "@/components/ui/panel/Panel";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+  faCheck,
+  faArrowUpFromBracket,
+  faBookmark,
+} from "@fortawesome/free-solid-svg-icons";
+
 
 export async function AccountSubscriptionPageView() {
   return (
@@ -103,6 +103,24 @@ export async function AccountSubscriptionPageView() {
               <Button variant="primary" className="mt-2">
                 Explore Options
               </Button>
+            </div>
+
+            <div className="flex items-center gap-[26px] max-[640px]:flex-wrap max-[640px]:gap-[18px]">
+              <button
+                type="button"
+                className="inline-flex items-center gap-[7px] font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition cursor-pointer"
+              >
+                <span>Share</span>
+                <Icon icon={faArrowUpFromBracket} className="text-[14px]" />
+              </button>
+
+              <button
+                type="button"
+                className="inline-flex items-center gap-[7px] font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition cursor-pointer"
+              >
+                <span>Save</span>
+                <Icon icon={faBookmark} className="text-[14px]" />
+              </button>
             </div>
           </PanelBody>
         </Panel>

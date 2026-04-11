@@ -18,12 +18,7 @@ export function ArticleAuthorSection({
   className,
 }: ArticleAuthorSectionProps) {
   return (
-    <section
-      className={classNameHelper(
-        "mx-auto max-w-205 px-4 text-black sm:px-6",
-        className
-      )}
-    >
+    <section className={className}>
       <div className="mb-5 border-b border-[#333333] pb-2.5">
         <h2 className="font-serif text-[24px] font-bold uppercase tracking-[1px] sm:text-[20px]">
           ABOUT THE AUTHOR

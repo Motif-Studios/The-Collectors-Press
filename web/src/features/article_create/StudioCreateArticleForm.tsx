@@ -74,6 +74,7 @@ export function StudioCreateArticleForm({
   }
 
   function handleBodyChange(body: EditorJsContent) {
+    console.log("EditorJS output:", body);
     setForm((prev) => ({
       ...prev,
       body,

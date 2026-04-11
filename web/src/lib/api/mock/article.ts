@@ -1,5 +1,7 @@
-import type { Article, ArticleSecondaryPanelData } from "@/features/article/types";
-
+import type {
+  Article,
+  ArticleSecondaryPanelData,
+} from "@/features/article/types";
 
 export const mockArticle: Article = {
   id: "article-1",
@@ -24,9 +26,10 @@ export const mockArticle: Article = {
   author: {
     id: "author-1",
     name: "Kevin Wu",
-    description: "Charlie Warzel is a staff writer at The Atlantic and the author of its newsletter Galaxy Brain, about technology, media, and big ideas. He can be reached via email.",
+    description:
+      "Charlie Warzel is a staff writer at The Atlantic and the author of its newsletter Galaxy Brain, about technology, media, and big ideas. He can be reached via email.",
     avatarSrc: "https://eu.ui-avatars.com/api/?name=Kevin+Wu&size=250",
-    moreTopics: ["Donald Trump", "Iran", "Middle East"]
+    moreTopics: ["Donald Trump", "Iran", "Middle East"],
   },
 
   coverImage: {
@@ -53,11 +56,16 @@ export const mockArticle: Article = {
         },
       },
       {
-        type: "simpleImage",
+        type: "image",
         data: {
-          url: "https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1400&q=80",
+          file: {
+            url: "https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1400&q=80",
+          },
           caption:
             "A clean editorial workspace helps writers focus on storytelling, structure and flow.",
+          withBorder: true,
+          withBackground: true,
+          stretched: true,
         },
       },
       {
@@ -104,13 +112,38 @@ export const mockArticle: Article = {
         type: "list",
         data: {
           style: "unordered",
+          meta: {},
           items: [
-            "Long-form paragraphs for reporting and analysis",
-            "Section headings to break up the story",
-            "Images with captions and credits",
-            "Embedded video or social posts",
-            "Pull quotes to highlight key moments",
-            "Lists for summaries, timelines or takeaways",
+            {
+              content: "Long-form paragraphs for reporting and analysis",
+              meta: {},
+              items: [],
+            },
+            {
+              content: "Section headings to break up the story",
+              meta: {},
+              items: [],
+            },
+            {
+              content: "Images with captions and credits",
+              meta: {},
+              items: [],
+            },
+            {
+              content: "Embedded video or social posts",
+              meta: {},
+              items: [],
+            },
+            {
+              content: "Pull quotes to highlight key moments",
+              meta: {},
+              items: [],
+            },
+            {
+              content: "Lists for summaries, timelines or takeaways",
+              meta: {},
+              items: [],
+            },
           ],
         },
       },

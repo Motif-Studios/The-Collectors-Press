@@ -95,24 +95,33 @@ export function StudioArticleBodyEditor({
             config: {
               uploader: {
                 async uploadByFile(file: File) {
-                  const formData = new FormData();
-                  formData.append("file", file);
+                  // const formData = new FormData();
+                  // formData.append("file", file);
 
-                  const response = await fetch("/api/uploads/image", {
-                    method: "POST",
-                    body: formData,
-                  });
+                  // const response = await fetch("/api/uploads/image", {
+                  //   method: "POST",
+                  //   body: formData,
+                  // });
 
-                  if (!response.ok) {
-                    throw new Error("Image upload failed");
-                  }
+                  // if (!response.ok) {
+                  //   throw new Error("Image upload failed");
+                  // }
 
-                  const result = await response.json();
+                  // const result = await response.json();
+
+                  // return {
+                  //   success: 1,
+                  //   file: {
+                  //     url: result.url,
+                  //   },
+                  // };
+
+                  console.log("mock uploaded file:", file);
 
                   return {
                     success: 1,
                     file: {
-                      url: result.url,
+                      url: "https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1400&q=80",
                     },
                   };
                 },
