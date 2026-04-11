@@ -249,3 +249,23 @@ export async function getLatestSecondaryMiniCards(limit?: number) {
     }
     return articles;
 }
+
+export async function getHomePageData() {
+    const primaryFeature = await getLatestPrimaryArticle();
+    const primaryStories = await getLatestPrimaryStories();
+    const secondaryTopStories = await getLatestSecondaryTopStories();
+    const secondaryStories = await getLatestSecondaryStories();
+    const secondaryMiniCards = await getLatestSecondaryMiniCards();
+
+    return {
+        primaryPanel: {
+            feature: primaryFeature,
+            stories: primaryStories,
+        },
+        secondaryPanel: {
+            topStories: secondaryTopStories,
+            stories: secondaryStories,
+            miniCards: secondaryMiniCards,
+        }
+    };     
+}
