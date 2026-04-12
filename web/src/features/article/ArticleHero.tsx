@@ -1,9 +1,7 @@
 import Image from "next/image";
 import type { Article } from "@/features/article/types";
 import { Icon } from "@/components/ui/icon/Icon";
-import {
-  faBookBookmark, faShare
-} from "@fortawesome/free-solid-svg-icons";
+import { faBookBookmark, faShare } from "@fortawesome/free-solid-svg-icons";
 
 type ArticleHeroProps = {
   article: Article;
@@ -18,25 +16,21 @@ function formatArticleDate(dateString: string) {
   });
 }
 
-function classNameHelper(...classes: Array<string | false | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export function ArticleHero({ article }: ArticleHeroProps) {
   return (
     <section className="mb-12 pt-11 max-[640px]:pt-7">
       {article.category ? (
-        <p className="mb-[18px] font-sans text-[11px] font-bold uppercase tracking-[1.4px] text-[#c44232]">
+        <p className="mb-4.5 font-sans text-[11px] font-bold uppercase tracking-[1.4px] text-[#c44232]">
           {article.category}
         </p>
       ) : null}
 
-      <h1 className="mb-[22px] font-[Georgia,'Times_New_Roman',serif] text-[3.65rem] leading-[1.08] font-medium tracking-[-0.4px] text-black max-[900px]:text-[3rem] max-[640px]:mb-[18px] max-[640px]:text-[2.2rem] max-[640px]:leading-[1.12]">
+      <h1 className="mb-5.5 font-[Georgia,'Times_New_Roman',serif] text-[3.65rem] leading-[1.08] font-medium tracking-[-0.4px] text-black max-[900px]:text-[3rem] max-[640px]:mb-4.5 max-[640px]:text-[2.2rem] max-[640px]:leading-[1.12]">
         {article.title}
       </h1>
 
       {article.subtitle ? (
-        <p className="mb-[22px] max-w-[90%] font-[Georgia,'Times_New_Roman',serif] text-[1.08rem] leading-[1.55] text-black max-[640px]:text-[1rem]">
+        <p className="mb-5.5 max-w-[90%] font-[Georgia,'Times_New_Roman',serif] text-[1.08rem] leading-[1.55] text-black max-[640px]:text-[1rem]">
           {article.subtitle}
         </p>
       ) : null}
@@ -64,15 +58,15 @@ export function ArticleHero({ article }: ArticleHeroProps) {
         </figure>
       ) : null}
 
-      <div className="mt-[22px] flex items-center justify-between gap-6 border-b border-[#d8d8d8] pb-[34px] max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-[18px]">
+      <div className="mt-5.5 flex items-center justify-between gap-6 border-b border-[#d8d8d8] pb-8.5 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-4.5">
         <p className="font-sans text-[12px] font-bold uppercase tracking-[1.4px] text-[#111]">
           {article.publishedAt ? formatArticleDate(article.publishedAt) : ""}
         </p>
 
-        <div className="flex items-center gap-[26px] max-[640px]:flex-wrap max-[640px]:gap-[18px]">
+        <div className="flex items-center gap-6.5 max-[640px]:flex-wrap max-[640px]:gap-4.5">
           <button
             type="button"
-            className="inline-flex items-center gap-[7px] font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition"
+            className="inline-flex items-center gap-1.75 font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition"
           >
             <span>Share</span>
             <Icon
@@ -83,7 +77,7 @@ export function ArticleHero({ article }: ArticleHeroProps) {
 
           <button
             type="button"
-            className="inline-flex items-center gap-[7px] font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition"
+            className="inline-flex items-center gap-1.75 font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition"
           >
             <span>Save</span>
             <Icon icon={faBookBookmark} />
