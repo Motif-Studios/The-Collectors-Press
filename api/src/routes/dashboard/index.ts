@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { get } from "node:http";
-import { createArticle, getDashboardArticles, saveArticle } from "../../../controllers/dashboard/controller";
+import { createArticle, deleteArticle, getDashboardArticles, saveArticle } from "../../../controllers/dashboard/controller";
 const router = Router();
 
 /**
@@ -120,16 +120,29 @@ router.post("/publish_article", (req, res) => {
 
 /**
  * @openapi
- * /dashboard/delete_article:
+ * /dashboard/delete_article/{article_id}:
  *   post:
  *     tags: [Dashboard]
  *     summary: Delete article
+ *     parameters:
+ *       - in: path
+ *         name: article_id
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Deleted article response
  */
-router.post("/delete_article", (req, res) => {
-  res.json({ message: "Deleted Article" });
+router.post("/delete_article/:article_id", async (req, res) => {
+  const { article_id } = req.params;
+  try {
+    await deleteArticle(article_id);
+    res.json({ message: `Deleted Article with ID: ${article_id}` });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to delete article";
+    res.status(500).json({ error: message });
+  }
 });
 
 

@@ -38,6 +38,20 @@ export async function createArticle(userId: string) {
     return data;
 }
 
+export async function deleteArticle(articleId: string) {
+    const { error: articleDeleteError } = await supabase
+        .from("article")
+        .delete()
+        .eq("article_id", articleId);
+
+    if (articleDeleteError) {
+        console.error("Error deleting article:", articleDeleteError);
+        throw new Error(`Failed to delete article: ${articleDeleteError.message}`);
+    }
+
+    return;
+}
+
 export async function saveArticle(articleId: string, articleData: StudioCreateArticle) {
     const { data, error } = await supabase
         .from("article")
