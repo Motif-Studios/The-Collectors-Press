@@ -1,10 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFacebookF,
-  faInstagram,
-  faXTwitter,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
+import { faFacebookF, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 
 const footerSections = [
@@ -83,10 +78,8 @@ const footerSections = [
 ];
 
 const socialLinks = [
-  { href: "#", label: "Facebook", icon: faFacebookF },
-  { href: "#", label: "Instagram", icon: faInstagram },
-  { href: "#", label: "Twitter", icon: faXTwitter },
-  { href: "#", label: "YouTube", icon: faYoutube },
+  { href: "https://www.facebook.com/TheCollectorsPress", label: "Facebook", icon: faFacebookF },
+  { href: "https://www.instagram.com/thecollectorspress/", label: "Instagram", icon: faInstagram },
 ];
 
 export function Footer() {
