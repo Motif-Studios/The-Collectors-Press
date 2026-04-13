@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { get } from "node:http";
-import { getDashboardArticles } from "../../../controllers/dashboard/controller";
+import { createArticle, getDashboardArticles, saveArticle } from "../../../controllers/dashboard/controller";
 const router = Router();
 
 /**
@@ -80,16 +80,28 @@ router.get("/preview_article", (req, res) => {
 
 /**
  * @openapi
- * /dashboard/create_article:
+ * /dashboard/create_article/{user_id}:
  *   post:
  *     tags: [Dashboard]
  *     summary: Create article
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Created article response
  */
-router.post("/create_article", (req, res) => {
-  res.json({ message: "Created Article" });
+router.post("/create_article/:user_id", async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const articleId = await createArticle(user_id);
+    res.json({ article_id: articleId });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create article" });
+  }
 });
 
 /**
@@ -118,6 +130,30 @@ router.post("/publish_article", (req, res) => {
  */
 router.post("/delete_article", (req, res) => {
   res.json({ message: "Deleted Article" });
+});
+
+
+/**
+ * @openapi
+ * /dashboard/save_article:
+ *   post:
+ *     tags: [Dashboard]
+ *     summary: Save article
+ *     responses:
+ *       200:
+ *         description: Saved article response
+ */
+router.post("/save_article/:article_id", async (req, res) => {
+  try{
+    const { article_id } = req.params;
+    const articleData = req.body?.content ?? req.body;
+
+    const response = await saveArticle(article_id, articleData);
+    res.json(response);
+  }catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to save article";
+    res.status(500).json({ error: message });
+  }
 });
 
 export default router;

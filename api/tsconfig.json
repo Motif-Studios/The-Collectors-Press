@@ -4,12 +4,12 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "outDir": "./dist",
-    "rootDir": ".",
+    "rootDir": "..",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": ["node"]
+    "types": ["node", "multer"]
   },
   "include": ["src/**/*", "controllers"],
   "exclude": ["node_modules", "dist"]

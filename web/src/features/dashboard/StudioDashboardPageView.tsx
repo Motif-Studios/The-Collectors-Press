@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { StudioPageHeader } from "@/components/ui/studio_page_header/StudioPageHeader";
 import { ActionButton } from "@/components/ui/action_button/ActionButton";
 import { SelectInput } from "@/components/ui/select_input/SelectInput";
@@ -131,9 +132,9 @@ export async function StudioDashboardPageView() {
 
               <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
                 <div className="flex flex-wrap gap-2.5">
-                  <button className="cursor-pointer p-0 text-sm text-black underline underline-offset-[3px]">
+                  <Link href={`/studio/create/${article.id}`} className="text-sm text-black underline underline-offset-[3px]">
                     Edit
-                  </button>
+                  </Link>
 
                   <button className="cursor-pointer p-0 text-sm text-black underline underline-offset-[3px]">
                     {article.secondaryActionLabel}

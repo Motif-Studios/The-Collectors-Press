@@ -9,3 +9,22 @@ export async function getStudioCreateArticleData() {
 
   return getStudioCreateArticleDataApi();
 }
+
+export async function getStudioCreateArticleById(articleId: string) {
+  if (env.useMockApi) {
+    const mockData = await getMockStudioCreateArticleData();
+    return {
+      ...mockData.article,
+      article_id: articleId,
+      id: articleId,
+    };
+  }
+
+  const response = await fetch(`http://localhost:5001/articles/${articleId}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch article");
+  }
+
+  return response.json();
+}
