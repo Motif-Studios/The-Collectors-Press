@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { get } from "node:http";
-import { createArticle, deleteArticle, getDashboardArticles, saveArticle } from "../../../controllers/dashboard/controller";
+import { createArticle, deleteArticle, getDashboardArticles, publishArticle, saveArticle } from "../../../controllers/dashboard/controller";
 const router = Router();
 
 /**
@@ -106,16 +106,29 @@ router.post("/create_article/:user_id", async (req, res) => {
 
 /**
  * @openapi
- * /dashboard/publish_article:
+ * /dashboard/publish_article/{article_id}:
  *   post:
  *     tags: [Dashboard]
  *     summary: Publish article
+ *     parameters:
+ *       - in: path
+ *         name: article_id
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Published article response
  */
-router.post("/publish_article", (req, res) => {
-  res.json({ message: "Published Article" });
+router.post("/publish_article/:article_id", async (req, res) => {
+  const article = req.params.article_id;
+  try {
+    const response = await publishArticle(article);
+    res.json(response);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to publish article";
+    res.status(500).json({ error: message });
+  }
 });
 
 /**

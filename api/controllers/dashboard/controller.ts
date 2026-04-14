@@ -117,3 +117,22 @@ export async function saveArticle(articleId: string, articleData: StudioCreateAr
 
     return data;
 }
+
+export async function publishArticle(articleId: string) {
+    const { data, error } = await supabase
+        .from("article")
+        .update({ 
+            status: "published",
+            updated_at: new Date().toISOString(),
+         })
+        .eq("article_id", articleId)
+        .select("*")
+        .single();
+
+    if (error) {
+        console.error("Error publishing article:", error);
+        throw new Error("Failed to publish article");
+    }
+
+    return data;
+}
