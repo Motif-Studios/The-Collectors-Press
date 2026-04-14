@@ -9,7 +9,7 @@ export async function uploadFile(file: File, article_id: string) {
   let response: Response;
 
   try {
-    response = await fetch(`${apiBaseUrl}/upload`, {
+    response = await fetch(`${apiBaseUrl}/upload/${article_id}`, {
       method: "POST",
       body: formData,
     });

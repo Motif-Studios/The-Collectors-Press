@@ -1,11 +1,11 @@
 import { supabase } from "../../lib/supabase";
 
-export async function uploadFile(file: Express.Multer.File): Promise<{ message: string; path: string }> {
+export async function uploadFile(file: Express.Multer.File, article_id: string): Promise<{ message: string; path: string }> {
     if (!file?.buffer || !file.originalname) {
         throw new Error("No file provided");
     }
 
-    const filePath = `temp/${Date.now()}-${file.originalname}`;
+    const filePath = `${article_id}/${Date.now()}-${file.originalname}`;
 
     const { error } = await supabase.storage
         .from("article images")

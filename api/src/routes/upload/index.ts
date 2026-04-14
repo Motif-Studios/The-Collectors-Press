@@ -27,13 +27,18 @@ const upload = multer({ storage: multer.memoryStorage() });
  *       500:
  *         description: Upload error
  */
-router.post("/", upload.single("file"), async (req, res) => {
+router.post("/:article_id", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No file provided" });
     }
 
-    const result = await uploadFile(req.file);
+    const article_id = req.params.article_id.toString();
+    if (!article_id) {
+      return res.status(400).json({ error: "No article ID provided" });
+    }
+
+    const result = await uploadFile(req.file, article_id);
     res.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "An unexpected error occurred";
