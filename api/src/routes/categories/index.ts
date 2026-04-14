@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllCategories, getCategoryById, getCategoriesByName, getCategoryByArticleId } from "../../../controllers/category/controller";
+import { getAllCategories, getCategoryById, getCategoriesByName, getCategoryByArticleId, createCategory } from "../../../controllers/category/controller";
 
 const router = Router();
 
@@ -103,6 +103,29 @@ router.get("/article/:article_id", async (req, res) => {
         res.json(category);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch category" });
+    }
+});
+
+/**
+ * @openapi
+ * /categories/create_category/{category_name}:
+ *  post:
+ *    tags: [Categories]
+ *   summary: Create a new category
+ *  parameters:
+ *    - in: path
+ *     name: category_name
+ *    required: true
+ *    schema:
+ *      type: string
+ *    description: Name of the category to create
+ */
+router.post("/create_category/:category_name", async (req, res) => {
+    try {
+        const category = await createCategory(req.params.category_name);
+        res.json(category);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to create category" });
     }
 });
 

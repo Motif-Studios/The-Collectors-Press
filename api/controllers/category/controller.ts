@@ -64,3 +64,17 @@ export async function getAllCategories() {
     }
     return data;
 }
+
+export async function createCategory(categoryName: string) {
+    const { data, error } = await supabase
+        .from("category")
+        .insert({ category_name: categoryName })
+        .select("*")
+        .single();
+
+    if (error) {
+        console.error("Error creating category:", error);
+        return error;
+    }
+    return data;
+}
