@@ -136,3 +136,19 @@ export async function publishArticle(articleId: string) {
 
     return data;
 }
+
+export async function getArticlesByStatus(userId: string, status: string) {
+    const { data, error } = await supabase
+        .from("article")
+        .select("*")
+        .eq("author_id", userId)
+        .eq("status", status)
+        .order("created_at", { ascending: false });
+    
+    if (error) {
+        console.error(`Error fetching ${status} articles for studio dashboard:`, error);
+        return error;
+    }
+
+    return data;
+}

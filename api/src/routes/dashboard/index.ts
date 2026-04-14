@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { get } from "node:http";
-import { createArticle, deleteArticle, getDashboardArticles, publishArticle, saveArticle } from "../../../controllers/dashboard/controller";
+import { createArticle, deleteArticle, getArticlesByStatus, getDashboardArticles, publishArticle, saveArticle } from "../../../controllers/dashboard/controller";
 const router = Router();
 
 /**
@@ -56,8 +56,10 @@ router.get("/articles/:user_id", async (req, res) => {
  *       200:
  *         description: Filtered dashboard articles
  */
-router.get("/articles/:status", (req, res) => {
-  res.json({ message: "Dashboard Articles by status" });
+router.get("/articles/:status/:user_id", async (req, res) => {
+  const { status, user_id } = req.params;
+  const articles = await getArticlesByStatus(user_id, status);
+  res.json(articles);
 });
 
 // router.get("/acticles/:article_id/edit", (req, res) => {
