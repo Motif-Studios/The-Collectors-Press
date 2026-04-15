@@ -175,9 +175,9 @@ export function AccountAction({ name }: AccountActionProps) {
       <span className="flex lg:hidden">
         <FontAwesomeIcon icon={faUser} />
       </span>
-      <button onClick={logout} className="text-sm font-semibold text-white">
+      {/* <button onClick={logout} className="text-sm font-semibold text-white">
         Logout
-      </button>
+      </button> */}
     </button>
   );
 }

@@ -1,4 +1,5 @@
 import type { StudioCreateArticleData } from "@/features/article_create/types";
+import type { StudioCreateArticle } from "@/features/article_create/types";
 
 const mockStudioCreateArticleData: StudioCreateArticleData = {
   authorName: "Kevin Wu",
@@ -27,4 +28,25 @@ const mockStudioCreateArticleData: StudioCreateArticleData = {
 
 export async function getMockStudioCreateArticleData(): Promise<StudioCreateArticleData> {
   return mockStudioCreateArticleData;
+}
+
+export async function saveMockStudioCreateArticleDraft(article: StudioCreateArticle): Promise<StudioCreateArticle> {
+  console.log("SAVE DRAFT:", article);
+
+  return {
+    ...article,
+    id: "342sfsoi5423sfjo",
+    lastSavedLabel: "Just now",
+  };
+}
+
+export async function publishMockStudioCreateArticle(article: StudioCreateArticle): Promise<StudioCreateArticle> {
+  console.log("PUBLISH:", article);
+
+  return {
+    ...article,
+    id: "342sfsoi5423sfjo",
+    status: "published",
+    lastSavedLabel: "Published just now",
+  };
 }
