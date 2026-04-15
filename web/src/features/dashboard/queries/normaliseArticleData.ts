@@ -4,8 +4,7 @@ type ArticleType = {
     article_id?: string;
     id?: string;
     title?: string;
-    subtitle?: string;
-    category?: string;
+    preview_text?: string;
     status?: string;
     updated_at?: string;
     image_alt?: string;
@@ -22,10 +21,12 @@ export async function normaliseArticleData(data: unknown) {
     const getAllCategoriesResponse = await fetch("http://localhost:5001/categories/all");
     const allCategories = await getAllCategoriesResponse.json();
     const categoryNames = allCategories.map((cat: { category_name: string }) => cat.category_name);
-    const normalizedCategory =
-        article.category && categoryNames.includes(article.category)
-            ? article.category
-            : (categoryNames[0] ?? "");
+    
+    const getCategory = await fetch(`http://localhost:5001/categories/article/${articleId}`);
+    const articleCategoryData = await getCategory.json();
+    const category = articleCategoryData?.[0]?.category_name ?? "Uncategorized";
+
+    console.log("category:", category);
 
     return {
         authorName,
@@ -33,8 +34,8 @@ export async function normaliseArticleData(data: unknown) {
         article:{
             title: article.title || "",
             id: articleId || "",
-            subtitle: article.subtitle || "",
-            category: normalizedCategory,
+            subtitle: article.preview_text || "",
+            category: category,
             status: article.status || "draft",
             lastSavedLabel: article.updated_at || "",
             coverImageCaption: article.image_alt || "",

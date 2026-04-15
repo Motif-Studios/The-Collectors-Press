@@ -20,7 +20,10 @@ export async function getStudioCreateArticleById(articleId: string) {
     };
   }
 
-  const response = await fetch(`http://localhost:5001/articles/${articleId}`);
+  const apiBaseUrl = env.apiUrl || "http://localhost:5001";
+  const response = await fetch(`${apiBaseUrl}/articles/${articleId}`, {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch article");

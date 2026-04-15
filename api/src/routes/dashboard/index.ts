@@ -164,14 +164,14 @@ router.post("/delete_article/:article_id", async (req, res) => {
 /**
  * @openapi
  * /dashboard/save_article:
- *   post:
+ *   put:
  *     tags: [Dashboard]
  *     summary: Save article
  *     responses:
  *       200:
  *         description: Saved article response
  */
-router.post("/save_article/:article_id", async (req, res) => {
+router.put("/save_article/:article_id", async (req, res) => {
   try{
     const { article_id } = req.params;
     const articleData = req.body?.content ?? req.body;

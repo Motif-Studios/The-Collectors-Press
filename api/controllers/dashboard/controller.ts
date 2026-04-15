@@ -87,31 +87,28 @@ export async function saveArticle(articleId: string, articleData: StudioCreateAr
             return data;
         }
 
-        // check if the article-category relation already exists
-        const { data: existingRelation, error: relationError } = await supabase
+        // delete all existing relations for this article
+        const { error: articleCategoryDeleteError } = await supabase
             .from("article_categories")
-            .select("*")
-            .eq("article_id", articleId)
-            .eq("category_id", categoryData.category_id)
-            .maybeSingle();
+            .delete()
+            .eq("article_id", articleId);
 
-        if (relationError) {
-            console.error("Error checking existing article category relation:", relationError);
+        if (articleCategoryDeleteError) {
+            console.error("Error deleting existing article category relations:", articleCategoryDeleteError);
             throw new Error("Failed to save article category");
         }
 
-        if (!existingRelation) {
-            const { error: articleCategoryError } = await supabase
-                .from("article_categories")
-                .insert({
-                    article_id: articleId,
-                    category_id: categoryData.category_id,
-                });
+        // save new relation with updated category
+        const { error: articleCategoryError } = await supabase
+            .from("article_categories")
+            .insert({
+                article_id: articleId,
+                category_id: categoryData.category_id,
+            });
 
-            if (articleCategoryError) {
-                console.error("Error saving article category relation:", articleCategoryError);
-                throw new Error("Failed to save article category");
-            }
+        if (articleCategoryError) {
+            console.error("Error saving article category relation:", articleCategoryError);
+            throw new Error("Failed to save article category");
         }
     }
 

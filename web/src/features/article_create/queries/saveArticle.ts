@@ -4,7 +4,7 @@ export async function saveArticle(articleId: string, content: StudioCreateArticl
     console.log("article data: ", { articleId, content });
     
     const response = await fetch(`http://localhost:5001/dashboard/save_article/${articleId}`, {
-        method: "POST",
+        method: "PUT",
         headers: {
             "Content-Type": "application/json",
         },

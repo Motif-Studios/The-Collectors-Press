@@ -4,6 +4,6 @@ function getBoolean(value: string | undefined, defaultValue = false) {
 }
 
 export const env = {
-  useMockApi: getBoolean(process.env.NEXT_PUBLIC_USE_MOCK_API, true),
+  useMockApi: getBoolean(process.env.NEXT_PUBLIC_USE_MOCK_API, false),
   apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "",
 };
