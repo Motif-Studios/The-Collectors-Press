@@ -2,7 +2,6 @@ import express from "express";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import path from "path";
-
 // routes
 import home from "./routes/home/index"; 
 import account from "./routes/account/index";

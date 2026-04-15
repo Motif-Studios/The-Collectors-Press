@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 type PricingCardProps = {
   label: string;
@@ -94,13 +95,14 @@ export function PricingCard({
           ))}
         </ul>
 
-        <button
-          className={`mb-4 block w-full rounded-[4px] px-4 py-3 font-sans text-[0.95rem] font-bold sm:px-[18px] sm:py-[14px] sm:text-[1rem] ${
+        <Link
+          href="http://localhost:5001/subscription/payment"
+          className={`mb-4 block w-full rounded-[4px] px-4 py-3 font-sans text-[0.95rem] font-bold sm:px-[18px] sm:py-[14px] sm:text-[1rem] text-center ${
             variant === "dark" ? "bg-[#666] text-white" : "bg-[#0a66c9] text-white"
           }`}
         >
           {buttonLabel}
-        </button>
+        </Link>
 
         {footerText ? (
           <p className="mb-5 text-center text-[0.9rem] leading-[1.4] text-[#111] sm:mb-6 sm:text-[0.92rem] sm:leading-[1.45]">

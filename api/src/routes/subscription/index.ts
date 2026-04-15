@@ -1,5 +1,8 @@
 import { Router } from "express";
+import { makeCustomerSubscriber } from "../../../controllers/subscription/controller";
+
 const router = Router();
+const stripe = require("stripe")(process.env.sk_test);
 
 /**
  * @openapi
@@ -31,7 +34,7 @@ router.get("/learn", (req, res) => {
 
 /**
  * @openapi
- * /subscription/payment:
+ * /subscription/payment/monthly:
  *   post:
  *     tags: [Subscription]
  *     summary: Subscription payment
@@ -39,8 +42,69 @@ router.get("/learn", (req, res) => {
  *       200:
  *         description: Payment response
  */
-router.post("/payment", (req, res) => {
-  res.json({ message: "Subscription Payment" });
+router.post("/payment/monthly", async (req, res) => {
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: [
+      {
+        price: "price_1TM6yzAcAGiNxdHjxrlslPCK",
+        quantity: 1,
+      },
+    ],
+    mode: "subscription",
+    success_url: "http://localhost:3000/subscribe/success?session_id={CHECKOUT_SESSION_ID}",
+    cancel_url: "http://localhost:3000/subscribe/cancel",
+  });
+  res.json({ url: session.url });
+});
+
+/**
+ * @openapi
+ * /subscription/payment/yearly:
+ *   post:
+ *     tags: [Subscription]
+ *     summary: Subscription payment
+ *     responses:
+ *       200:
+ *         description: Payment response
+ */
+router.post("/payment/yearly", async (req, res) => {
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: [
+      {
+        price: "price_1TM6yzAcAGiNxdHjxrlslPCK",
+        quantity: 1,
+      },
+    ],
+    mode: "subscription",
+    success_url: "http://localhost:3000/subscribe/success?session_id={CHECKOUT_SESSION_ID}",
+    cancel_url: "http://localhost:3000/subscribe/cancel",
+  });
+  res.json({ url: session.url });
+});
+
+router.post("/payment/webhook", async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+  let event;
+
+  try{
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    
+  } catch (err) {
+    console.error('Error verifying webhook signature:', err);
+    return res.status(400);
+  }
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    console.log("Subscription successful for session:", session.id)
+    const customerId = session.customer;
+    const subscriptionId = session.subscription;
+    const response = await makeCustomerSubscriber(customerId, subscriptionId);
+    console.log("Customer subscription status updated:", response);
+  }
+  res.json({ received: true });
 });
 
 

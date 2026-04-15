@@ -109,16 +109,21 @@ router.get("/article/:article_id", async (req, res) => {
 /**
  * @openapi
  * /categories/create_category/{category_name}:
- *  post:
- *    tags: [Categories]
- *   summary: Create a new category
- *  parameters:
- *    - in: path
- *     name: category_name
- *    required: true
- *    schema:
- *      type: string
- *    description: Name of the category to create
+ *   post:
+ *     tags: [Categories]
+ *     summary: Create a new category
+ *     parameters:
+ *       - in: path
+ *         name: category_name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Name of the category to create
+ *     responses:
+ *       200:
+ *         description: Category created
+ *       500:
+ *         description: Failed to create category
  */
 router.post("/create_category/:category_name", async (req, res) => {
     try {
