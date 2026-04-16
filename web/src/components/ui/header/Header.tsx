@@ -129,14 +129,14 @@ export function HeaderNav({ items }: { items: NavItem[] }) {
 export function SubscribeButton() {
   return (
     <>
-      <Link href={"/register"}>
+      <Link href={"/subscribe"}>
         <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#f4b73f] px-4 py-2 text-sm font-semibold text-black">
           <FontAwesomeIcon icon={faReadme} className="text-sm" />
           <span>Subscribe</span>
         </button>
       </Link>
 
-      <Link href={"/register"}>
+      <Link href={"/subscribe"}>
         <button className="inline-flex lg:hidden text-sm font-semibold text-[#f4b73f]">
           Subscribe
         </button>
