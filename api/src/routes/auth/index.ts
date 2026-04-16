@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { createProfile } from "../../../controllers/auth/controller";
 
 
 const router = Router();
@@ -13,22 +14,14 @@ const router = Router();
  *       200:
  *         description: Signup response
  */
-router.post("/signup", (req, res) => {
-    res.json({ message: "temp signup" })
-})
-
-/**
- * @openapi
- * /auth/login:
- *   post:
- *     tags: [Auth]
- *     summary: User login
- *     responses:
- *       200:
- *         description: Login response
- */
-router.post("/login", (req, res) => {
-    res.json({ message: "temp login" })
-})
+router.post("/create_profile", async (req, res) => {
+    const user_id = req.body.user_id;
+    try {
+        const response = await createProfile(user_id);
+        res.json(response);
+    } catch (error) {
+        res.status(500).json();
+    }   
+});
 
 export default router;
