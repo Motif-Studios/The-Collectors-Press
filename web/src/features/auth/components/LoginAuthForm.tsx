@@ -94,6 +94,12 @@ export function LoginForm() {
               Create one
             </Link>
           </p>
+          <p className="mt-2 text-sm text-[#6c7680]">
+            Forgot your password?{" "}
+            <Link href="/forgot_password" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#3fa0cf]">
+              Reset it
+            </Link>
+          </p>
         </div>
       </div>
     </div>
