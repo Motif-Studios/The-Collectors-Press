@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
+import { API_BASE_URL } from "@/lib/env";
 
 type ArticleType = {
     article_id?: string;
@@ -18,11 +19,11 @@ export async function normaliseArticleData(data: unknown) {
     const user = await getCurrentUser();
     const authorName = user?.name || "User";
 
-    const getAllCategoriesResponse = await fetch("http://localhost:5001/categories/all");
+    const getAllCategoriesResponse = await fetch(`${API_BASE_URL}/categories/all`);
     const allCategories = await getAllCategoriesResponse.json();
     const categoryNames = allCategories.map((cat: { category_name: string }) => cat.category_name);
     
-    const getCategory = await fetch(`http://localhost:5001/categories/article/${articleId}`);
+    const getCategory = await fetch(`${API_BASE_URL}/categories/article/${articleId}`);
     const articleCategoryData = await getCategory.json();
     const category = articleCategoryData?.[0]?.category_name ?? "Uncategorized";
 

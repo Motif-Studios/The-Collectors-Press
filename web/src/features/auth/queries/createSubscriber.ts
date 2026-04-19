@@ -1,5 +1,7 @@
+import { API_BASE_URL } from "@/lib/env";
+
 export async function createSubscriber(userId: string|undefined, email: string, customerId: string) {
-    const newSubscriberResponse = await fetch("http://localhost:5001/subscription/make_new_subscriber", {
+    const newSubscriberResponse = await fetch(`${API_BASE_URL}/subscription/make_new_subscriber`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -1,7 +1,8 @@
 import { getMockArticleBySlug, getMockArticleSecondaryPanelData } from "./mock/article";
+import { API_BASE_URL } from "@/lib/env";
 
 export async function getArticlePageDataApi(articleSlug: string) {
-    const data = await fetch(`http://localhost:5001/article/${encodeURIComponent(articleSlug)}`)
+  const data = await fetch(`${API_BASE_URL}/article/${encodeURIComponent(articleSlug)}`)
 
     const response = await data.json();
 

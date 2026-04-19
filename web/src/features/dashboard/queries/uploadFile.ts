@@ -1,15 +1,13 @@
-import { env } from "@/lib/env";
+import { API_BASE_URL } from "@/lib/env";
 
 export async function uploadFile(file: File, article_id: string) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const apiBaseUrl = (env.apiUrl || "http://localhost:5001").replace(/\/$/, "");
-
   let response: Response;
 
   try {
-    response = await fetch(`${apiBaseUrl}/upload/${article_id}`, {
+    response = await fetch(`${API_BASE_URL}/upload/${article_id}`, {
       method: "POST",
       body: formData,
     });
@@ -27,7 +25,7 @@ export async function uploadFile(file: File, article_id: string) {
   console.log("File uploaded successfully:", result);
 
   try{
-    const saveImageToArticle = await fetch(`${apiBaseUrl}/upload/save-image/${article_id}`, {
+    const saveImageToArticle = await fetch(`${API_BASE_URL}/upload/save-image/${article_id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ path: result.path }),

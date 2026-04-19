@@ -1,9 +1,10 @@
 import { StudioCreateArticle } from "../types";
+import { API_BASE_URL } from "@/lib/env";
 
 export async function saveArticle(articleId: string, content: StudioCreateArticle) {
     console.log("article data: ", { articleId, content });
     
-    const response = await fetch(`http://localhost:5001/dashboard/save_article/${articleId}`, {
+    const response = await fetch(`${API_BASE_URL}/dashboard/save_article/${articleId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",

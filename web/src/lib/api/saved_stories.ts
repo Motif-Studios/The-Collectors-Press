@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
 import { getMockSavedStoriesPageData } from "./mock/saved_stories";
+import { API_BASE_URL } from "@/lib/env";
 
 export async function getSavedStoriesPageDataApi() {
 
@@ -9,7 +10,7 @@ export async function getSavedStoriesPageDataApi() {
     return [];
   }
 
-  const response = await fetch(`http://localhost:5001/articles/saved?user_id=${user.id}`);
+  const response = await fetch(`${API_BASE_URL}/articles/saved?user_id=${user.id}`);
 
   if (!response.ok) {
     console.error("Failed to fetch saved stories:", response.statusText);

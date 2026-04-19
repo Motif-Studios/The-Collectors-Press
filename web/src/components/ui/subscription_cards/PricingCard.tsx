@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
+import { API_BASE_URL } from "@/lib/env";
 
 type PricingCardProps = {
   label: string;
@@ -33,7 +34,7 @@ export async function PricingCard({
 }: PricingCardProps) {
   const user = await getCurrentUser();
 
-  const checkoutUrl = user ? await fetch("http://localhost:5001/subscription/payment/monthly").then(res => res.json()).then(data => data.url) : "/login";
+  const checkoutUrl = user ? await fetch(`${API_BASE_URL}/subscription/payment/monthly`).then(res => res.json()).then(data => data.url) : "/login";
 
 
   return (

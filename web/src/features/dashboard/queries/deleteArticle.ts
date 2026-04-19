@@ -1,5 +1,7 @@
+import { API_BASE_URL } from "@/lib/env";
+
 export async function deleteArticle(articleId: string) {
-    const response = await fetch(`http://localhost:5001/dashboard/delete_article/${articleId}`, {
+    const response = await fetch(`${API_BASE_URL}/dashboard/delete_article/${articleId}`, {
         method: "POST",
     });
 

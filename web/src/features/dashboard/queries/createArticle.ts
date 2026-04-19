@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
+import { API_BASE_URL } from "@/lib/env";
 
 export async function createArticle() {
     const user = await getCurrentUser();
@@ -7,7 +8,7 @@ export async function createArticle() {
         throw new Error("User is not authenticated");
     }
 
-    const response = await fetch(`http://localhost:5001/dashboard/create_article/${user.id}`, {
+    const response = await fetch(`${API_BASE_URL}/dashboard/create_article/${user.id}`, {
         method: "POST",
     });
     if (!response.ok) {
