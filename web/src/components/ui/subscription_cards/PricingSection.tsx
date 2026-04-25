@@ -9,6 +9,7 @@ export function PricingSection() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 place-items-center">
 
           <PricingCard
+            id="monthly"
             label="WEEKEND PAPER DELIVERY"
             title={
               <>
@@ -28,6 +29,7 @@ export function PricingSection() {
           />
 
           <PricingCard
+            id="yearly"
             label="DIGITAL ACCESS"
             title={
               <>
@@ -49,6 +51,7 @@ export function PricingSection() {
           />
 
           <PricingCard
+            id="business"
             label="BUSINESS"
             title={
               <>

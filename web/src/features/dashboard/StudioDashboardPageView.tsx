@@ -141,7 +141,7 @@ export async function StudioDashboardPageView() {
 
               <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
                 <div className="flex flex-wrap gap-2.5">
-                  <Link href={`/studio/create/${article.id}`} className="text-sm text-black underline underline-offset-[3px]">
+                  <Link href={`/studio/create/${article.id}/${article.slug}`} className="text-sm text-black underline underline-offset-[3px]">
                     Edit
                   </Link>
 

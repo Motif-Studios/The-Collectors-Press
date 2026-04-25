@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
 import { API_BASE_URL } from "@/lib/env";
 
 type PricingCardProps = {
+  id: string;
   label: string;
   title: React.ReactNode;
   price?: string;
@@ -18,7 +19,25 @@ type PricingCardProps = {
   termsText?: string;
 };
 
+async function getCheckoutUrl(id: string, user: { id: string } | null) {
+  if (!user) return "/login";
+  const endpoint = id === "monthly" || id === "yearly" ? id : null;
+  if (!endpoint) return "/subscribe";
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/subscription/payment/${endpoint}`, {
+      method: "GET",
+    });
+    if (!response.ok) return "/subscribe";
+    const data = await response.json();
+    return data.url || "/subscribe";
+  } catch {
+    return "/subscribe";
+  }
+}
+
 export async function PricingCard({
+  id,
   label,
   title,
   price,
@@ -33,9 +52,7 @@ export async function PricingCard({
   termsText,
 }: PricingCardProps) {
   const user = await getCurrentUser();
-
-  const checkoutUrl = user ? await fetch(`${API_BASE_URL}/subscription/payment/monthly`).then(res => res.json()).then(data => data.url) : "/login";
-
+  const checkoutUrl = await getCheckoutUrl(id, user);
 
   return (
     <article

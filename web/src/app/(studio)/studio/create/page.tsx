@@ -11,5 +11,5 @@ export default async function StudioCreateArticlePage() {
   // console.log(data);
   // console.log("Redirecting to article creation page with ID:", data.article_id.article_id);
 
-  redirect(`/studio/create/${data.article_id.article_id}`);
+  redirect(`/studio/create/${data.article_id.slug}`);
 }

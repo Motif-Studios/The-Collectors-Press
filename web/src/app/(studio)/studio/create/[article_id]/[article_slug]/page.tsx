@@ -1,12 +1,11 @@
 import { StudioCreateArticlePageView } from "@/features/article_create/StudioCreateArticlePageView";
 
-export default async function StudioCreateArticleByIdPage({
+export default async function StudioCreateArticleByIdAndSlugPage({
   params,
 }: {
-  params: Promise<{ article_id: string }>;
+  params: Promise<{ article_id: string; article_slug: string }>;
 }) {
   const { article_id } = await params;
-  console.log("Article ID in page component:", article_id);
 
   return <StudioCreateArticlePageView articleId={article_id} />;
 }
