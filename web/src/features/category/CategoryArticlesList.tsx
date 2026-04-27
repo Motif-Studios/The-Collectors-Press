@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArticleCard } from "@/components/ui/article_card/ArticleCard";
+import { getCategoryArticles } from "./queries";
 
 type Article = {
   id: string;
@@ -39,10 +40,8 @@ export function CategoryArticlesList({
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `http://localhost:5001/articles/category/${categorySlug}/${BATCH_SIZE}/${offset}`
-      );
-
+      const response = await getCategoryArticles(categorySlug, BATCH_SIZE, offset);
+    
       if (!response.ok) {
         throw new Error("Failed to fetch more articles");
       }

@@ -1,10 +1,10 @@
-export type ArticleStatus = "draft" | "published";
+// export type ArticleStatus = "draft" | "published";
 
 export type StudioArticleRow = {
   id: string;
   title: string;
   slug: string;
-  status: ArticleStatus;
+  status: string;
   category: string;
   updatedAtLabel: string;
   authorName: string;

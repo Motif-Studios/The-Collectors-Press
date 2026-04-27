@@ -1,4 +1,6 @@
 import React from "react";
+import Link from "next/link";
+import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
 
 type PricingCardProps = {
   label: string;
@@ -15,7 +17,7 @@ type PricingCardProps = {
   termsText?: string;
 };
 
-export function PricingCard({
+export async function PricingCard({
   label,
   title,
   price,
@@ -29,6 +31,11 @@ export function PricingCard({
   footerText,
   termsText,
 }: PricingCardProps) {
+  const user = await getCurrentUser();
+
+  const checkoutUrl = user ? await fetch("http://localhost:5001/subscription/payment/monthly").then(res => res.json()).then(data => data.url) : "/login";
+
+
   return (
     <article
       className={`w-full max-w-[360px] overflow-hidden rounded-md bg-[#f2f2f2] font-[Georgia,'Times_New_Roman',serif] shadow-[0_3px_10px_rgba(0,0,0,0.08)] ${
@@ -94,13 +101,14 @@ export function PricingCard({
           ))}
         </ul>
 
-        <button
-          className={`mb-4 block w-full rounded-[4px] px-4 py-3 font-sans text-[0.95rem] font-bold sm:px-[18px] sm:py-[14px] sm:text-[1rem] ${
+        <Link
+          href={checkoutUrl}
+          className={`mb-4 block w-full rounded-[4px] px-4 py-3 font-sans text-[0.95rem] font-bold sm:px-[18px] sm:py-[14px] sm:text-[1rem] text-center ${
             variant === "dark" ? "bg-[#666] text-white" : "bg-[#0a66c9] text-white"
           }`}
         >
           {buttonLabel}
-        </button>
+        </Link>
 
         {footerText ? (
           <p className="mb-5 text-center text-[0.9rem] leading-[1.4] text-[#111] sm:mb-6 sm:text-[0.92rem] sm:leading-[1.45]">

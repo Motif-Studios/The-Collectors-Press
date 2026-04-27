@@ -165,20 +165,22 @@ export function SignInButton() {
 
 export function AccountAction({ name }: AccountActionProps) {
   return (
-    <button className="flex items-center gap-2 bg-transparent! p-0! border-0! shadow-none! text-sm font-semibold text-white">
-      <span className="hidden lg:flex items-center gap-2">
-        <FontAwesomeIcon icon={faUser} />
-        <span>{name}</span>
-        <FontAwesomeIcon icon={faChevronDown} className="text-xs opacity-80" />
-      </span>
+    <div className="flex items-center gap-2">
+      <button className="flex items-center gap-2 !bg-transparent !p-0 !border-0 !shadow-none text-sm font-semibold text-white">
+        <span className="hidden lg:flex items-center gap-2">
+          <FontAwesomeIcon icon={faUser} />
+          <span>{name}</span>
+          <FontAwesomeIcon icon={faChevronDown} className="text-xs opacity-80" />
+        </span>
 
-      <span className="flex lg:hidden">
-        <FontAwesomeIcon icon={faUser} />
-      </span>
+        <span className="flex lg:hidden">
+          <FontAwesomeIcon icon={faUser} />
+        </span>
+      </button>
       <button onClick={logout} className="text-sm font-semibold text-white">
         Logout
       </button>
-    </button>
+    </div>
   );
 }
 

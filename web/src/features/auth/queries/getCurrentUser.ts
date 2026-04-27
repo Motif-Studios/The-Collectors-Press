@@ -7,7 +7,10 @@ export async function getCurrentUser() {
     console.log("Current user data:", data.user);
 
     return data.user
-    ? { name: data.user.email || "User" }
+    ? { 
+        name: data.user.email || "User",
+        id: data.user.id,
+     }
     : null;
 }
 

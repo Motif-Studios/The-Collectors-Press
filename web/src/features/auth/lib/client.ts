@@ -1,4 +1,7 @@
 import { supabase } from "../../../lib/supabase/client";
+import { createStripeCustomer } from "../queries/createStripeCustomer";
+import { createSubscriber } from "../queries/createSubscriber";
+import { newProfile } from "../queries/newProfile";
 
 export const login = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -29,7 +32,11 @@ export const signup = async (email: string, password: string) => {
 
     console.log("Signup successful:", data);
 
-    return { user: data.user, session: data.session };
+    const stripeCustomerData = await createStripeCustomer(email);
+    const newProfileData = await newProfile(data.user?.id);
+    const newSubscriberData = await createSubscriber(data.user?.id, email, stripeCustomerData.id);
+    
+    return { user: data.user, session: data.session, subscription: newSubscriberData, profile: newProfileData };
 }
 
 export const logout = async () => {    

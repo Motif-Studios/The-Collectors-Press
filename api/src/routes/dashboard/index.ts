@@ -1,37 +1,187 @@
 import { Router } from "express";
+import { get } from "node:http";
+import { createArticle, deleteArticle, getArticlesByStatus, getDashboardArticles, publishArticle, saveArticle } from "../../../controllers/dashboard/controller";
 const router = Router();
 
+/**
+ * @openapi
+ * /dashboard:
+ *   get:
+ *     tags: [Dashboard]
+ *     summary: Dashboard root
+ *     responses:
+ *       200:
+ *         description: Dashboard response
+ */
 router.get("/", (req, res) => {
   res.json({ message: "Dashboard" });
 });
 
 
-router.get("/articles", (req, res) => {
-  res.json({ message: "Dashboard Articles" });
+/**
+ * @openapi
+ * /dashboard/articles/{user_id}:
+ *   get:
+ *     tags: [Dashboard]
+ *     summary: Dashboard articles list
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Dashboard articles response
+ */
+router.get("/articles/:user_id", async (req, res) => {
+   const { user_id } = req.params;
+   const articles = await getDashboardArticles(user_id);
+   res.json(articles);
 });
 
-router.get("/articles/:status", (req, res) => {
-  res.json({ message: "Dashboard Articles by status" });
+/**
+ * @openapi
+ * /dashboard/articles/{status}:
+ *   get:
+ *     tags: [Dashboard]
+ *     summary: Dashboard articles by status
+ *     parameters:
+ *       - in: path
+ *         name: status
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Filtered dashboard articles
+ */
+router.get("/articles/:status/:user_id", async (req, res) => {
+  const { status, user_id } = req.params;
+  const articles = await getArticlesByStatus(user_id, status);
+  res.json(articles);
 });
 
 // router.get("/acticles/:article_id/edit", (req, res) => {
 //   res.json({ message: "Dashboard" });
 // });
 
+/**
+ * @openapi
+ * /dashboard/preview_article:
+ *   get:
+ *     tags: [Dashboard]
+ *     summary: Preview article
+ *     responses:
+ *       200:
+ *         description: Article preview response
+ */
 router.get("/preview_article", (req, res) => {
   res.json({ message: "Dashboard Articles by Article ID" });
 });
 
-router.post("/create_article", (req, res) => {
-  res.json({ message: "Created Article" });
+/**
+ * @openapi
+ * /dashboard/create_article/{user_id}:
+ *   post:
+ *     tags: [Dashboard]
+ *     summary: Create article
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Created article response
+ */
+router.post("/create_article/:user_id", async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const articleId = await createArticle(user_id);
+    res.json({ article_id: articleId });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create article" });
+  }
 });
 
-router.post("/publish_article", (req, res) => {
-  res.json({ message: "Published Article" });
+/**
+ * @openapi
+ * /dashboard/publish_article/{article_id}:
+ *   post:
+ *     tags: [Dashboard]
+ *     summary: Publish article
+ *     parameters:
+ *       - in: path
+ *         name: article_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Published article response
+ */
+router.post("/publish_article/:article_id", async (req, res) => {
+  const article = req.params.article_id;
+  try {
+    const response = await publishArticle(article);
+    res.json(response);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to publish article";
+    res.status(500).json({ error: message });
+  }
 });
 
-router.post("/delete_article", (req, res) => {
-  res.json({ message: "Published Article" });
+/**
+ * @openapi
+ * /dashboard/delete_article/{article_id}:
+ *   post:
+ *     tags: [Dashboard]
+ *     summary: Delete article
+ *     parameters:
+ *       - in: path
+ *         name: article_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Deleted article response
+ */
+router.post("/delete_article/:article_id", async (req, res) => {
+  const { article_id } = req.params;
+  try {
+    await deleteArticle(article_id);
+    res.json({ message: `Deleted Article with ID: ${article_id}` });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to delete article";
+    res.status(500).json({ error: message });
+  }
+});
+
+
+/**
+ * @openapi
+ * /dashboard/save_article:
+ *   put:
+ *     tags: [Dashboard]
+ *     summary: Save article
+ *     responses:
+ *       200:
+ *         description: Saved article response
+ */
+router.put("/save_article/:article_id", async (req, res) => {
+  try{
+    const { article_id } = req.params;
+    const articleData = req.body?.content ?? req.body;
+
+    const response = await saveArticle(article_id, articleData);
+    res.json(response);
+  }catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to save article";
+    res.status(500).json({ error: message });
+  }
 });
 
 export default router;
