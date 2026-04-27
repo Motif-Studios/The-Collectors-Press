@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/panel/Panel";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons/faGoogle";
 import { getMyAccountData } from "./queries";
+import Link from "next/link";
 
 export async function MyAccountPageView() {
   const data = await getMyAccountData();
@@ -22,12 +23,12 @@ export async function MyAccountPageView() {
             actions={<button>See plans</button>}
           />
 
-          <PanelFooter>
-            <div className="flex w-full justify-between">
-              <h3>Change your email address</h3>
-              <p>{">"}</p>
-            </div>
-          </PanelFooter>
+            <PanelFooter>
+              <Link className="flex w-full items-center justify-between !no-underline !text-black ![font-family:inherit] visited:!text-black hover:!text-gray-600 hover:!no-underline active:!text-gray-600" href="/my-account/change-email">
+                <h3 className="m-0 !no-underline !text-inherit ![font-family:inherit]">Change your email address</h3>
+                <p className="m-0 !no-underline !text-inherit ![font-family:inherit]">{">"}</p>
+              </Link>
+            </PanelFooter>
           <PanelFooter>
             <div className="flex w-full justify-between">
               <h3>Change your mailing address</h3>

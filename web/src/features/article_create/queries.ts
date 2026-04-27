@@ -1,6 +1,7 @@
 import { getStudioCreateArticleDataApi } from "@/lib/api/studio_create_article";
 import { getMockStudioCreateArticleData } from "@/lib/api/mock/studio_create_article";
 import { env } from "@/lib/env";
+import { API_BASE_URL } from "@/lib/env";
 
 export async function getStudioCreateArticleData() {
   if (env.useMockApi) {
@@ -20,8 +21,7 @@ export async function getStudioCreateArticleById(articleId: string) {
     };
   }
 
-  const apiBaseUrl = env.apiUrl || "http://localhost:5001";
-  const response = await fetch(`${apiBaseUrl}/articles/${articleId}`, {
+  const response = await fetch(`${API_BASE_URL}/articles/${articleId}`, {
     cache: "no-store",
   });
 

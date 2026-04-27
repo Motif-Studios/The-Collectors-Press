@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
+import { API_BASE_URL } from "@/lib/env";
 import type {
   StudioArticleRow,
   StudioDashboardData,
@@ -33,7 +34,7 @@ export async function normalisedDashboardArticles(articles: DashboardArticle[]):
         title: article.title,
         slug: article.slug,
         status: article.status,
-        category: await fetch(`http://localhost:5001/categories/article/${article.article_id}`).then(res => res.json()).then(data => data.category_name || "Uncategorized"),
+        category: await fetch(`${API_BASE_URL}/categories/article/${article.article_id}`).then(res => res.json()).then(data => data.category_name || "Uncategorized"),
         updatedAtLabel: article.updated_at,
         authorName: user.name,
         secondaryActionLabel: article.status === "draft" ? "Preview" : "View",
@@ -77,7 +78,7 @@ export async function getStudioDashboardDataApi(): Promise<StudioDashboardData> 
     throw new Error("User not authenticated");
   }
 
-  const getUserArticles = await fetch(`http://localhost:5001/dashboard/articles/${user.id}`);
+  const getUserArticles = await fetch(`${API_BASE_URL}/dashboard/articles/${user.id}`);
 
   if (!getUserArticles.ok) {
     throw new Error("Failed to fetch dashboard articles");

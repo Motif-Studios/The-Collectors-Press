@@ -1,5 +1,7 @@
+import { API_BASE_URL } from "@/lib/env";
+
 export async function newProfile(userId: string|undefined) {
-    const newProfileResponse = await fetch("http://localhost:5001/auth/create_profile", {
+    const newProfileResponse = await fetch(`${API_BASE_URL}/auth/create_profile`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

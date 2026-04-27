@@ -1,5 +1,7 @@
+import { API_BASE_URL } from "@/lib/env";
+
 export async function createStripeCustomer(email: string) {    
-    const stripeCustomerResponse = await fetch("http://localhost:5001/subscription/create_customer", {
+    const stripeCustomerResponse = await fetch(`${API_BASE_URL}/subscription/create_customer`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

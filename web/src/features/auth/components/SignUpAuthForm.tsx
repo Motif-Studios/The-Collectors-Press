@@ -10,11 +10,19 @@ import { signup } from "@/features/auth/lib/client";
 export function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [ passwordCheck, setPasswordCheck ] = useState("");
+  const [  errorMessage, setErrorMessage ] = useState<string>("");
+  const [  successCheckMessage, setSuccess ] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const handleSignUp = async () => {
+    if(password !== passwordCheck) {
+      setErrorMessage("Passwords do not match. Please check and try again.");
+      return;
+    }
+
     try {
       setLoading(true);
       const response = await signup(email, password);
@@ -22,10 +30,11 @@ export function SignUpForm() {
       console.log("Signup response:", response);
 
       if (response.error) {
-        alert("Signup failed: " + response.error);
+        setErrorMessage("Signup failed: " + response.error);
         return;
       }
 
+      setSuccess(true);
       router.push("/"); // Redirect to homepage after successful signup
 
       return response;
@@ -53,6 +62,16 @@ export function SignUpForm() {
             Sign up to save stories, manage your profile, and subscribe later with ease.
           </p>
 
+          { 
+            errorMessage ? (
+              <p className="mb-8 text-sm leading-6 text-[#ff4d4f] sm:text-[15px]">
+                {errorMessage}
+              </p>
+            ) 
+          : 
+            null
+          }
+
           <div className="space-y-4 text-left">
             <label className="block text-sm font-medium text-[#111]" htmlFor="signup-email">
               Email address
@@ -76,6 +95,19 @@ export function SignUpForm() {
               placeholder="Create a password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
+              className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
+            />
+
+            <label className="block text-sm font-medium text-[#111]" htmlFor="signup-password-check">
+              Confirm Password
+            </label>
+            <input
+              id="signup-password-check"
+              type="password"
+              placeholder="Confirm your password"
+              value={passwordCheck}
+              onChange={(e) => setPasswordCheck(e.target.value)}
               autoComplete="new-password"
               className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
             />

@@ -1,5 +1,6 @@
 import type { FeatureStoryItem, StoryCardItem } from "@/components/ui/news_panels/primary/types";
 import type { SecondaryMiniCardItem, SecondaryTextStoryItem, SecondaryTopStoryItem } from "@/components/ui/news_panels/secondary";
+import { API_BASE_URL } from "@/lib/env";
 
 type RawPrimaryFeature = {
   article_id?: string;
@@ -133,7 +134,7 @@ export async function normalisedSecondaryPanelMiniCards(): Promise<SecondaryMini
 }
 
 export async function getHomePageDataApi() {
-  const homeDataResponse = await fetch("http://localhost:5001/articles/home-data");
+  const homeDataResponse = await fetch(`${API_BASE_URL}/articles/home-data`);
   if (!homeDataResponse.ok) {
     console.error("Failed to fetch home page data:", homeDataResponse.statusText);
     return [];
