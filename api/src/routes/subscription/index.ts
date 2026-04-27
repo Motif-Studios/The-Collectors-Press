@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { createNewSubscriber, createStripeCustomer, makeCustomerSubscriber } from "../../../controllers/subscription/controller";
+import { createNewSubscriber, createStripeCustomer, handleSubscriptionCancellation, handleSubscriptionPaymentFailed, handleSubscriptionRenewal, makeCustomerSubscriber } from "../../../controllers/subscription/controller";
+import { supabase } from "../../../lib/supabase";
 
 const router = Router();
 const stripe = require("stripe")(process.env.sk_test);
@@ -167,7 +168,7 @@ router.get("/payment/yearly", async (req, res) => {
     payment_method_types: ["card"],
     line_items: [
       {
-        price: "price_1TM6yzAcAGiNxdHjxrlslPCK",
+        price: "price_1TO7byAcAGiNxdHjuGRy97ld",
         quantity: 1,
       },
     ],
@@ -195,11 +196,36 @@ router.post("/payment/webhook", async (req, res) => {
     console.log("Subscription successful for session:", session.id)
     const customerId = session.customer;
     const subscriptionId = session.subscription;
-    const response = await makeCustomerSubscriber(customerId, subscriptionId);
+    const priceId = session.display_items[0].price.id;
+    const response = await makeCustomerSubscriber(customerId, subscriptionId, priceId);
     console.log("Customer subscription status updated:", response);
   }
+
+  if(event.type === "customer.subscription.deleted") {
+    const subscription = event.data.object;
+    
+    const response = await handleSubscriptionCancellation(subscription.id);
+    console.log("Customer subscription cancelled:", response);
+  }
+
+  // renewal check event
+  if (event.type === "invoice.payment_succeeded") {
+    const invoice = event.data.object;
+
+    const response = await handleSubscriptionRenewal(invoice.subscription);
+    console.log("Customer subscription renewed:", response);
+  }
+
+  if (event.type === "invoice.payment_failed") {
+    const invoice = event.data.object;
+
+    const subscriptionId = invoice.subscription;
+
+    const response = await handleSubscriptionPaymentFailed(subscriptionId);
+    console.log("Customer subscription payment failed:", response);
+  }
+
   res.json({ received: true });
 });
-
 
 export default router;

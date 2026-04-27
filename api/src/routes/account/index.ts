@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { cancelAccountSubscription } from "../../../controllers/account/controller";
+
 const router = Router();
 
 /**
@@ -31,30 +33,54 @@ router.get("/subscription", (req, res) => {
 
 /**
  * @openapi
- * /account/subscription/cancel:
+ * /account/subscription/cancel/{user_id}:
  *   post:
  *     tags: [Account]
  *     summary: Cancel account subscription
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Cancellation result
  */
-router.post("/subscription/cancel", (req, res) => {
-    res.json({ message: "Account Subscription Cancel" })
-})
+router.post("/subscription/cancel/:user_id", async (req, res) => {
+    const userId = req.params.user_id;
+
+    if (!userId) {
+        return res.status(400).json({ error: "'user_id' is required" });
+    }
+
+    try {
+        const subscription = await cancelAccountSubscription(userId);
+        return res.json({ message: "Account Subscription Cancelled", subscription });
+    } catch (error: unknown) {
+        return res.status(500).json({ error: "Failed to cancel subscription" });
+    }
+});
+
 
 /**
  * @openapi
- * /account/subscription/renew:
+ * /account/subscription/renew/{user_id}:
  *   post:
  *     tags: [Account]
  *     summary: Renew account subscription
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Renewal result
  */
-router.post("/subscription/renew", (req, res) => {
-    res.json({ message: "Account Subscription Renew" })
+router.post("/subscription/renew/:user_id", async (req, res) => {
+    return res.json({ message: "Account Subscription Renewed" })
 })
 
 // router.get("/saved_stories", (req, res) => {

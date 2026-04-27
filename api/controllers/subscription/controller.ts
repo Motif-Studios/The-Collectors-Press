@@ -7,8 +7,8 @@ if (!stripeSecretKey) {
 }
 const stripe = new Stripe(stripeSecretKey);
 
-export async function makeCustomerSubscriber(customerId: string, subscriptionId: string) {
-    const plan_type = subscriptionId === "price_1TM6yzAcAGiNxdHjxrlslPCK" ? "monthly" : "yearly";
+export async function makeCustomerSubscriber(customerId: string, subscriptionId: string, priceId: string) {
+    const plan_type = priceId === "price_1TM6yzAcAGiNxdHjxrlslPCK" ? "monthly" : "yearly";
 
     const { data, error } = await supabase
         .from("subscription")
@@ -50,4 +50,46 @@ export async function createStripeCustomer(email: string) {
         email,
     });
     return customer;
+}
+
+export async function handleSubscriptionCancellation(subscription: string) {
+    const { data, error } = await supabase
+        .from("subscription")
+        .update({ subscription_status: "cancelled", updated_at: new Date() })
+        .eq("stripe_subscription_id", subscription);
+    
+    if (error) {
+        console.error("Error updating subscription status on cancellation:", error);
+        throw new Error("Failed to update subscription status on cancellation");
+    }
+
+    return data;
+}
+
+export async function handleSubscriptionRenewal(subscription: string) {
+    const { data, error } = await supabase
+        .from("subscription")
+        .update({ subscription_status: "active", updated_at: new Date() })
+        .eq("stripe_subscription_id", subscription);
+    
+    if (error) {
+        console.error("Error updating subscription status on renewal:", error);
+        throw new Error("Failed to update subscription status on renewal");
+    }
+
+    return data;
+}
+
+export async function handleSubscriptionPaymentFailed(subscription: string) {
+    const { data, error } = await supabase
+        .from("subscription")
+        .update({ subscription_status: "past_due", updated_at: new Date() })
+        .eq("stripe_subscription_id", subscription);
+
+    if (error) {
+        console.error("Error updating subscription status on payment failure:", error);
+        throw new Error("Failed to update subscription status on payment failure");
+    }
+
+    return data;
 }
