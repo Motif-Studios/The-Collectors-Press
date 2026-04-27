@@ -1,18 +1,19 @@
 import { supabase } from "../../lib/supabase";
 
-export async function handleSearchQuery(searchQuery: string) {
-    const searchTerm = decodeURIComponent(searchQuery);
-
+export async function createProfile(userId: string) {
     const { data, error } = await supabase
-        .from("article")
-        .select(`*, article_categories(category_id), category(category_name)`)
-        .ilike("title", `%${searchTerm}%`)
-        .or(`preview_text.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,category.category_name.ilike.%${searchTerm}%`);
- 
+        .from("profiles")
+        .insert({
+            id: userId,
+            user_type: "normal",
+        })
+        .select()
+        .single();
 
     if (error) {
-        console.error("Error handling search query:", error);
-        return error;
-    }
+        console.error("Error creating profile:", error);
+        throw new Error("Failed to create profile");
+    }  
+    
     return data;
 }

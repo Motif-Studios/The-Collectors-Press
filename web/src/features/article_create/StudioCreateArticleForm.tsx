@@ -7,7 +7,11 @@ import { ArticleMetaCard } from "@/components/ui/article_meta_card/ArticleMetaCa
 import { ArticleStatusBadge } from "@/components/ui/article_status_badge/ArticleStatusBadge";
 import { classNameHelper } from "@/lib/utils/classNameHelper";
 import { StudioArticleBodyEditor } from "./StudioArticleBodyEditor";
-import type { StudioCreateArticle, EditorJsContent } from "./types";
+import type {
+  StudioCreateArticle,
+  EditorJsContent,
+} from "./types";
+import { saveArticle } from "./queries/saveArticle";
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
@@ -78,9 +82,23 @@ export function StudioCreateArticleForm({
   }
 
   React.useEffect(() => {
-    console.log("current article form:", article);
-  }, [article]);
+    console.log("current article form:", form);
+  }, [form]);
 
+  // debounce saving
+  React.useEffect(() => {
+    const timeout = setTimeout(async () => {
+      try {
+        const response = await saveArticle(article.id, form);
+        console.log("Article saved successfully:", response);
+      } catch (error) {
+        console.error("Failed to save article:", error);
+      }
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [form, article.id]);
+ 
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -144,6 +162,7 @@ export function StudioCreateArticleForm({
             id="cover-image-upload"
             name="coverImage"
             className="mt-2"
+            article_id={form.id}
           />
         </div>
 

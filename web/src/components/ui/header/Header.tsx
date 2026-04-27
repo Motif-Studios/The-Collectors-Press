@@ -129,14 +129,14 @@ export function HeaderNav({ items }: { items: NavItem[] }) {
 export function SubscribeButton() {
   return (
     <>
-      <Link href={"/register"}>
+      <Link href={"/subscribe"}>
         <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#f4b73f] px-4 py-2 text-sm font-semibold text-black">
           <FontAwesomeIcon icon={faReadme} className="text-sm" />
           <span>Subscribe</span>
         </button>
       </Link>
 
-      <Link href={"/register"}>
+      <Link href={"/subscribe"}>
         <button className="inline-flex lg:hidden text-sm font-semibold text-[#f4b73f]">
           Subscribe
         </button>
@@ -165,20 +165,22 @@ export function SignInButton() {
 
 export function AccountAction({ name }: AccountActionProps) {
   return (
-    <button className="flex items-center gap-2 bg-transparent! p-0! border-0! shadow-none! text-sm font-semibold text-white">
-      <span className="hidden lg:flex items-center gap-2">
-        <FontAwesomeIcon icon={faUser} />
-        <span>{name}</span>
-        <FontAwesomeIcon icon={faChevronDown} className="text-xs opacity-80" />
-      </span>
+    <div className="flex items-center gap-2">
+      <button className="flex items-center gap-2 !bg-transparent !p-0 !border-0 !shadow-none text-sm font-semibold text-white">
+        <span className="hidden lg:flex items-center gap-2">
+          <FontAwesomeIcon icon={faUser} />
+          <span>{name}</span>
+          <FontAwesomeIcon icon={faChevronDown} className="text-xs opacity-80" />
+        </span>
 
-      <span className="flex lg:hidden">
-        <FontAwesomeIcon icon={faUser} />
-      </span>
-      {/* <button onClick={logout} className="text-sm font-semibold text-white">
+        <span className="flex lg:hidden">
+          <FontAwesomeIcon icon={faUser} />
+        </span>
+      </button>
+      <button onClick={logout} className="text-sm font-semibold text-white">
         Logout
-      </button> */}
-    </button>
+      </button>
+    </div>
   );
 }
 

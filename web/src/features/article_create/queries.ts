@@ -2,7 +2,7 @@ import { getStudioCreateArticleDataApi, saveStudioCreateArticleDraftApi, publish
 import { getMockStudioCreateArticleData, saveMockStudioCreateArticleDraft, publishMockStudioCreateArticle } from "@/lib/api/mock/studio_create_article";
 
 import { env } from "@/lib/env";
-import type { StudioCreateArticle } from "./types";
+import { API_BASE_URL } from "@/lib/env";
 
 export async function getStudioCreateArticleData() {
   if (env.useMockApi) {
@@ -12,18 +12,23 @@ export async function getStudioCreateArticleData() {
   return getStudioCreateArticleDataApi();
 }
 
-export async function saveStudioCreateArticleDraft(article: StudioCreateArticle) {
+export async function getStudioCreateArticleById(articleId: string) {
   if (env.useMockApi) {
-    return saveMockStudioCreateArticleDraft(article);
+    const mockData = await getMockStudioCreateArticleData();
+    return {
+      ...mockData.article,
+      article_id: articleId,
+      id: articleId,
+    };
   }
 
-  return saveStudioCreateArticleDraftApi(article);
-}
+  const response = await fetch(`${API_BASE_URL}/articles/${articleId}`, {
+    cache: "no-store",
+  });
 
-export async function publishStudioCreateArticle(article: StudioCreateArticle) {
-  if (env.useMockApi) {
-    return publishMockStudioCreateArticle(article);
+  if (!response.ok) {
+    throw new Error("Failed to fetch article");
   }
 
-  return publishStudioCreateArticleApi(article);
+  return response.json();
 }
