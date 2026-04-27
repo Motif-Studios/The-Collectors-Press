@@ -220,6 +220,8 @@ export async function getLatestSecondaryStories(limit?: number) {
         console.error("Error fetching latest secondary stories:", error || articleError || articlesError);
         return error || articleError || articlesError;
     }
+
+    return articles;
 }
 
 export async function getLatestSecondaryMiniCards(limit?: number) {
