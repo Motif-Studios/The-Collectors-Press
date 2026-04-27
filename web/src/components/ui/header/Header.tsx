@@ -93,7 +93,7 @@ export function HeaderCenter() {
           alt="Motif"
           width={100}
           height={40}
-          className="h-auto w-[120px] md:w-[130px] my-3"
+          className="h-auto w-30 md:w-32.5 my-3"
           priority
         />
       </Link>
@@ -104,7 +104,7 @@ export function HeaderCenter() {
 export function HeaderNav({ items }: { items: NavItem[] }) {
   return (
     <nav className="border-b border-white/20 px-3">
-      <div className="flex items-center justify-start lg:justify-center gap-8 overflow-x-auto whitespace-nowrap py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex items-center justify-start sm:justify-center gap-8 overflow-x-auto whitespace-nowrap py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {items.map((item, index) => (
           <a
             key={`${item.label}-${index}`}

@@ -31,10 +31,9 @@ export async function StudioCreateArticlePageView({
         />
 
         <StudioCreateArticleForm
-          // authorName={data.authorName}
-          authorName={normalisedData.authorName}
-          categories={normalisedData.categories}
-          article={normalisedData.article as StudioCreateArticle}
+          authorName={data.authorName}
+          categories={data.categories}
+          article={data.article}
         />
       </div>
     </div>

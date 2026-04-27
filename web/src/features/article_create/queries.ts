@@ -1,5 +1,6 @@
-import { getStudioCreateArticleDataApi } from "@/lib/api/studio_create_article";
-import { getMockStudioCreateArticleData } from "@/lib/api/mock/studio_create_article";
+import { getStudioCreateArticleDataApi, saveStudioCreateArticleDraftApi, publishStudioCreateArticleApi } from "@/lib/api/studio_create_article";
+import { getMockStudioCreateArticleData, saveMockStudioCreateArticleDraft, publishMockStudioCreateArticle } from "@/lib/api/mock/studio_create_article";
+
 import { env } from "@/lib/env";
 import { API_BASE_URL } from "@/lib/env";
 

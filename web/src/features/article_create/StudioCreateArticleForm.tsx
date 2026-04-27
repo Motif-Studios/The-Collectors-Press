@@ -55,31 +55,30 @@ type StudioCreateArticleFormProps = {
   authorName: string;
   categories: string[];
   article: StudioCreateArticle;
+  onChange: (article: StudioCreateArticle) => void;
 };
 
 export function StudioCreateArticleForm({
   authorName,
   categories,
   article,
+  onChange,
 }: StudioCreateArticleFormProps) {
-  const [form, setForm] = React.useState<StudioCreateArticle>(article);
-
   function updateField<K extends keyof StudioCreateArticle>(
     key: K,
     value: StudioCreateArticle[K],
   ) {
-    setForm((prev) => ({
-      ...prev,
+    onChange({
+      ...article,
       [key]: value,
-    }));
+    });
   }
 
   function handleBodyChange(body: EditorJsContent) {
-    console.log("EditorJS output:", body);
-    setForm((prev) => ({
-      ...prev,
+    onChange({
+      ...article,
       body,
-    }));
+    });
   }
 
   React.useEffect(() => {
@@ -109,7 +108,7 @@ export function StudioCreateArticleForm({
 
         <ArticleMetaCard label="Category">
           <select
-            value={form.category}
+            value={article.category}
             onChange={(e) => updateField("category", e.target.value)}
             className="w-full bg-transparent text-sm text-black outline-none"
           >
@@ -122,11 +121,11 @@ export function StudioCreateArticleForm({
         </ArticleMetaCard>
 
         <ArticleMetaCard label="Status">
-          <ArticleStatusBadge status={form.status} />
+          <ArticleStatusBadge status={article.status} />
         </ArticleMetaCard>
 
         <ArticleMetaCard label="Last saved">
-          <span>{form.lastSavedLabel}</span>
+          <span>{article.lastSavedLabel}</span>
         </ArticleMetaCard>
       </div>
 
@@ -135,7 +134,7 @@ export function StudioCreateArticleForm({
           <Label>Title</Label>
 
           <InputField
-            value={form.title}
+            value={article.title}
             onChange={(e) => updateField("title", e.target.value)}
             placeholder="Enter article title"
             className="mt-2 h-[72px] px-5 text-3xl font-normal text-[#8a8177] placeholder:text-[#8a8177] md:text-3xl"
@@ -146,7 +145,7 @@ export function StudioCreateArticleForm({
           <Label>Subtitle</Label>
 
           <TextAreaField
-            value={form.subtitle}
+            value={article.subtitle}
             onChange={(e) => updateField("subtitle", e.target.value)}
             placeholder="Add a short subtitle or standfirst"
             rows={3}
@@ -171,7 +170,7 @@ export function StudioCreateArticleForm({
           <Label>Cover image annotation</Label>
 
           <TextAreaField
-            value={form.coverImageCaption}
+            value={article.coverImageCaption}
             onChange={(e) => updateField("coverImageCaption", e.target.value)}
             placeholder="Write a caption or credit for the cover image"
             rows={3}
@@ -187,14 +186,14 @@ export function StudioCreateArticleForm({
           </h2>
 
           <p className="mt-2 text-lg text-neutral-600">
-            Use the editor below to add paragraphs, headings, images, embeds
-            and videos.
+            Use the editor below to add paragraphs, headings, images, embeds and
+            videos.
           </p>
         </div>
 
         <div className="article-editor min-h-[720px] border border-neutral-200 bg-white py-4">
           <StudioArticleBodyEditor
-            initialData={form.body}
+            initialData={article.body}
             onChange={handleBodyChange}
           />
         </div>
