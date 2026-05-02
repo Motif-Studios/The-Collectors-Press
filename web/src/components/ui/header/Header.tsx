@@ -167,6 +167,24 @@ export function SignInButton() {
 export function AccountAction({ name }: AccountActionProps) {
   const { showSuccess, showError, clearMessage } = useLogoutFeedback();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isDropdownOpen]);
 
   const handleLogout = async () => {
     try {
@@ -194,27 +212,62 @@ export function AccountAction({ name }: AccountActionProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <button className="flex items-center gap-2 !bg-transparent !p-0 !border-0 !shadow-none text-sm font-semibold text-white">
-        <span className="hidden lg:flex items-center gap-2">
-          <FontAwesomeIcon icon={faUser} />
-          <span>{name}</span>
-          <FontAwesomeIcon icon={faChevronDown} className="text-xs opacity-80" />
-        </span>
-
-        <span className="flex lg:hidden">
-          <FontAwesomeIcon icon={faUser} />
-        </span>
-      </button>
-
-      <div className="flex flex-col items-end gap-1">
+      <div className="relative" ref={dropdownRef}>
         <button
-          onClick={handleLogout}
-          disabled={isLoggingOut}
-          className="text-sm font-semibold text-white disabled:opacity-60"
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="flex items-center gap-2 !bg-transparent !p-0 !border-0 !shadow-none text-sm font-semibold text-white hover:text-white/80 transition"
         >
-          {isLoggingOut ? "Logging out..." : "Logout"}
+          <span className="hidden lg:flex items-center gap-2">
+            <FontAwesomeIcon icon={faUser} />
+            <span>{name}</span>
+            <FontAwesomeIcon
+              icon={faChevronDown}
+              className={classNameHelper(
+                "text-xs opacity-80 transition-transform",
+                isDropdownOpen && "rotate-180"
+              )}
+            />
+          </span>
+
+          <span className="flex lg:hidden">
+            <FontAwesomeIcon icon={faUser} />
+          </span>
         </button>
+
+        {/* Dropdown Menu */}
+        {isDropdownOpen && (
+          <div className="absolute right-0 top-full mt-2 w-48 rounded-lg bg-neutral-900 border border-white/20 shadow-lg z-50">
+            <div className="py-2">
+              {/* Studio Link */}
+              <Link
+                href="/studio"
+                className="block px-4 py-2 text-sm text-white hover:bg-neutral-800 transition"
+                onClick={() => setIsDropdownOpen(false)}
+              >
+                Studio
+              </Link>
+
+              {/* Account Link */}
+              <Link
+                href="/my-account"
+                className="block px-4 py-2 text-sm text-white hover:bg-neutral-800 transition"
+                onClick={() => setIsDropdownOpen(false)}
+              >
+                My Account
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Logout Button - kept on the side */}
+      <button
+        onClick={handleLogout}
+        disabled={isLoggingOut}
+        className="text-sm font-semibold text-white hover:text-white/80 transition disabled:opacity-60"
+      >
+        {isLoggingOut ? "Logging out..." : "Logout"}
+      </button>
     </div>
   );
 }
