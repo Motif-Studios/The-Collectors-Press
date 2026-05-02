@@ -3,14 +3,21 @@ import { ActionButton } from "@/components/ui/action_button/ActionButton";
 import { getStudioCreateArticleById } from "./queries";
 import { StudioCreateArticleForm } from "./StudioCreateArticleForm";
 import { normaliseArticleData } from "../dashboard/queries/normaliseArticleData";
-import { StudioCreateArticle } from "@/features/article_create/types";
+import { StudioRouteFeedback } from "./StudioRouteFeedback";
+
+type StudioFeedback = {
+  type: "success" | "error";
+  message: string;
+};
 
 type StudioCreateArticlePageViewProps = {
   articleId: string;
+  feedback?: StudioFeedback | null;
 };
 
 export async function StudioCreateArticlePageView({
   articleId,
+  feedback = null,
 }: StudioCreateArticlePageViewProps) {
   const data = await getStudioCreateArticleById(articleId);
   const normalisedData = await normaliseArticleData(data);
@@ -30,10 +37,12 @@ export async function StudioCreateArticlePageView({
           }
         />
 
+        <StudioRouteFeedback feedback={feedback} />
+
         <StudioCreateArticleForm
-          authorName={data.authorName}
-          categories={data.categories}
-          article={data.article}
+          authorName={normalisedData.authorName}
+          categories={normalisedData.categories}
+          article={normalisedData.article}
         />
       </div>
     </div>

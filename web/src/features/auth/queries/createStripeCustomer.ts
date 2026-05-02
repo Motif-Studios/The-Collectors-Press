@@ -10,5 +10,9 @@ export async function createStripeCustomer(email: string) {
     });
     const stripeCustomerData = await stripeCustomerResponse.json();
 
+    if (!stripeCustomerResponse.ok) {
+        return { error: stripeCustomerData?.error ?? "Failed to create Stripe customer" };
+    }
+
     return stripeCustomerData;
 };

@@ -12,7 +12,7 @@ export async function createProfile(userId: string) {
 
     if (error) {
         console.error("Error creating profile:", error);
-        throw new Error("Failed to create profile");
+        throw new Error("Email already in use");
     }  
     
     return data;

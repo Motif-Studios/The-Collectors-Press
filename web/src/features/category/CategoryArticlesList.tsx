@@ -31,6 +31,7 @@ export function CategoryArticlesList({
   const [offset, setOffset] = useState(initialArticles.length);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialArticles.length === BATCH_SIZE);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
@@ -40,10 +41,12 @@ export function CategoryArticlesList({
     setLoading(true);
 
     try {
+      setErrorMessage("");
       const response = await getCategoryArticles(categorySlug, BATCH_SIZE, offset);
     
       if (!response.ok) {
-        throw new Error("Failed to fetch more articles");
+        setErrorMessage("We couldn't load more articles right now. Please try again in a moment.");
+        return;
       }
 
       const newArticles: Article[] = await response.json();
@@ -56,6 +59,7 @@ export function CategoryArticlesList({
       }
     } catch (error) {
       console.error(error);
+      setErrorMessage("We couldn't load more articles right now. Please try again in a moment.");
     } finally {
       setLoading(false);
     }
@@ -104,6 +108,10 @@ export function CategoryArticlesList({
 
       {loading && (
         <div className="py-4 text-center text-sm text-gray-500">Loading...</div>
+      )}
+
+      {errorMessage && !loading && (
+        <div className="py-4 text-center text-sm text-red-600">{errorMessage}</div>
       )}
 
       {!loading && hasMore && <div ref={loadMoreRef} className="h-10" />}

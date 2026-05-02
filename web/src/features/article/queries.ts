@@ -3,13 +3,14 @@ import { getArticlePageDataApi, getArticleSecondaryPanelData } from "@/lib/api/a
 import { getMockArticleBySlug, getMockArticleSecondaryPanelData } from "@/lib/api/mock/article";
 import { env } from "@/lib/env";
 
-export async function getArticleBySlug(articleSlug: string): Promise<Article> {
+export async function getArticleBySlug(articleSlug: string): Promise<Article | null> {
 
   if (env.useMockApi) {
     return getMockArticleBySlug(articleSlug);
   }
 
-  return getArticlePageDataApi(articleSlug);
+  const article = await getArticlePageDataApi(articleSlug);
+  return article?.error ? null : article;
 }
 
 export async function getArticlePageData(articleCategory: string) {

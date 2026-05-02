@@ -1,46 +1,47 @@
 "use client";
 
 import Link from "next/link";
-
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signup } from "@/features/auth/lib/client";
+import { useLogoutFeedback } from "@/components/ui/logout_feedback/LogoutFeedback";
 
 
 export function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [ passwordCheck, setPasswordCheck ] = useState("");
-  const [  errorMessage, setErrorMessage ] = useState<string>("");
-  const [  successCheckMessage, setSuccess ] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
+  const { showSuccess, showError, clearMessage } = useLogoutFeedback();
 
   const handleSignUp = async () => {
     if(password !== passwordCheck) {
-      setErrorMessage("Passwords do not match. Please check and try again.");
+      showError("Passwords do not match. Please check and try again.");
       return;
     }
 
     try {
       setLoading(true);
+      clearMessage();
       const response = await signup(email, password);
 
       console.log("Signup response:", response);
 
       if (response.error) {
-        setErrorMessage("Signup failed: " + response.error);
+        showError(`Signup failed: ${response.error}`);
         return;
       }
 
-      setSuccess(true);
-      router.push("/"); // Redirect to homepage after successful signup
+      showSuccess("Account created successfully.");
+      setTimeout(() => {
+        window.location.replace("/");
+      }, 500);
 
       return response;
 
     } catch (err) {
       console.error(err);
+      showError("An unexpected error occurred during signup. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -61,16 +62,6 @@ export function SignUpForm() {
           <p className="mb-8 text-sm leading-6 text-[#6c7680] sm:text-[15px]">
             Sign up to save stories, manage your profile, and subscribe later with ease.
           </p>
-
-          { 
-            errorMessage ? (
-              <p className="mb-8 text-sm leading-6 text-[#ff4d4f] sm:text-[15px]">
-                {errorMessage}
-              </p>
-            ) 
-          : 
-            null
-          }
 
           <div className="space-y-4 text-left">
             <label className="block text-sm font-medium text-[#111]" htmlFor="signup-email">

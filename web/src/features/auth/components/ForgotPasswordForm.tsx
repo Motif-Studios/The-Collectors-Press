@@ -1,28 +1,30 @@
 "use client";
 
-import Link from "next/link";
 import React from "react";
 import { forgotPassword } from "@/features/auth/lib/client";
+import { useLogoutFeedback } from "@/components/ui/logout_feedback/LogoutFeedback";
 
 export function ForgotPasswordForm() {
     const [email, setEmail] = React.useState("");
     const [loading, setLoading] = React.useState(false);
-    const [ successCheckMessage, setSuccess ] = React.useState(false);
+    const { showSuccess, showError, clearMessage } = useLogoutFeedback();
 
     const handleForgotPassword = async () => {
         try {
             setLoading(true);
+            clearMessage();
             const response = await forgotPassword(email);
             console.log("Forgot password response:", response);
 
             if (response.error) {
-                alert("Forgot password failed: " + response.error);
+                showError(`Failed to send reset email: ${response.error}`);
                 return;
             }
-            setSuccess(true);
+            showSuccess("Password reset email sent.");
 
         } catch (err) {
             console.error(err);
+            showError("An unexpected error occurred. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -39,14 +41,6 @@ export function ForgotPasswordForm() {
                 <h1 className="mb-3 text-2xl font-bold tracking-tight text-[#111] sm:text-[28px]">
                     Enter your email to reset your password.
                 </h1>
-
-                { successCheckMessage ? (
-                     <p className="mb-8 text-sm leading-6 text-[#00A82D] sm:text-[15px]">
-                        Success! Please check your email for instructions on how to reset your password. If you don't receive an email, please check your spam folder or try again.
-                    </p>
-                ) : (
-                   <></>
-                )}
 
                 <div className="space-y-4 text-left">
                     <label className="block text-sm font-medium text-[#111]" htmlFor="login-email">
@@ -71,12 +65,9 @@ export function ForgotPasswordForm() {
                     {loading ? "Loading..." : "Continue"}
                 </button>
 
-                {/* <p className="mt-6 text-sm text-[#6c7680]">
-                    Don’t have an account?{" "}
-                    <Link href="/register" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#3fa0cf]">
-                    Create one
-                    </Link>
-                </p> */}
+                <p className="mt-6 text-sm text-[#6c7680]">
+                    Didn’t get the email? Check your spam folder and try again.
+                </p>
                 </div>
             </div>
         </div>

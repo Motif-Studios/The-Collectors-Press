@@ -134,13 +134,18 @@ export async function normalisedSecondaryPanelMiniCards(): Promise<SecondaryMini
 }
 
 export async function getHomePageDataApi() {
-  const homeDataResponse = await fetch(`${API_BASE_URL}/articles/home-data`);
-  if (!homeDataResponse.ok) {
-    console.error("Failed to fetch home page data:", homeDataResponse.statusText);
-    return [];
+  try {
+    const homeDataResponse = await fetch(`${API_BASE_URL}/articles/home-data`);
+    if (!homeDataResponse.ok) {
+      console.error("Failed to fetch home page data:", homeDataResponse.status, homeDataResponse.statusText);
+      return {};
+    }
+    const homeData = await homeDataResponse.json();
+    return homeData ?? {};
+  } catch (error) {
+    console.error("Error fetching home page data:", error);
+    return {};
   }
-  const homeData = await homeDataResponse.json();
-  return homeData;
 }
 
 export async function getHomePageDataNormalised(){

@@ -10,5 +10,9 @@ export async function newProfile(userId: string|undefined) {
     });
     const newProfileData = await newProfileResponse.json();
 
+    if (!newProfileResponse.ok) {
+        return { error: newProfileData?.error ?? "Email already in use" };
+    }
+
     return newProfileData;
 }

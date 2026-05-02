@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getArticleByCategoryName, getAllArticles, getArticleById, getSavedArticles, getHomePageData } from "../../../controllers/articles/controller";
+import { getArticleByCategoryName, getAllArticles, getArticleById, getArticleBySlug, getSavedArticles, getHomePageData } from "../../../controllers/articles/controller";
 
 const router = Router();
 
@@ -112,6 +112,28 @@ router.get("/saved", async (req, res) => {
 router.get("/home-data", async (req, res) => {
   const homeData = await getHomePageData();
   res.json(homeData);
+});
+
+/**
+ * @openapi
+ * /articles/slug/{article_slug}:
+ *   get:
+ *     tags: [Articles]
+ *     summary: Get article by slug
+ *     parameters:
+ *       - in: path
+ *         name: article_slug
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Article data
+ */
+router.get("/slug/:article_slug", async (req, res) => {
+  const { article_slug } = req.params;
+  const data = await getArticleBySlug(article_slug);
+  res.json(data);
 });
 
 /**

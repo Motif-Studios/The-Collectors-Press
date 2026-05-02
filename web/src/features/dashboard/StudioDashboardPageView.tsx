@@ -6,15 +6,7 @@ import { ArticleStatsCard } from "@/components/ui/article_stats_card/ArticleStat
 import { Table } from "@/components/ui/table/Table";
 import { ArticleStatusBadge } from "@/components/ui/article_status_badge/ArticleStatusBadge";
 import { getStudioDashboardData } from "./queries";
-import { deleteArticle } from "./queries/deleteArticle";
 import { DeleteArticleButton } from "./DeleteArticleButton";
-
-
-async function deleteArticleAction(articleId: string) {
-  "use server";
-
-  await deleteArticle(articleId);
-}
 
 
 export async function StudioDashboardPageView() {
@@ -149,7 +141,7 @@ export async function StudioDashboardPageView() {
                     {article.secondaryActionLabel}
                   </button>
 
-                  <DeleteArticleButton action={deleteArticleAction.bind(null, article.id)} />
+                  <DeleteArticleButton articleId={article.id} />
                 </div>
               </td>
             </tr>

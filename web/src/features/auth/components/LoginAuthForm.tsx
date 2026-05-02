@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { login } from "@/features/auth/lib/client";
+import { useLogoutFeedback } from "@/components/ui/logout_feedback/LogoutFeedback";
 
 
 export function LoginForm() {
@@ -11,26 +11,31 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
+  const { showSuccess, showError, clearMessage } = useLogoutFeedback();
 
   const handleLogin = async () => {
     try {
       setLoading(true);
+      clearMessage();
       const response = await login(email, password);
 
       console.log("Login response:", response);
 
       if (response.error) {
-        alert("Login failed: " + response.error);
+        showError(`Login failed: ${response.error}`);
         return;
       }
-    
-      router.push("/"); // Redirect to homepage after successful login
+
+      showSuccess("Login successful.");
+      setTimeout(() => {
+        window.location.replace("/");
+      }, 500);
 
       return response;
 
     } catch (err) {
       console.error(err);
+      showError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -85,7 +90,7 @@ export function LoginForm() {
             disabled={loading}
             className="mt-6 inline-flex h-12 w-full items-center justify-center bg-[#3fa0cf] text-[15px] font-bold text-white transition hover:bg-[#3495c3] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Loading..." : "Continue"}
+            {loading ? "Logging in..." : "Continue"}
           </button>
 
           <p className="mt-6 text-sm text-[#6c7680]">

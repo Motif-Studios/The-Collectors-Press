@@ -13,6 +13,7 @@ import Link from "next/link";
 import { faReadme } from "@fortawesome/free-brands-svg-icons";
 import { classNameHelper } from "@/lib/utils/classNameHelper";
 import { logout } from "@/features/auth/lib/client";
+import { useLogoutFeedback } from "@/components/ui/logout_feedback/LogoutFeedback";
 
 type NavItem = {
   label: string;
@@ -164,6 +165,33 @@ export function SignInButton() {
 }
 
 export function AccountAction({ name }: AccountActionProps) {
+  const { showSuccess, showError, clearMessage } = useLogoutFeedback();
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      clearMessage();
+
+      const result = await logout();
+
+      if (result.error) {
+        showError(`Logout failed: ${result.error}`);
+        return;
+      }
+
+      showSuccess("You have been signed out successfully.");
+      setTimeout(() => {
+        window.location.replace("/");
+      }, 800);
+    } catch (error) {
+      console.error("Logout handler error:", error);
+      showError("An unexpected error occurred while logging out. Please try again.");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
   return (
     <div className="flex items-center gap-2">
       <button className="flex items-center gap-2 !bg-transparent !p-0 !border-0 !shadow-none text-sm font-semibold text-white">
@@ -177,9 +205,16 @@ export function AccountAction({ name }: AccountActionProps) {
           <FontAwesomeIcon icon={faUser} />
         </span>
       </button>
-      <button onClick={logout} className="text-sm font-semibold text-white">
-        Logout
-      </button>
+
+      <div className="flex flex-col items-end gap-1">
+        <button
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="text-sm font-semibold text-white disabled:opacity-60"
+        >
+          {isLoggingOut ? "Logging out..." : "Logout"}
+        </button>
+      </div>
     </div>
   );
 }

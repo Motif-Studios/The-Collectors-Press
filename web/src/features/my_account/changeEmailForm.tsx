@@ -3,40 +3,78 @@
 import React from "react";
 import { changeEmail } from "@/features/my_account/query/changeEmail";
 import { supabase } from "@/lib/supabase/client";
+import { useLogoutFeedback } from "@/components/ui/logout_feedback/LogoutFeedback";
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function ChangeEmailForm() {
-    const [ email, setEmail] = React.useState(""); 
-    const [ loading, setLoading ] = React.useState(false);
-    const [ successCheckMessage, setSuccess ] = React.useState(false);
-    const [ errorMessage, setErrorMessage ] = React.useState<string>("");
+    const [email, setEmail] = React.useState("");
+    const [confirmEmail, setConfirmEmail] = React.useState("");
+    const [loading, setLoading] = React.useState(false);
+    const { showSuccess, showError, clearMessage } = useLogoutFeedback();
 
-    const handleEmailChange = async () => {
-        setErrorMessage("");
+    const handleEmailChange = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        clearMessage();
+
+        const normalizedEmail = email.trim().toLowerCase();
+        const normalizedConfirm = confirmEmail.trim().toLowerCase();
+
+        if (!normalizedEmail) {
+            showError("Email address is required.");
+            return;
+        }
+
+        if (!EMAIL_REGEX.test(normalizedEmail)) {
+            showError("Please enter a valid email address.");
+            return;
+        }
+
+        if (!normalizedConfirm) {
+            showError("Please confirm your new email address.");
+            return;
+        }
+
+        if (normalizedEmail !== normalizedConfirm) {
+            showError("Email addresses do not match. Please check and try again.");
+            return;
+        }
+
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+        const currentEmail = user?.email?.trim().toLowerCase();
+
+        if (currentEmail && normalizedEmail === currentEmail) {
+            showError("New email address must be different from your current email address.");
+            return;
+        }
 
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
-            setErrorMessage("Your reset session is no longer valid. Please open the reset link from your email again.");
+            showError("Your session is no longer valid. Please log in again.");
             return;
         }
 
 
         try {
             setLoading(true);
-            const response = await changeEmail(email);
+            const response = await changeEmail(normalizedEmail);
             console.log("Change email response:", response);
 
             if (response.error) {
-                setErrorMessage("Change email failed: " + response.error);
+                showError(`Change email failed: ${response.error}`);
                 return;
             }
-            setSuccess(true);
+            showSuccess("Email update request sent. Check both your old and new inboxes to confirm the change.");
 
             setTimeout(() => {
-                window.location.href = "/my-account"; // Redirect to login page after successful email change
-            }, 1500); // Redirect after 1 second
+                window.location.replace("/my-account");
+            }, 1500);
 
         } catch (err) {
             console.error(err);
+            showError("An unexpected error occurred while updating your email. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -54,23 +92,7 @@ export function ChangeEmailForm() {
                     Enter your new email address.
                 </h1>
 
-                { successCheckMessage ? (
-                     <p className="mb-8 text-sm leading-6 text-[#00A82D] sm:text-[15px]">
-                        Success! Please check both your old and new email inboxes for a confirmation email. Follow the instructions in the email to confirm your new email address. If you don't receive an email, please check your spam folder or try again.
-                    </p>
-                ) : (
-                     <></>
-                )}
-
-                { errorMessage ? (
-                    <p className="mb-8 text-sm leading-6 text-[#FF0000] sm:text-[15px]">
-                        {errorMessage}
-                    </p>
-                ) : (
-                    <></>
-                )}
-
-                <div className="space-y-4 text-left">
+                <form className="space-y-4 text-left" onSubmit={handleEmailChange} noValidate>
                     <label className="block text-sm font-medium text-[#111]" htmlFor="login-email">
                     New Email Address
                     </label>
@@ -80,31 +102,33 @@ export function ChangeEmailForm() {
                     placeholder="Enter your new email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                     autoComplete="new-password"
                     className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
                     />
 
-                    {/* <label className="block text-sm font-medium text-[#111]" htmlFor="login-password-check">
+                    <label className="block text-sm font-medium text-[#111]" htmlFor="login-email-check">
                     Confirm Email Address
                     </label>
                     <input
-                    id="login-password-check"
-                    type="password"
-                    placeholder="Confirm your new password"
-                    value={passwordCheck}
-                    onChange={(e) => setPasswordCheck(e.target.value)}
+                    id="login-email-check"
+                    type="email"
+                    placeholder="Confirm your new email address"
+                    value={confirmEmail}
+                    onChange={(e) => setConfirmEmail(e.target.value)}
+                    required
                     autoComplete="new-password"
                     className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
-                    /> */}
-                </div>
+                    />
 
-                <button
-                    onClick={handleEmailChange}
-                    disabled={loading}
-                    className="mt-6 inline-flex h-12 w-full items-center justify-center bg-[#3fa0cf] text-[15px] font-bold text-white transition hover:bg-[#3495c3] disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                    {loading ? "Loading..." : "Continue"}
-                </button>
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="mt-6 inline-flex h-12 w-full items-center justify-center bg-[#3fa0cf] text-[15px] font-bold text-white transition hover:bg-[#3495c3] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        {loading ? "Loading..." : "Continue"}
+                    </button>
+                </form>
 
                 {/* <p className="mt-6 text-sm text-[#6c7680]">
                     Don’t have an account?{" "}

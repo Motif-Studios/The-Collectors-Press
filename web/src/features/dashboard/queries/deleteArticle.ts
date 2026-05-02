@@ -10,7 +10,5 @@ export async function deleteArticle(articleId: string) {
         throw new Error(`Failed to delete article: ${response.status} ${errorBody}`);
     }
 
-    window.location.reload(); 
-    
     return response.json();
 }
