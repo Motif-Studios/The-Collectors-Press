@@ -19,9 +19,20 @@ type RawPrimaryFeature = {
   section?: string;
 };
 
-const homeData = await getHomePageDataApi();
+type HomeDataShape = {
+  primaryPanel?: {
+    feature?: RawPrimaryFeature;
+    stories?: RawPrimaryFeature[];
+  };
+  secondaryPanel?: {
+    topStories?: RawPrimaryFeature[];
+    stories?: RawPrimaryFeature[];
+    miniCards?: RawPrimaryFeature[];
+  };
+};
 
 export async function normalisedPrimaryPanelFeaturedArticles(): Promise<FeatureStoryItem> {
+  const homeData = (await getHomePageDataApi()) as HomeDataShape;
   const featurePrimary = homeData?.primaryPanel?.feature as RawPrimaryFeature | undefined;
 
   if (!featurePrimary) {
@@ -52,6 +63,7 @@ export async function normalisedPrimaryPanelFeaturedArticles(): Promise<FeatureS
 }
 
 export async function normalisedPrimaryPanelStories(): Promise<StoryCardItem[]> {
+  const homeData = (await getHomePageDataApi()) as HomeDataShape;
   const primaryStories = homeData?.primaryPanel?.stories as RawPrimaryFeature[] | undefined;
 
   if (!primaryStories) {
@@ -74,6 +86,7 @@ export async function normalisedPrimaryPanelStories(): Promise<StoryCardItem[]> 
 }
 
 export async function normalisedSecondaryPanelTopStories(): Promise<SecondaryTopStoryItem[]> {
+  const homeData = (await getHomePageDataApi()) as HomeDataShape;
   const secondaryTopStories = homeData?.secondaryPanel?.topStories as RawPrimaryFeature[] | undefined;
 
   if (!secondaryTopStories) {
@@ -101,6 +114,7 @@ export async function normalisedSecondaryPanelTopStories(): Promise<SecondaryTop
 }
 
 export async function normalisedSecondaryPanelStories(): Promise<SecondaryTextStoryItem[]> {
+  const homeData = (await getHomePageDataApi()) as HomeDataShape;
   const secondaryStories = homeData?.secondaryPanel?.stories as RawPrimaryFeature[] | undefined;
 
   if (!secondaryStories) {
@@ -117,6 +131,7 @@ export async function normalisedSecondaryPanelStories(): Promise<SecondaryTextSt
 }
 
 export async function normalisedSecondaryPanelMiniCards(): Promise<SecondaryMiniCardItem[]> {
+  const homeData = (await getHomePageDataApi()) as HomeDataShape;
   const secondaryMiniCards = homeData?.secondaryPanel?.miniCards as RawPrimaryFeature[] | undefined;
 
   if (!secondaryMiniCards) {
@@ -137,13 +152,11 @@ export async function getHomePageDataApi() {
   try {
     const homeDataResponse = await fetch(`${API_BASE_URL_SERVER}/articles/home-data`);
     if (!homeDataResponse.ok) {
-      console.error("Failed to fetch home page data:", homeDataResponse.status, homeDataResponse.statusText);
       return {};
     }
     const homeData = await homeDataResponse.json();
     return homeData ?? {};
-  } catch (error) {
-    console.error("Error fetching home page data:", error);
+  } catch {
     return {};
   }
 }

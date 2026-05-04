@@ -35,6 +35,5 @@ export async function getArticlePageDataApi(articleSlug: string) {
 
 export async function getArticleSecondaryPanelData(articleCategory: string) {
   // TEMP: until backend is ready
-  console.log("API CALL");
   return getMockArticleSecondaryPanelData(articleCategory);
 }

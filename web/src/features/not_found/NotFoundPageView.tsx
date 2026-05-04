@@ -6,7 +6,6 @@ import Link from "next/link";
 
 export async function NotFoundPageView() {
   const data = await getNotFoundPageData();
-  console.log(data);
 
   return (
     <div className="my-16 flex flex-col gap-12">
