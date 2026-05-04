@@ -23,7 +23,7 @@ type NavItem = {
 
 type HeaderProps = {
   navItems?: NavItem[];
-  user: { name: string } | null;
+  user?: { name: string } | null;
   isSubscriber?: boolean;
   children?: React.ReactNode;
 };
@@ -73,7 +73,7 @@ export function HeaderTopBar({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function HeaderLeft({ children }: { children: React.ReactNode }) {
+export function HeaderLeft({ children }: { children?: React.ReactNode }) {
   return <div className="flex items-center gap-2 md:gap-4">{children}</div>;
 }
 

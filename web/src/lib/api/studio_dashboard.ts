@@ -1,9 +1,10 @@
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
-import { API_BASE_URL } from "@/lib/env";
+import { API_BASE_URL_SERVER } from "@/lib/env";
 import type {
   StudioArticleRow,
   StudioDashboardData,
   StudioDashboardSummary,
+  ArticleStatus,
 } from "@/features/dashboard/types";
 
 type DashboardArticle = {
@@ -34,8 +35,8 @@ export async function normalisedDashboardArticles(articles: DashboardArticle[]):
       id: article.article_id,
       title: article.title,
       slug: article.slug,
-      status: article.status,
-      category: await fetch(`${API_BASE_URL}/categories/article/${article.article_id}`).then(res => res.json()).then(data => data.category_name || "Uncategorized").catch(() => "Uncategorized"),
+      status: (article.status as ArticleStatus) || "draft",
+      category: await fetch(`${API_BASE_URL_SERVER}/categories/article/${article.article_id}`).then(res => res.json()).then(data => data.category_name || "Uncategorized").catch(() => "Uncategorized"),
       updatedAtLabel: article.updated_at,
       authorName: user.name,
       secondaryActionLabel: article.status === "draft" ? "Preview" : "View",
@@ -102,7 +103,7 @@ export async function getStudioDashboardDataApi(): Promise<StudioDashboardData> 
       };
     }
 
-    const getUserArticles = await fetch(`${API_BASE_URL}/dashboard/articles/${user.id}`);
+    const getUserArticles = await fetch(`${API_BASE_URL_SERVER}/dashboard/articles/${user.id}`);
 
     if (!getUserArticles.ok) {
       console.error("Failed to fetch dashboard articles:", getUserArticles.status, getUserArticles.statusText);

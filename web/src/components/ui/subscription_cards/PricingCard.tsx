@@ -10,6 +10,7 @@ type PricingCardProps = {
   price?: string;
   priceMeta?: string[];
   offerText?: string;
+  extraText?: React.ReactNode;
   description?: React.ReactNode;
   features: string[];
   buttonLabel: string;
@@ -43,6 +44,7 @@ export async function PricingCard({
   price,
   priceMeta,
   offerText,
+  extraText,
   description,
   features,
   buttonLabel,
@@ -94,6 +96,12 @@ export async function PricingCard({
             )}
           </div>
         )}
+
+        {extraText ? (
+          <p className="mb-3 text-center text-[0.85rem] leading-[1.2] text-[#111] sm:mb-2 sm:text-[0.9rem] sm:leading-[1.3]">
+            {extraText}
+          </p>
+        ) : null}
 
         {offerText ? (
           <p className="mb-5 text-center text-[0.92rem] leading-[1.35] text-[#111] sm:mb-[22px] sm:text-[0.95rem] sm:leading-[1.4]">

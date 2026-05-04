@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
 import { API_BASE_URL } from "@/lib/env";
+import type { StudioCreateArticleStatus } from "@/features/article_create/types";
 
 type ArticleType = {
     article_id?: string;
@@ -37,7 +38,7 @@ export async function normaliseArticleData(data: unknown) {
             id: articleId || "",
             subtitle: article.preview_text || "",
             category: category,
-            status: article.status || "draft",
+            status: (article.status as StudioCreateArticleStatus) || "draft",
             lastSavedLabel: article.updated_at || "",
             coverImageCaption: article.image_alt || "",
             body: {

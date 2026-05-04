@@ -3,6 +3,7 @@ import { getMockStudioCreateArticleData, saveMockStudioCreateArticleDraft, publi
 
 import { env } from "@/lib/env";
 import { API_BASE_URL } from "@/lib/env";
+import type { StudioCreateArticle } from "./types";
 
 export async function getStudioCreateArticleData() {
   if (env.useMockApi) {
@@ -31,4 +32,20 @@ export async function getStudioCreateArticleById(articleId: string) {
   }
 
   return response.json();
+}
+
+export async function saveStudioCreateArticleDraft(article: StudioCreateArticle) {
+  if (env.useMockApi) {
+    return saveMockStudioCreateArticleDraft(article);
+  }
+
+  return saveStudioCreateArticleDraftApi(article);
+}
+
+export async function publishStudioCreateArticle(article: StudioCreateArticle) {
+  if (env.useMockApi) {
+    return publishMockStudioCreateArticle(article);
+  }
+
+  return publishStudioCreateArticleApi(article);
 }

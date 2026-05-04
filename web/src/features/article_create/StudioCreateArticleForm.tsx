@@ -115,6 +115,10 @@ export function StudioCreateArticleForm({
   React.useEffect(() => {
     const timeout = setTimeout(async () => {
       try {
+        if (!currentArticle.id) {
+          console.log("Article ID not set, skipping save");
+          return;
+        }
         const response = await saveArticle(currentArticle.id, currentArticle);
         console.log("Article saved successfully:", response);
         clearMessage();
