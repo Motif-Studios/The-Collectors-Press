@@ -2,7 +2,7 @@ import type { EditorJsContent, EditorJsListItem } from "./types";
 import Image from "next/image";
 
 type ArticleBodyRendererProps = {
-  content: EditorJsContent;
+  content?: EditorJsContent | null;
 };
 
 function isHtmlEffectivelyEmpty(html: string) {
@@ -81,9 +81,22 @@ function ArticleListBlock({
 }
 
 export function ArticleBodyRenderer({ content }: ArticleBodyRendererProps) {
+  const blocks = Array.isArray(content?.blocks) ? content.blocks : [];
+
+  console.log("🎨 ArticleBodyRenderer received:", {
+    contentExists: !!content,
+    blocksCount: blocks.length,
+    blockTypes: blocks.map(b => b.type),
+  });
+
+  if (blocks.length === 0) {
+    console.warn("⚠️ No blocks to render");
+    return null;
+  }
+
   return (
     <div>
-      {content.blocks.map((block, index) => {
+      {blocks.map((block, index) => {
         const key = block.id ?? `${block.type}-${index}`;
 
         switch (block.type) {
@@ -92,7 +105,7 @@ export function ArticleBodyRenderer({ content }: ArticleBodyRendererProps) {
               return null;
             }
 
-            const firstParagraphIndex = content.blocks.findIndex(
+            const firstParagraphIndex = blocks.findIndex(
               (block) =>
                 block.type === "paragraph" &&
                 block.data?.text &&

@@ -71,7 +71,6 @@ export async function getArticleBySlug(articleSlug: string) {
     const { data, error } = await supabase
         .from("article")
         .select("*")
-        // .select("*, profiles(id, user_type)")
         .eq("slug", decodedSlug)
         .single();
     
@@ -80,23 +79,22 @@ export async function getArticleBySlug(articleSlug: string) {
         return error;
     }
 
-   // transform data
-    // if (data) {
-    //     const authorId = data.author_id || "unknown-author";
-    //     return {
-    //         ...data,
-    //         author: {
-    //             id: authorId,
-    //             name: authorId, // Fallback: use author_id as name until profiles has name field
-    //             description: "",
-    //             avatarSrc: `https://eu.ui-avatars.com/api/?name=${encodeURIComponent(String(authorId))}&size=250`,
-    //             moreTopics: [],
-    //         },
-    //         body: data.content || { blocks: [] },
-    //     };
-    // }
+    if (data) {
+        const authorId = data.author_id || "unknown-author";
+        return {
+            ...data,
+            author: {
+                id: authorId,
+                name: authorId,
+                description: "",
+                avatarSrc: `https://eu.ui-avatars.com/api/?name=${encodeURIComponent(String(authorId))}&size=250`,
+                moreTopics: [],
+            },
+            body: data.content || { blocks: [] },
+        };
+    }
 
-    return null;
+    return data;
 }
 
 export async function getSavedArticles(userId: string) {
