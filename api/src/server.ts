@@ -64,6 +64,8 @@ app.get("/", (req, res) =>{
     res.status(200).json({ message:"API RUNNING" });
 })
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-}) 
+// app.listen(PORT, () => {
+//     console.log(`Server running on port ${PORT}`);
+// }) 
+
+export default app;
