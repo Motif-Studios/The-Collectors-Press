@@ -20,7 +20,37 @@ type ApiArticle = {
 };
 
 function normaliseArticle(raw: ApiArticle): Article {
-  const articleBody = raw.body ?? raw.content ?? { blocks: [] };
+  let content = raw.content as any;
+  if (typeof content === "string") {
+    try {
+      content = JSON.parse(content);
+    } catch {
+      // leave as-is
+    }
+  }
+
+  function findEditorJsContent(obj: any): any | null {
+    if (!obj || typeof obj !== "object") return null;
+    if (Array.isArray(obj.blocks)) return obj;
+
+    for (const key of Object.keys(obj)) {
+      const value = obj[key];
+      if (value && typeof value === "object") {
+        if (Array.isArray(value.blocks)) return value;
+        // check one level deeper
+        for (const k2 of Object.keys(value)) {
+          const v2 = value[k2];
+          if (v2 && typeof v2 === "object" && Array.isArray(v2.blocks)) return v2;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  const unwound = raw.body ?? content ?? null;
+  const found = findEditorJsContent(unwound);
+  const articleBody = found ?? unwound ?? { blocks: [] };
 
   return {
     id: raw.article_id ?? "",
@@ -67,30 +97,10 @@ export async function getArticleBySlug(articleSlug: string): Promise<Article | n
       return null;
     }
 
-    console.log("📄 Raw article from API:", {
-      slug: articleRaw.slug,
-      title: articleRaw.title,
-      hasContent: !!articleRaw.content,
-      hasBody: !!articleRaw.body,
-      contentType: typeof articleRaw.content,
-      contentBlocksCount: Array.isArray(articleRaw.content?.blocks) ? articleRaw.content.blocks.length : 0,
-      bodyBlocksCount: Array.isArray(articleRaw.body?.blocks) ? articleRaw.body.blocks.length : 0,
-      rawContent: articleRaw.content,
-      rawBody: articleRaw.body,
-    });
-
     const normalized = normaliseArticle(articleRaw);
-    
-    console.log("📄 Normalized article:", {
-      id: normalized.id,
-      title: normalized.title,
-      bodyBlocksCount: normalized.body?.blocks?.length ?? 0,
-      bodyBlocks: normalized.body?.blocks?.map(b => b.type),
-    });
 
     return normalized;
   } catch (error) {
-    console.error("❌ Error fetching article:", error);
     return null;
   }
 }

@@ -219,12 +219,16 @@ export function ArticleBodyRenderer({ content }: ArticleBodyRendererProps) {
           case "delimiter":
             return <hr key={key} className="my-10 border-neutral-300" />;
 
-          case "embed":
+          case "embed": {
+            const src = block.data.embed ?? block.data.source ?? block.data.url ?? block.data.file?.url;
+
+            if (!src) return null;
+
             return (
               <figure key={key} className="my-[38px]">
                 <div className="relative w-full overflow-hidden bg-black aspect-video">
                   <iframe
-                    src={block.data.embed}
+                    src={src}
                     width={block.data.width ?? 580}
                     height={block.data.height ?? 320}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -241,6 +245,7 @@ export function ArticleBodyRenderer({ content }: ArticleBodyRendererProps) {
                 ) : null}
               </figure>
             );
+          }
 
           default:
             return null;

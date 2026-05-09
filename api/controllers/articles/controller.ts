@@ -43,8 +43,8 @@ export async function getArticleByCategoryName(categoryName: string, limit?: num
         return articlesError;
     }
 
-    if(limit && offset) {
-        const paginatedData = articlesData.slice(offset, offset + limit);
+    if (typeof limit === "number" && typeof offset === "number") {
+        const paginatedData = (articlesData ?? []).slice(offset, offset + limit);
         return paginatedData;
     }
 
@@ -79,22 +79,28 @@ export async function getArticleBySlug(articleSlug: string) {
         return error;
     }
 
-    if (data) {
-        const authorId = data.author_id || "unknown-author";
-        return {
-            ...data,
-            author: {
-                id: authorId,
-                name: authorId,
-                description: "",
-                avatarSrc: `https://eu.ui-avatars.com/api/?name=${encodeURIComponent(String(authorId))}&size=250`,
-                moreTopics: [],
-            },
-            body: data.content || { blocks: [] },
-        };
-    }
+    const authorId = data.author_id || "unknown-author";
 
-    return data;
+    const { data: authorData, error: authorError } = await supabase
+        .schema("auth")
+        .from("users")
+        .select("email")
+        .eq("id", authorId)
+        .single();
+
+    const authorName = authorError ? "Unknown author" : authorData?.email ?? "Unknown author";
+
+    return {
+        ...data,
+        author: {
+            id: authorId,
+            name: authorName,
+            description: "",
+            avatarSrc: `https://eu.ui-avatars.com/api/?name=${encodeURIComponent(String(authorName))}&size=250`,
+            moreTopics: [],
+        },
+        body: data.content || { blocks: [] },
+    };
 }
 
 export async function getSavedArticles(userId: string) {
