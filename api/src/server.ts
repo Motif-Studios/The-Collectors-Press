@@ -47,7 +47,7 @@ app.use((req, res, next) => {
     next();
 });
 
-const PORT = 5001;
+const PORT = process.env.PORT || 5001;
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/home", home);
@@ -64,8 +64,8 @@ app.get("/", (req, res) =>{
     res.status(200).json({ message:"API RUNNING" });
 })
 
-// app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-// }) 
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+}) 
 
-export default app;
+// export default app;
