@@ -220,7 +220,7 @@ export function ArticleBodyRenderer({ content }: ArticleBodyRendererProps) {
             return <hr key={key} className="my-10 border-neutral-300" />;
 
           case "embed": {
-            const src = block.data.embed ?? block.data.source ?? block.data.url ?? block.data.file?.url;
+            const src = block.data.embed ?? block.data.source;
 
             if (!src) return null;
 
