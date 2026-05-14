@@ -8,14 +8,15 @@ import {
 import { faGoogle } from "@fortawesome/free-brands-svg-icons/faGoogle";
 import { getMyAccountData } from "./queries";
 import Link from "next/link";
+import { getCurrentUser } from "../auth/queries/getCurrentUser";
 
 export async function MyAccountPageView() {
-  const data = await getMyAccountData();
+  const data = await getCurrentUser();
 
   return (
     <div>
       <div className="w-165 max-w-full">
-        <h2 className="mb-4 text-3xl font-bold">Hello, {data.firstName}</h2>
+        <h2 className="mb-4 text-3xl font-bold">Hello, {data?.name}</h2>
         <Panel>
           <PanelHeader
             title="Subscribe to The Collectors Press"
@@ -45,30 +46,30 @@ export async function MyAccountPageView() {
           <PanelBody>
             <div className="flex flex-col gap-4">
                 <div className="flex flex-row">
-                    <div className="flex flex-col items-start flex-1">
+                    {/* <div className="flex flex-col items-start flex-1">
                         <strong className="w-full">First Name</strong>
                         <div className="w-full">{data.firstName}</div>
                     </div>
                     <div className="flex flex-col items-start flex-1">
                         <strong className="w-full">Last Name</strong>
                         <div className="w-full">{data.lastName}</div>
-                    </div>
+                    </div> */}
                 </div>
                 <div>
                     <div>
                         <strong>Email Address</strong>
-                        <div>{data.email}</div>
+                        <div>{data?.name}</div>
                     </div>
                 </div>
             </div>
           </PanelBody>
 
-          <PanelFooter>
+          {/* <PanelFooter>
             <div className="flex w-full justify-between items-center">
               <Icon icon={faGoogle} />
               <div>Google account connected</div>
             </div>
-          </PanelFooter>
+          </PanelFooter> */}
         </Panel>
       </div>
     </div>
