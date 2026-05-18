@@ -1,12 +1,14 @@
 import React from "react";
 import "./SavedStoryCard.css";
 import Image from "next/image";
+import Link from "next/link";
 
 export type SavedStoryCardProps = {
   title: string;
   author: string;
   image: string;
   imageAlt?: string;
+  href?: string;
   onRemove?: () => void;
 };
 
@@ -15,6 +17,7 @@ export function SavedStoryCard({
   author,
   image,
   imageAlt = "Saved story thumbnail",
+  href,
   onRemove,
 }: SavedStoryCardProps) {
   return (
@@ -24,7 +27,13 @@ export function SavedStoryCard({
       </div>
 
       <div className="saved-story-item__content">
-        <h2>{title}</h2>
+        <h2>
+          {href ? (
+            <Link href={href}>{title}</Link>
+          ) : (
+            title
+          )}
+        </h2>
         <p>By {author}</p>
       </div>
 

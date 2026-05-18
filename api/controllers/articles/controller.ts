@@ -1,5 +1,20 @@
 import { supabase } from "../../lib/supabase";
 
+async function resolveUserEmail(userId: string) {
+    try {
+        const { data, error } = await supabase.auth.admin.getUserById(userId);
+
+        if (error || !data?.user) {
+            return null;
+        }
+
+        return data.user.email ?? null;
+    } catch (error) {
+        console.error("Error resolving user email:", error);
+        return null;
+    }
+}
+
 export async function getAllArticles() {
     const { data, error } = await supabase
         .from("article")
@@ -80,15 +95,7 @@ export async function getArticleBySlug(articleSlug: string) {
     }
 
     const authorId = data.author_id || "unknown-author";
-
-    const { data: authorData, error: authorError } = await supabase
-        .schema("auth")
-        .from("users")
-        .select("email")
-        .eq("id", authorId)
-        .single();
-
-    const authorName = authorError ? "Unknown author" : authorData?.email ?? "Unknown author";
+    const authorName = (await resolveUserEmail(authorId)) ?? "Unknown author";
 
     return {
         ...data,
@@ -104,6 +111,7 @@ export async function getArticleBySlug(articleSlug: string) {
 }
 
 export async function getSavedArticles(userId: string) {
+    console.log("getSavedArticles called for userId:", userId);
     const { data, error } = await supabase
         .from("saved_articles")
         .select("article_id")
@@ -111,10 +119,11 @@ export async function getSavedArticles(userId: string) {
 
     if (error) {
         console.error("Error fetching saved articles for user:", error);
-        return error;
+        return [];
     }
 
     if (!data || data.length === 0) {
+        console.log("No saved_articles rows found for user", userId);
         return [];
     }
 
@@ -125,9 +134,29 @@ export async function getSavedArticles(userId: string) {
 
     if (articlesError) {
         console.error("Error fetching saved articles for user:", articlesError);
-        return articlesError;
+        return [];
     }
-    return articlesData;
+
+    const authorIds = [...new Set((articlesData ?? []).map((article) => article.author_id).filter(Boolean))];
+
+    const authorEmailEntries = await Promise.all(
+        authorIds.map(async (authorId) => [authorId, (await resolveUserEmail(authorId)) ?? "Unknown author"] as const),
+    );
+
+    const authorNameById = new Map(authorEmailEntries);
+
+    const articlesWithAuthor = (articlesData ?? []).map((article) => ({
+        id: article.article_id,
+        title: article.title,
+        author: authorNameById.get(article.author_id) ?? "Unknown author",
+        imageSrc: article.cover_image_url,
+        imageAlt: article.image_alt ?? article.title ?? "Article cover image",
+        href: article.slug ? `/article/${encodeURIComponent(article.slug)}` : "#",
+    }));
+
+    console.log(`Found ${articlesWithAuthor.length} saved articles for user ${userId}`);
+
+    return articlesWithAuthor;
 }
 
 export async function getLatestPrimaryArticle() {

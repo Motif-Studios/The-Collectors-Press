@@ -1,5 +1,4 @@
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
-import { getMockSavedStoriesPageData } from "./mock/saved_stories";
 import { API_BASE_URL_SERVER } from "@/lib/env";
 import type { SavedStoriesPageData } from "@/features/saved_stories/types";
 
@@ -19,5 +18,5 @@ export async function getSavedStoriesPageDataApi(): Promise<SavedStoriesPageData
   }
 
   const data = await response.json();
-  return data;
+  return Array.isArray(data) ? data : [];
 }

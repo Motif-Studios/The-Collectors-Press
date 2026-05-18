@@ -41,11 +41,11 @@ export async function MyAccountPageView() {
         <Panel className="mt-9">
           <PanelHeader
             title="Your Account"
-            actions={<button>Edit</button>}
+            // actions={<button>Edit</button>}
           />
           <PanelBody>
             <div className="flex flex-col gap-4">
-                <div className="flex flex-row">
+                {/* <div className="flex flex-row"> */}
                     {/* <div className="flex flex-col items-start flex-1">
                         <strong className="w-full">First Name</strong>
                         <div className="w-full">{data.firstName}</div>
@@ -54,13 +54,13 @@ export async function MyAccountPageView() {
                         <strong className="w-full">Last Name</strong>
                         <div className="w-full">{data.lastName}</div>
                     </div> */}
-                </div>
-                <div>
+                {/* </div> */}
+                {/* <div> */}
                     <div>
                         <strong>Email Address</strong>
                         <div>{data?.name}</div>
                     </div>
-                </div>
+                {/* </div> */}
             </div>
           </PanelBody>
 

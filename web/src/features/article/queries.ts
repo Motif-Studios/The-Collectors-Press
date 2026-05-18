@@ -19,28 +19,41 @@ type ApiArticle = {
   author?: Article["author"];
 };
 
-function normaliseArticle(raw: ApiArticle): Article {
-  let content = raw.content as any;
-  if (typeof content === "string") {
-    try {
-      content = JSON.parse(content);
-    } catch {
-      // leave as-is
-    }
-  }
+function parseMaybeJson(value: unknown): unknown {
+  if (typeof value !== "string") return value;
 
-  function findEditorJsContent(obj: any): any | null {
-    if (!obj || typeof obj !== "object") return null;
-    if (Array.isArray(obj.blocks)) return obj;
+  try {
+    return JSON.parse(value) as unknown;
+  } catch {
+    return value;
+  }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isEditorJsContent(value: unknown): value is Article["body"] {
+  return isRecord(value) && Array.isArray(value.blocks);
+}
+
+function normaliseArticle(raw: ApiArticle): Article {
+  const content = parseMaybeJson(raw.content);
+  const body = parseMaybeJson(raw.body);
+
+  function findEditorJsContent(obj: unknown): Article["body"] | null {
+    if (isEditorJsContent(obj)) return obj;
+
+    if (!isRecord(obj)) return null;
 
     for (const key of Object.keys(obj)) {
       const value = obj[key];
-      if (value && typeof value === "object") {
-        if (Array.isArray(value.blocks)) return value;
-        // check one level deeper
-        for (const k2 of Object.keys(value)) {
-          const v2 = value[k2];
-          if (v2 && typeof v2 === "object" && Array.isArray(v2.blocks)) return v2;
+      if (isEditorJsContent(value)) return value;
+
+      if (isRecord(value)) {
+        for (const nestedKey of Object.keys(value)) {
+          const nestedValue = value[nestedKey];
+          if (isEditorJsContent(nestedValue)) return nestedValue;
         }
       }
     }
@@ -48,9 +61,8 @@ function normaliseArticle(raw: ApiArticle): Article {
     return null;
   }
 
-  const unwound = raw.body ?? content ?? null;
-  const found = findEditorJsContent(unwound);
-  const articleBody = found ?? unwound ?? { blocks: [] };
+  const unwound = body ?? content ?? null;
+  const articleBody = findEditorJsContent(unwound) ?? { blocks: [] };
 
   return {
     id: raw.article_id ?? "",
@@ -100,7 +112,7 @@ export async function getArticleBySlug(articleSlug: string): Promise<Article | n
     const normalized = normaliseArticle(articleRaw);
 
     return normalized;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
