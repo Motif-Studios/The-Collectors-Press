@@ -1,6 +1,6 @@
 import type { SearchPageData } from "@/features/search/types";
 
-const mockArticles: SearchPageData = [
+const mockArticles: SearchPageData["articles"] = [
   {
     id: "1",
     title: "Why Cities Are Rethinking Public Transport",
@@ -39,16 +39,24 @@ const mockArticles: SearchPageData = [
   },
 ];
 
+const mockCategories: SearchPageData["categories"] = [
+  { id: "pokemon", name: "Pokémon", slug: "pokemon", href: "/category/pokemon" },
+  { id: "one-piece", name: "One Piece", slug: "one-piece", href: "/category/one-piece" },
+  { id: "basketball", name: "Basketball", slug: "basketball", href: "/category/basketball" },
+  { id: "american-football", name: "American Football", slug: "american-football", href: "/category/american-football" },
+  { id: "other", name: "Other", slug: "other", href: "/category/other" },
+];
+
 export async function getMockSearchPageData(
   searchQuery: string,
 ): Promise<SearchPageData> {
   const query = searchQuery.trim().toLowerCase();
 
   if (!query) {
-    return [];
+    return { articles: mockArticles, categories: mockCategories };
   }
 
-  return mockArticles.filter((article) => {
+  const articles = mockArticles.filter((article) => {
     const searchableText = [
       article.title,
       article.summary,
@@ -60,4 +68,10 @@ export async function getMockSearchPageData(
 
     return searchableText.includes(query);
   });
+
+  const categories = mockCategories.filter((category) =>
+    category.name.toLowerCase().includes(query),
+  );
+
+  return { articles, categories };
 }
