@@ -14,7 +14,15 @@ import subscription from "./routes/subscription/index";
 import upload from "./routes/upload/index";
 
 const app = express();
-app.use(express.json());
+app.use(
+    express.json({
+        verify: (req: any, _res, buf) => {
+            if (req.originalUrl === "/subscription/payment/webhook") {
+                req.rawBody = buf;
+            }
+        },
+    }),
+);
 
 const openApiOptions: swaggerJSDoc.Options = {
     definition: {

@@ -3,6 +3,7 @@ import { Footer } from "@/components/ui/footer/Footer";
 import { ReactNode } from "react";
 
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
+import { getIsSubscriber } from "@/features/auth/queries/getIsSubscriber";
 import { LogoutFeedbackBanner, LogoutFeedbackProvider } from "@/components/ui/logout_feedback/LogoutFeedback";
 
 const homepageNavItems = [
@@ -24,13 +25,15 @@ export default async function PublicLayout({
   children: ReactNode;
 }) {
   const handleUser = await getCurrentUser();
+  const subscriberInfo = await getIsSubscriber(handleUser?.id);
+  const isSubscriber = !!subscriberInfo?.is_subscriber;
 
   return (
     <LogoutFeedbackProvider>
       <Header
         navItems={homepageNavItems}
         user={handleUser}
-        isSubscriber={false}
+        isSubscriber={isSubscriber}
       />
 
       <LogoutFeedbackBanner />

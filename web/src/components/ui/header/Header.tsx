@@ -290,7 +290,7 @@ export function MenuAction() {
 
 export function SearchAction() {
   return (
-    <button className="flex items-center gap-2 text-sm font-semibold">
+    <Link href="/search" className="flex items-center gap-2 text-sm font-semibold">
       <span className="hidden lg:flex h-8 w-8 items-center justify-center rounded-full bg-white text-black">
         <FontAwesomeIcon icon={faSearch} />
       </span>
@@ -300,6 +300,6 @@ export function SearchAction() {
       </span>
 
       <span className="hidden lg:inline">Search</span>
-    </button>
+    </Link>
   );
 }

@@ -27,3 +27,18 @@ export async function cancelAccountSubscription(userId: string) {
     await stripe.subscriptions.cancel(subscription.stripe_subscription_id);
   }
 }
+
+export async function isSubscribed(userId: string): Promise<boolean> {
+  const { data: subscription, error } = await supabase
+    .from("subscription")
+    .select("id, subscription_status")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+    if (error) {
+      console.error("Error checking subscription:", error);
+      return false;
+    }
+
+  return subscription?.subscription_status === "active";
+}

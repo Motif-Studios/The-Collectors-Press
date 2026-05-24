@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
-import { API_BASE_URL } from "@/lib/env";
+import { API_BASE_URL, API_BASE_URL_SERVER } from "@/lib/env";
 
 type PricingCardProps = {
   id: string;
@@ -26,7 +26,8 @@ async function getCheckoutUrl(id: string, user: { id: string } | null) {
   if (!endpoint) return "/subscribe";
 
   try {
-    const response = await fetch(`${API_BASE_URL}/subscription/payment/${endpoint}`, {
+    const baseUrl = typeof window === "undefined" ? API_BASE_URL_SERVER : API_BASE_URL;
+    const response = await fetch(`${baseUrl}/subscription/payment/${endpoint}?userId=${encodeURIComponent(user.id)}`, {
       method: "GET",
     });
     if (!response.ok) return "/subscribe";

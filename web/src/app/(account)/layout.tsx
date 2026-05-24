@@ -4,14 +4,17 @@ import { AccountFooter } from "@/components/ui/account_footer/AccountFooter";
 import { AccountSidebarNav } from "@/components/ui/account_sidebar_nav/AccountSidebarNav";
 import { LogoutFeedbackBanner, LogoutFeedbackProvider } from "@/components/ui/logout_feedback/LogoutFeedback";
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
+import { getIsSubscriber } from "@/features/auth/queries/getIsSubscriber";
 
 export default async function AccountLayout({ children }: { children: ReactNode }) {
   const user = (await getCurrentUser()) ?? { name: "User", id: "" };
+  const subscriberInfo = await getIsSubscriber(user?.id);
+  const isSubscriber = !!subscriberInfo?.is_subscriber;
 
   return (
     <LogoutFeedbackProvider>
       <div className="flex min-h-screen flex-col">
-        <AccountHeader user={user} isSubscriber={false} />
+        <AccountHeader user={user} isSubscriber={isSubscriber} />
         <LogoutFeedbackBanner />
 
         <main className="flex-1 px-5 pt-6 pb-16 md:px-8 md:pt-7 md:pb-20">

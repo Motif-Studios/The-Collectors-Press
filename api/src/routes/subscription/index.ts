@@ -138,8 +138,28 @@ router.post("/make_new_subscriber", async (req, res) => {
  *         description: Payment response
  */
 router.get("/payment/monthly", async (req, res) => {
+  const userId = typeof req.query?.userId === "string" ? req.query.userId : undefined;
+  let customerId: string | undefined;
+
+  if (userId) {
+    const { data: subscriptionRow, error } = await supabase
+      .from("subscription")
+      .select("stripe_customer_id")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error loading subscription customer for monthly checkout:", error);
+    }
+
+    customerId = subscriptionRow?.stripe_customer_id ?? undefined;
+  }
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
+    ...(customerId ? { customer: customerId } : {}),
+    client_reference_id: userId,
+    metadata: userId ? { user_id: userId } : undefined,
     line_items: [
       {
         price: "price_1TM6yzAcAGiNxdHjxrlslPCK",
@@ -164,8 +184,28 @@ router.get("/payment/monthly", async (req, res) => {
  *         description: Payment response
  */
 router.get("/payment/yearly", async (req, res) => {
+  const userId = typeof req.query?.userId === "string" ? req.query.userId : undefined;
+  let customerId: string | undefined;
+
+  if (userId) {
+    const { data: subscriptionRow, error } = await supabase
+      .from("subscription")
+      .select("stripe_customer_id")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error loading subscription customer for yearly checkout:", error);
+    }
+
+    customerId = subscriptionRow?.stripe_customer_id ?? undefined;
+  }
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
+    ...(customerId ? { customer: customerId } : {}),
+    client_reference_id: userId,
+    metadata: userId ? { user_id: userId } : undefined,
     line_items: [
       {
         price: "price_1TO7byAcAGiNxdHjuGRy97ld",
@@ -184,7 +224,8 @@ router.post("/payment/webhook", async (req, res) => {
   let event;
 
   try{
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    const rawBody = (req as any).rawBody ?? req.body;
+    event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
     
   } catch (err) {
     console.error('Error verifying webhook signature:', err);
@@ -192,13 +233,35 @@ router.post("/payment/webhook", async (req, res) => {
   }
 
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-    console.log("Subscription successful for session:", session.id)
-    const customerId = session.customer;
-    const subscriptionId = session.subscription;
-    const priceId = session.display_items[0].price.id;
-    const response = await makeCustomerSubscriber(customerId, subscriptionId, priceId);
-    console.log("Customer subscription status updated:", response);
+    try {
+      const session = event.data.object;
+      const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
+      const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
+      const userId = typeof session.client_reference_id === "string"
+        ? session.client_reference_id
+        : typeof session.metadata?.user_id === "string"
+          ? session.metadata.user_id
+          : undefined;
+
+      if (!subscriptionId) {
+        throw new Error("Missing subscription ID from checkout session");
+      }
+
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+        expand: ["items.data.price"],
+      });
+
+      const priceId = subscription.items.data[0]?.price?.id;
+      if (!priceId) {
+        throw new Error("Unable to determine price ID from subscription");
+      }
+
+      const response = await makeCustomerSubscriber(customerId, subscriptionId, priceId, userId);
+      console.log("Customer subscription activated for user:", userId || customerId);
+    } catch (error) {
+      console.error("Failed to activate subscription:", error instanceof Error ? error.message : error);
+      return res.status(500).json({ error: "Failed to activate subscription" });
+    }
   }
 
   if(event.type === "customer.subscription.deleted") {
