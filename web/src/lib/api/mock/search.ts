@@ -43,7 +43,7 @@ const mockCategories: SearchPageData["categories"] = [
   { id: "pokemon", name: "Pokémon", slug: "pokemon", href: "/category/pokemon" },
   { id: "one-piece", name: "One Piece", slug: "one-piece", href: "/category/one-piece" },
   { id: "basketball", name: "Basketball", slug: "basketball", href: "/category/basketball" },
-  { id: "american-football", name: "American Football", slug: "american-football", href: "/category/american-football" },
+  // { id: "american-football", name: "American Football", slug: "american-football", href: "/category/american-football" },
   { id: "other", name: "Other", slug: "other", href: "/category/other" },
 ];
 

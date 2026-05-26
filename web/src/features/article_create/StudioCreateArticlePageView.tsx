@@ -1,9 +1,9 @@
-import { StudioPageHeader } from "@/components/ui/studio_page_header/StudioPageHeader";
-import { ActionButton } from "@/components/ui/action_button/ActionButton";
 import { getStudioCreateArticleById } from "./queries";
-import { StudioCreateArticleForm } from "./StudioCreateArticleForm";
+import { StudioCreateArticleEditor } from "./StudioCreateArticleEditor";
 import { normaliseArticleData } from "../dashboard/queries/normaliseArticleData";
 import { StudioRouteFeedback } from "./StudioRouteFeedback";
+import { StudioPageHeader } from "@/components/ui/studio_page_header/StudioPageHeader";
+import { ActionButton } from "@/components/ui/action_button/ActionButton";
 
 type StudioFeedback = {
   type: "success" | "error";
@@ -25,7 +25,7 @@ export async function StudioCreateArticlePageView({
   return (
     <div className="mx-auto w-full max-w-[1200px] px-4 py-6 md:px-6 md:py-8">
       <div className="flex flex-col gap-6">
-        <StudioPageHeader
+        {/* <StudioPageHeader
           title="Create article"
           description="Draft, preview and prepare your story for publishing."
           actions={
@@ -35,14 +35,14 @@ export async function StudioCreateArticlePageView({
               <ActionButton variant="primary">Publish</ActionButton>
             </>
           }
-        />
+        /> */}
 
         <StudioRouteFeedback feedback={feedback} />
 
-        <StudioCreateArticleForm
+        <StudioCreateArticleEditor
           authorName={normalisedData.authorName}
           categories={normalisedData.categories}
-          article={normalisedData.article}
+          initialArticle={normalisedData.article}
         />
       </div>
     </div>

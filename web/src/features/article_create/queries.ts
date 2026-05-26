@@ -2,7 +2,7 @@ import { getStudioCreateArticleDataApi, saveStudioCreateArticleDraftApi, publish
 import { getMockStudioCreateArticleData, saveMockStudioCreateArticleDraft, publishMockStudioCreateArticle } from "@/lib/api/mock/studio_create_article";
 
 import { env } from "@/lib/env";
-import { API_BASE_URL } from "@/lib/env";
+import { API_BASE_URL_SERVER } from "@/lib/env";
 import type { StudioCreateArticle } from "./types";
 
 export async function getStudioCreateArticleData() {
@@ -23,7 +23,7 @@ export async function getStudioCreateArticleById(articleId: string) {
     };
   }
 
-  const response = await fetch(`${API_BASE_URL}/articles/${articleId}`, {
+  const response = await fetch(`${API_BASE_URL_SERVER}/articles/${articleId}`, {
     cache: "no-store",
   });
 
@@ -48,4 +48,20 @@ export async function publishStudioCreateArticle(article: StudioCreateArticle) {
   }
 
   return publishStudioCreateArticleApi(article);
+}
+
+export async function publishArticle(articleId: string) {
+  const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/publish_article/${articleId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Failed to publish article: ${response.status} ${errorBody}`);
+  }
+
+  return response.json();
 }

@@ -11,7 +11,7 @@ const homepageNavItems = [
   { label: "Pokémon", href: "/category/pokemon" },
   { label: "One Piece", href: "/category/one-piece" },
   { label: "Basketball", href: "/category/basketball" },
-  { label: "American Football", href: "/category/american-football" },
+  // { label: "American Football", href: "/category/american-football" },
   { label: "Other", href: "/category/other" },
   // { label: "Magic" },
   // { label: "Yu-Gi-Oh" },
