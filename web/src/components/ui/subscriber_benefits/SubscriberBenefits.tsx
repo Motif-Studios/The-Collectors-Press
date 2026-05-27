@@ -82,8 +82,8 @@ const benefits: Benefit[] = [
 
 export function SubscriberBenefits() {
   return (
-    <section className="py-16 px-6">
-      <div className="max-w-[1100px] mx-auto">
+    <section>
+      {/* <div className="max-w-[1100px] mx-auto">
         <h2 className="text-center text-xl font-bold mb-10">
           Subscriber benefits
         </h2>
@@ -93,7 +93,7 @@ export function SubscriberBenefits() {
             <BenefitItem key={index} {...benefit} />
           ))}
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }

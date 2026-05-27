@@ -1,4 +1,5 @@
 import { supabase } from "../../lib/supabase";
+import { randomUUID } from "crypto";
 
 // Local copy of the minimal `StudioCreateArticle` type used by the API.
 // Kept here to avoid importing types from the `web` package during API build.
@@ -41,6 +42,31 @@ export async function getDashboardArticles(userId: string) {
 }
 
 export async function createArticle(userId: string) {
+    const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", userId)
+        .maybeSingle();
+
+    if (profileError) {
+        console.error("Error checking profile for article creation:", profileError);
+        throw new Error(`Failed to check profile: ${profileError.message}`);
+    }
+
+    if (!profile) {
+        const { error: createProfileError } = await supabase
+            .from("profiles")
+            .insert({
+                id: userId,
+                user_type: "normal",
+            });
+
+        if (createProfileError) {
+            console.error("Error creating missing profile for article creation:", createProfileError);
+            throw new Error(`Failed to create profile: ${createProfileError.message}`);
+        }
+    }
+
     const { data, error } = await supabase
         .from("article")
         .insert({ 
@@ -48,7 +74,7 @@ export async function createArticle(userId: string) {
             title: "Untitled article",  
             preview_text: "Article preview text goes here. This should be a short summary or introduction to the article content.",
             description: "Article description goes here. This can be a longer summary or overview of the article, providing more context and details about the content.",
-            slug: `untitled-article-${Date.now()}`,
+            slug: `untitled-article-${Date.now()}-${randomUUID().slice(0, 8)}`,
             status: "draft",
         })
         .select("*")
@@ -56,7 +82,7 @@ export async function createArticle(userId: string) {
 
     if (error) {
         console.error("Error creating article:", error);
-        throw new Error("Failed to create article");
+        throw new Error(error.message);
     }
 
     return data;
