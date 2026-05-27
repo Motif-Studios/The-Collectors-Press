@@ -273,18 +273,141 @@ export function AccountAction({ name }: AccountActionProps) {
 }
 
 export function MenuAction() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isMenuOpen]);
+
+  const menuItems = [
+    { label: "Home", href: "/" },
+    { label: "Pokémon", href: "/category/pokemon" },
+    { label: "One Piece", href: "/category/one-piece" },
+    { label: "Basketball", href: "/category/basketball" },
+    { label: "Other", href: "/category/other" },
+    { label: "About The Collectors Press", href: "/about" },
+    { label: "Write for us", href: "#" },
+    { label: "Subscribe", href: "/subscribe" },
+  ];
+
   return (
-    <button className="flex items-center gap-2 text-sm font-semibold">
-      <span className="hidden lg:flex h-8 w-8 items-center justify-center rounded-full bg-white text-black">
-        <FontAwesomeIcon icon={faBars} />
-      </span>
+    <div>
+      <button 
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        className="flex items-center gap-2 text-sm font-semibold transition-colors duration-200 hover:text-white/70"
+      >
+        <span className="hidden lg:flex h-8 w-8 items-center justify-center rounded-full bg-white text-black transition-all duration-200">
+          <FontAwesomeIcon icon={faBars} />
+        </span>
 
-      <span className="flex lg:hidden text-white">
-        <FontAwesomeIcon icon={faBars} />
-      </span>
+        <span className="flex lg:hidden text-white">
+          <FontAwesomeIcon icon={faBars} />
+        </span>
 
-      <span className="hidden lg:inline">Menu</span>
-    </button>
+        <span className="hidden lg:inline">Menu</span>
+      </button>
+
+      {/* Modern Full-Screen Modal Menu */}
+      {isMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/60 z-40 animate-in fade-in duration-300"
+            onClick={() => setIsMenuOpen(false)}
+          />
+          
+          {/* Menu Panel */}
+          <div className="animate-in slide-in-from-left duration-300 fixed left-0 top-0 h-screen w-80 bg-black border-r border-white/10 z-50 overflow-y-auto">
+            {/* Close Button */}
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <span className="font-serif text-xl font-bold text-white">Menu</span>
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Menu Items */}
+            <div className="px-4 py-8 space-y-1">
+              {/* Categories Section */}
+              <div>
+                <p className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-white/50 mb-4">Categories</p>
+                <nav className="space-y-2">
+                  {[
+                    { label: "Home", href: "/" },
+                    { label: "Pokémon", href: "/category/pokemon" },
+                    { label: "One Piece", href: "/category/one-piece" },
+                    { label: "Basketball", href: "/category/basketball" },
+                    { label: "Other", href: "/category/other" },
+                  ].map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className="block px-3 py-3 text-base text-white hover:bg-white/5 rounded-lg transition-colors duration-200"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+              
+              {/* Divider */}
+              <div className="h-px bg-white/10 my-6" />
+              
+              {/* About & More Section */}
+              <div>
+                <p className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-white/50 mb-4">About</p>
+                <nav className="space-y-2">
+                  {[
+                    { label: "About The Collectors Press", href: "/about" },
+                    { label: "Write for us", href: "#" },
+                  ].map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className="block px-3 py-3 text-base text-white hover:bg-white/5 rounded-lg transition-colors duration-200"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+              
+              {/* Divider */}
+              <div className="h-px bg-white/10 my-6" />
+              
+              {/* Subscribe Section */}
+              <Link
+                href="/subscribe"
+                className="block px-3 py-3 mt-4 text-base font-semibold text-black bg-[#f4b73f] hover:bg-[#f5c549] rounded-lg transition-colors duration-200 text-center"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Subscribe
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 

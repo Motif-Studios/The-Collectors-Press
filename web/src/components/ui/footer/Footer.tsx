@@ -6,7 +6,7 @@ const footerSections = [
   {
     title: "The Collectors Press",
     links: [
-      { label: "About The Collectors Press", href: "#" },
+      { label: "About The Collectors Press", href: "/about" },
       { label: "Write for us", href: "#" },
       { label: "Contact us", href: "#" },
       { label: "Privacy Policy", href: "#" },
