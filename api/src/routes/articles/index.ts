@@ -95,9 +95,7 @@ router.get("/saved", async (req, res) => {
   if (!user_id || typeof user_id !== "string") {
     return res.status(400).json({ message: "user_id query parameter is required" });
   }
-  console.log("GET /articles/saved - user_id:", user_id);
   const articles = await getSavedArticles(user_id as string);
-  console.log(`GET /articles/saved - returning ${Array.isArray(articles) ? articles.length : 0} items`);
   res.json(articles);
 });
 
