@@ -8,7 +8,11 @@ const navItems = [
   { href: "/studio/create", label: "Create" },
 ];
 
-function isActivePath(pathname: string, href: string, exact?: boolean) {
+function isActivePath(pathname: string | null, href: string, exact?: boolean) {
+  if (!pathname) {
+    return false;
+  }
+
   if (exact) {
     return pathname === href;
   }
