@@ -24,7 +24,7 @@ export function StudioHeader({ user }: StudioHeaderProps) {
         <HeaderLeft>
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm font-semibold text-white"
+            className="flex items-center gap-2 text-sm font-semibold text-black"
           >
             Home
           </Link>

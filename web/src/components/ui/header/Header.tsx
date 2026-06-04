@@ -40,25 +40,27 @@ export function Header({
 }: HeaderProps) {
   
   if (children) {
-    return <header className="w-full bg-black text-white">{children}</header>;
+    return <header className="w-full bg-white text-black">{children}</header>;
   }
 
   return (
-    <header className="w-full bg-black text-white">
-      <HeaderTopBar>
-        <HeaderLeft>
-          <MenuAction />
-          <SearchAction />
-        </HeaderLeft>
+    <header className="w-full">
+      <div className="bg-white text-black">
+        <HeaderTopBar>
+          <HeaderLeft>
+            <MenuAction />
+            <SearchAction />
+          </HeaderLeft>
 
-        <HeaderCenter />
+          <HeaderCenter />
 
-        <HeaderRight>
-          {!isSubscriber ? <SubscribeButton /> : null}
+          <HeaderRight>
+            {!isSubscriber ? <SubscribeButton /> : null}
 
-          {user ? <AccountAction name={user.name} /> : <SignInButton />}
-        </HeaderRight>
-      </HeaderTopBar>
+            {user ? <AccountAction name={user.name} /> : <SignInButton />}
+          </HeaderRight>
+        </HeaderTopBar>
+      </div>
 
       {navItems.length > 0 ? <HeaderNav items={navItems} /> : null}
     </header>
@@ -67,7 +69,7 @@ export function Header({
 
 export function HeaderTopBar({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center border-b border-white/20 px-3 py-3 md:px-9 md:py-2.5">
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center border-b border-black/10 px-3 py-3 md:px-9 md:py-2.5">
       {children}
     </div>
   );
@@ -90,7 +92,7 @@ export function HeaderCenter() {
     <div className="flex items-center justify-center text-center">
       <Link href="/" className="inline-flex items-center justify-center">
         <Image
-          src="/brand/logo/white.png"
+          src="/brand/logo/black.png"
           alt="Motif"
           width={100}
           height={40}
@@ -104,7 +106,7 @@ export function HeaderCenter() {
 
 export function HeaderNav({ items }: { items: NavItem[] }) {
   return (
-    <nav className="border-b border-white/20 px-3">
+    <nav className="bg-black border-b border-white/20 px-3">
       <div className="flex items-center justify-start sm:justify-center gap-8 overflow-x-auto whitespace-nowrap py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {items.map((item, index) => (
           <a
@@ -150,13 +152,13 @@ export function SignInButton() {
   return (
     <>
       <Link href={"/login"} className="inline-flex items-center gap-2">
-        <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
+        <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-semibold text-white">
           <FontAwesomeIcon icon={faUser} />
           <span>Sign In</span>
         </button>
       </Link>
       <Link href={"/login"}>
-      <button className="inline-flex lg:hidden text-sm font-semibold text-white">
+      <button className="inline-flex lg:hidden text-sm font-semibold text-black">
           Sign In
         </button>
       </Link>
@@ -215,7 +217,7 @@ export function AccountAction({ name }: AccountActionProps) {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="flex items-center gap-2 !bg-transparent !p-0 !border-0 !shadow-none text-sm font-semibold text-white hover:text-white/80 transition"
+          className="flex items-center gap-2 !bg-transparent !p-0 !border-0 !shadow-none text-sm font-semibold text-black hover:text-black/80 transition"
         >
           <span className="hidden lg:flex items-center gap-2">
             <FontAwesomeIcon icon={faUser} />
@@ -229,19 +231,19 @@ export function AccountAction({ name }: AccountActionProps) {
             />
           </span>
 
-          <span className="flex lg:hidden">
+          <span className="flex lg:hidden text-black">
             <FontAwesomeIcon icon={faUser} />
           </span>
         </button>
 
         {/* Dropdown Menu */}
         {isDropdownOpen && (
-          <div className="absolute right-0 top-full mt-2 w-48 rounded-lg bg-neutral-900 border border-white/20 shadow-lg z-50">
+          <div className="absolute right-0 top-full mt-2 w-48 rounded-lg bg-white border border-black/10 shadow-lg z-50">
             <div className="py-2">
               {/* Studio Link */}
               <Link
                 href="/studio"
-                className="block px-4 py-2 text-sm text-white hover:bg-neutral-800 transition"
+                className="block px-4 py-2 text-sm text-black hover:bg-black/5 transition"
                 onClick={() => setIsDropdownOpen(false)}
               >
                 Studio
@@ -250,7 +252,7 @@ export function AccountAction({ name }: AccountActionProps) {
               {/* Account Link */}
               <Link
                 href="/my-account"
-                className="block px-4 py-2 text-sm text-white hover:bg-neutral-800 transition"
+                className="block px-4 py-2 text-sm text-black hover:bg-black/5 transition"
                 onClick={() => setIsDropdownOpen(false)}
               >
                 My Account
@@ -264,7 +266,7 @@ export function AccountAction({ name }: AccountActionProps) {
       <button
         onClick={handleLogout}
         disabled={isLoggingOut}
-        className="text-sm font-semibold text-white hover:text-white/80 transition disabled:opacity-60"
+        className="text-sm font-semibold text-black hover:text-black/80 transition disabled:opacity-60"
       >
         {isLoggingOut ? "Logging out..." : "Logout"}
       </button>
@@ -307,13 +309,13 @@ export function MenuAction() {
     <div>
       <button 
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="flex items-center gap-2 text-sm font-semibold transition-colors duration-200 hover:text-white/70"
+        className="flex items-center gap-2 text-sm font-semibold transition-colors duration-200 text-black hover:text-black/70"
       >
-        <span className="hidden lg:flex h-8 w-8 items-center justify-center rounded-full bg-white text-black transition-all duration-200">
+        <span className="hidden lg:flex h-8 w-8 items-center justify-center rounded-full bg-black text-white transition-all duration-200">
           <FontAwesomeIcon icon={faBars} />
         </span>
 
-        <span className="flex lg:hidden text-white">
+        <span className="flex lg:hidden text-black">
           <FontAwesomeIcon icon={faBars} />
         </span>
 
@@ -338,7 +340,7 @@ export function MenuAction() {
                 onClick={() => setIsMenuOpen(false)}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -413,12 +415,12 @@ export function MenuAction() {
 
 export function SearchAction() {
   return (
-    <Link href="/search" className="flex items-center gap-2 text-sm font-semibold">
-      <span className="hidden lg:flex h-8 w-8 items-center justify-center rounded-full bg-white text-black">
+    <Link href="/search" className="flex items-center gap-2 text-sm font-semibold text-black">
+      <span className="hidden lg:flex h-8 w-8 items-center justify-center rounded-full bg-black text-white">
         <FontAwesomeIcon icon={faSearch} />
       </span>
 
-      <span className="flex lg:hidden text-white">
+      <span className="flex lg:hidden text-black">
         <FontAwesomeIcon icon={faSearch} />
       </span>
 

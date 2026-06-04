@@ -30,7 +30,7 @@ export function SubscribeHeader({ user = null }: SubscribeHeaderProps) {
             <AccountAction name={user.name} />
           ) : (
             <>
-              <span className="hidden lg:inline text-sm font-semibold text-white">
+              <span className="hidden lg:inline text-sm font-semibold text-black">
                 Already a subscriber?
               </span>
 
