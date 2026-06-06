@@ -30,17 +30,19 @@ export default async function PublicLayout({
 
   return (
     <LogoutFeedbackProvider>
-      <Header
-        navItems={homepageNavItems}
-        user={handleUser}
-        isSubscriber={isSubscriber}
-      />
+      <div className="flex min-h-screen flex-col">
+        <Header
+          navItems={homepageNavItems}
+          user={handleUser}
+          isSubscriber={isSubscriber}
+        />
 
-      <LogoutFeedbackBanner />
+        <LogoutFeedbackBanner />
 
-      <main>{children}</main>
+        <main className="flex-1">{children}</main>
 
-      <Footer />
+        <Footer />
+      </div>
     </LogoutFeedbackProvider>
   );
 }

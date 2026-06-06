@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getArticleByCategoryName, getAllArticles, getArticleById, getArticleBySlug, getSavedArticles, getHomePageData } from "../../../controllers/articles/controller";
+import { getArticleByCategoryName, getAllArticles, getArticleById, getArticleBySlug, getSavedArticles, getHomePageData, saveArticleToUser, isArticleSaved } from "../../../controllers/articles/controller";
 
 const router = Router();
 
@@ -101,6 +101,50 @@ router.get("/saved", async (req, res) => {
 
 /**
  * @openapi
+ * /articles/save:
+ *   post:
+ *     tags: [Articles]
+ *     summary: Save an article for a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_id:
+ *                 type: string
+ *               article_id:
+ *                 type: string
+ *             required:
+ *               - user_id
+ *               - article_id
+ *     responses:
+ *       200:
+ *         description: Article saved
+ *       400:
+ *         description: Missing user_id or article_id
+ *       500:
+ *         description: Failed to save article
+ */
+router.post("/save", async (req, res) => {
+  const { user_id, article_id } = req.body ?? {};
+
+  if (!user_id || typeof user_id !== "string" || !article_id || typeof article_id !== "string") {
+    return res.status(400).json({ message: "user_id and article_id are required" });
+  }
+
+  const result = await saveArticleToUser(user_id, article_id);
+
+  if (result && typeof result === "object" && "success" in result) {
+    return res.json(result);
+  }
+
+  return res.status(500).json({ message: "Failed to save article" });
+});
+
+/**
+ * @openapi
  * /articles/home-data:
  *   get:
  *     tags: [Articles]
@@ -156,6 +200,20 @@ router.get("/:article_id", async (req, res) => {
   const { article_id } = req.params;
   const data = await getArticleById(article_id);
   res.json(data); 
+});
+
+/**
+ * GET /articles/is-saved
+ * query: user_id, article_id
+ */
+router.get("/is-saved", async (req, res) => {
+  const { user_id, article_id } = req.query;
+  if (!user_id || typeof user_id !== "string" || !article_id || typeof article_id !== "string") {
+    return res.status(400).json({ message: "user_id and article_id query parameters are required" });
+  }
+
+  const saved = await isArticleSaved(user_id as string, article_id as string);
+  res.json({ saved });
 });
 
 export default router;

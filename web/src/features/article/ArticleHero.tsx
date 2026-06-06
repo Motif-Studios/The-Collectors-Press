@@ -1,10 +1,10 @@
 import Image from "next/image";
 import type { Article } from "@/features/article/types";
-import { Icon } from "@/components/ui/icon/Icon";
-import { faBookBookmark, faShare } from "@fortawesome/free-solid-svg-icons";
+import { SaveArticleButton } from "./SaveArticleButton";
 
 type ArticleHeroProps = {
   article: Article;
+  userId?: string;
 };
 
 function formatArticleDate(dateString: string) {
@@ -16,7 +16,7 @@ function formatArticleDate(dateString: string) {
   });
 }
 
-export function ArticleHero({ article }: ArticleHeroProps) {
+export function ArticleHero({ article, userId }: ArticleHeroProps) {
   return (
     <section className="mb-12 pt-11 max-[640px]:pt-7">
       {article.category ? (
@@ -64,7 +64,7 @@ export function ArticleHero({ article }: ArticleHeroProps) {
         </p>
 
         <div className="flex items-center gap-6.5 max-[640px]:flex-wrap max-[640px]:gap-4.5">
-          <button
+          {/* <button
             type="button"
             className="inline-flex items-center gap-1.75 font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition"
           >
@@ -73,15 +73,9 @@ export function ArticleHero({ article }: ArticleHeroProps) {
               icon={faShare}
               className="text-[14px]"
             />
-          </button>
+          </button> */}
 
-          <button
-            type="button"
-            className="inline-flex items-center gap-1.75 font-sans text-[12px] font-bold uppercase tracking-[1.2px] text-[#111] hover:opacity-70 transition"
-          >
-            <span>Save</span>
-            <Icon icon={faBookBookmark} />
-          </button>
+          {userId ? <SaveArticleButton userId={userId} articleId={article.id} /> : null}
         </div>
       </div>
     </section>

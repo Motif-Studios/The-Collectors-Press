@@ -68,7 +68,7 @@ export async function ArticlePageView({ article }: { article: Article }) {
   return (
     <div>
       <Wrapper>
-        <ArticleHero article={article} />
+        <ArticleHero article={article} userId={user?.id} />
         <div className="px-15 mb-24">
           {user && hasSubscription ? (
             <ArticleBodyRenderer content={article.body} />

@@ -321,3 +321,41 @@ export async function getHomePageData() {
         }
     };     
 }
+
+export async function saveArticleToUser(userId: string, articleId: string) {
+    const { error } = await supabase        
+        .from("saved_articles")
+        .insert({ user_id: userId, article_id: articleId });
+
+    if (error) {
+        console.error("Error saving article for user:", error);
+        return error;
+    }
+
+    return { success: true };
+}
+
+export async function isArticleSaved(userId: string, articleId: string) {
+    try {
+        const { data, error } = await supabase
+            .from("saved_articles")
+            .select("id")
+            .eq("user_id", userId)
+            .eq("article_id", articleId)
+            .single();
+
+        if (error) {
+            if ((error as any).code === "PGRST116") {
+                // No rows found (single() returns 406-like error in some setups) — treat as not saved
+                return false;
+            }
+            console.error("Error checking saved article:", error);
+            return false;
+        }
+
+        return !!(data && data.id);
+    } catch (err) {
+        console.error("isArticleSaved unexpected error:", err);
+        return false;
+    }
+}

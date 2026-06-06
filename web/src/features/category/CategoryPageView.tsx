@@ -18,7 +18,9 @@ export async function CategoryPageView({
   categorySlug: string;
 }) {
   const title = slugToTitle(categorySlug);
+  console.log("CategoryPageView rendered with slug:", categorySlug);
   const initialArticles = await getCategoryArticles(categorySlug, 10, 0);
+  console.log("Fetched initial articles for category:", initialArticles);
 
   return (
     <div className="mb-12">

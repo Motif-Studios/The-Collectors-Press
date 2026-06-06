@@ -9,8 +9,27 @@ export async function getSearchPageDataApi(searchQuery: string) {
             fetch(`${API_BASE_URL_SERVER}/search/category`),
         ]);
 
-        const articles = articlesRes.ok ? await articlesRes.json() : [];
+        const articlesData = articlesRes.ok ? await articlesRes.json() : [];
         const categoriesData = categoriesRes.ok ? await categoriesRes.json() : [];
+
+        const articles = (Array.isArray(articlesData) ? articlesData : []).map((article) => {
+            const title = String(article.title || article.name || "");
+            const summary = String(article.preview_text || article.description || article.summary || "");
+            const imageSrc = String(article.cover_image_url || article.imageSrc || "");
+            const imageAlt = String(article.image_alt || article.imageAlt || title || "Article cover image");
+
+            return {
+                id: String(article.article_id || article.id || title),
+                title,
+                summary,
+                author: String(article.author_name || article.author || "Unknown author"),
+                date: String(article.created_at || article.date || ""),
+                caption: String(article.cover_image_caption || article.caption || ""),
+                imageSrc,
+                imageAlt,
+                href: article.slug ? `/article/${encodeURIComponent(article.slug)}` : "#",
+            };
+        });
 
         const queryLower = query.toLowerCase();
         const categories = (Array.isArray(categoriesData) ? categoriesData : [])
