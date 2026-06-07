@@ -84,9 +84,9 @@ export async function StudioDashboardPageView() {
             <th className="border-b border-neutral-300 px-4.5 py-4 text-left text-xs uppercase tracking-[0.06em] text-neutral-600">
               Category
             </th>
-            <th className="border-b border-neutral-300 px-4.5 py-4 text-left text-xs uppercase tracking-[0.06em] text-neutral-600">
+            {/* <th className="border-b border-neutral-300 px-4.5 py-4 text-left text-xs uppercase tracking-[0.06em] text-neutral-600">
               Updated
-            </th>
+            </th> */}
             <th className="border-b border-neutral-300 px-4.5 py-4 text-left text-xs uppercase tracking-[0.06em] text-neutral-600">
               Author
             </th>
@@ -119,16 +119,18 @@ export async function StudioDashboardPageView() {
                 {article.category}
               </td>
 
-              <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
+              {/* <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
                 <span className="inline-block max-w-[90px] leading-[1.45]">
                   {article.updatedAtLabel}
                 </span>
-              </td>
+              </td> */}
 
               <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
-                <span className="inline-block max-w-[70px] leading-[1.45]">
-                  {article.authorName}
-                </span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="block max-w-[140px] truncate leading-[1.45]">
+                    {article.authorName}
+                  </span>
+                </div>
               </td>
 
               <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
