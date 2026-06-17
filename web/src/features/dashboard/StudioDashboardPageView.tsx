@@ -47,10 +47,10 @@ export async function StudioDashboardPageView() {
 
           <SelectInput>
             <option value="all-categories">All categories</option>
-            <option value="news">News</option>
-            <option value="opinion">Opinion</option>
-            <option value="culture">Culture</option>
-            <option value="technology">Technology</option>
+            <option value="news">Pokémon</option>
+            <option value="opinion">One Piece</option>
+            <option value="culture">Basketball</option>
+            <option value="technology">Other</option>
           </SelectInput>
 
           <SelectInput>

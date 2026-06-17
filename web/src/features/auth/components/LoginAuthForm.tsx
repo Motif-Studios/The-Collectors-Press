@@ -68,7 +68,7 @@ export function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
-              className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
+              className="h-14 w-full border-0 bg-[#ffffff] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#000000]/40"
             />
 
             <label className="block text-sm font-medium text-[#111]" htmlFor="login-password">
@@ -81,27 +81,27 @@ export function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
+              className="h-14 w-full border-0 bg-[#ffffff] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#000000]/40"
             />
           </div>
 
           <button
             onClick={handleLogin}
             disabled={loading}
-            className="mt-6 inline-flex h-12 w-full items-center justify-center bg-[#3fa0cf] text-[15px] font-bold text-white transition hover:bg-[#3495c3] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-6 inline-flex h-12 w-full items-center justify-center bg-[#000000] text-[15px] font-bold text-white transition hover:bg-[#000000]/90 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Continue"}
           </button>
 
           <p className="mt-6 text-sm text-[#6c7680]">
             Don’t have an account?{" "}
-            <Link href="/register" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#3fa0cf]">
+            <Link href="/register" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#000000]/70">
               Create one
             </Link>
           </p>
           <p className="mt-2 text-sm text-[#6c7680]">
             Forgot your password?{" "}
-            <Link href="/forgot_password" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#3fa0cf]">
+            <Link href="/forgot_password" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#000000]/70">
               Reset it
             </Link>
           </p>

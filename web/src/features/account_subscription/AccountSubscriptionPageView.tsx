@@ -13,10 +13,16 @@ export async function AccountSubscriptionPageView() {
     <div>
       <div className="w-165 max-w-full">
         <Panel>
-          <PanelHeader title="Become a Kevin Wu subscriber today." />
+          <PanelHeader title="Become a subscriber of The Collectors Press today" />
 
           <PanelBody className="pt-0">
-            <div className="space-y-8">
+              {/* <div className="space-y-2">
+                <h3 className="text-[18px] font-normal text-neutral-500">
+                  Cancel anytime, no questions asked.
+                </h3>
+                </div>
+                <br></br> */}
+            {/* <div className="space-y-8">
               <div className="space-y-2">
                 <h3 className="text-[18px] font-normal text-neutral-500">
                   Digital
@@ -84,7 +90,7 @@ export async function AccountSubscriptionPageView() {
                   <div className="flex items-start gap-3">
                     <Icon icon={faCheck} className="mt-1 text-[#0f6da9]" />
                     <span className="text-[16px] leading-[1.45] text-black italic">
-                      Kevin Wu
+                      The Collectors Press
                     </span>
                     <span className="text-[16px] leading-[1.45] text-black">
                       scrapbook
@@ -98,12 +104,12 @@ export async function AccountSubscriptionPageView() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <Button variant="primary" className="mt-2">
                 Explore Options
               </Button>
-            </div>
+         
           </PanelBody>
         </Panel>
       </div>

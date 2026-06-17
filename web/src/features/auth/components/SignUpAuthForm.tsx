@@ -74,7 +74,7 @@ export function SignUpForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
-              className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
+              className="h-14 w-full border-0 bg-[#ffffff] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#000000]/40"
             />
 
             <label className="block text-sm font-medium text-[#111]" htmlFor="signup-password">
@@ -87,7 +87,7 @@ export function SignUpForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
-              className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
+              className="h-14 w-full border-0 bg-[#ffffff] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#000000]/40"
             />
 
             <label className="block text-sm font-medium text-[#111]" htmlFor="signup-password-check">
@@ -100,21 +100,21 @@ export function SignUpForm() {
               value={passwordCheck}
               onChange={(e) => setPasswordCheck(e.target.value)}
               autoComplete="new-password"
-              className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
+              className="h-14 w-full border-0 bg-[#ffffff] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#000000]/40"
             />
           </div>
 
           <button
             onClick={handleSignUp}
             disabled={loading}
-            className="mt-6 inline-flex h-12 w-full items-center justify-center bg-[#3fa0cf] text-[15px] font-bold text-white transition hover:bg-[#3495c3] disabled:cursor-not-allowed disabled:opacity-50"
+            className="cursor-pointer mt-6 inline-flex h-12 w-full items-center justify-center bg-[#000000] text-[15px] font-bold text-white transition hover:bg-[#000000]/90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Creating account..." : "Continue"}
           </button>
 
           <p className="mt-6 text-sm text-[#6c7680]">
             Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#3fa0cf]">
+            <Link href="/login" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#000000]/70">
               Sign in
             </Link>
           </p>

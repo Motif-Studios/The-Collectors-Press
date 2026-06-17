@@ -49,7 +49,11 @@ export function CategoryArticlesList({
         return;
       }
 
+      console.log("category slug:", categorySlug, "offset:", offset);
+
       const newArticles: Article[] = await response.json();
+
+      console.log("fetched articles:", newArticles);
 
       setArticles((prev) => [...prev, ...newArticles]);
       setOffset((prev) => prev + newArticles.length);

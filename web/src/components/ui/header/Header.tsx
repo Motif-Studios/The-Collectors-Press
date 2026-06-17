@@ -133,14 +133,14 @@ export function SubscribeButton() {
   return (
     <>
       <Link href={"/subscribe"}>
-        <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#f4b73f] px-4 py-2 text-sm font-semibold text-black">
+        <button className="cursor-pointer hidden lg:inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-[#d4a843] via-[#f0c060] to-[#a87820] px-4 py-2 text-sm font-semibold text-black">
           <FontAwesomeIcon icon={faReadme} className="text-sm" />
           <span>Subscribe</span>
         </button>
       </Link>
 
       <Link href={"/subscribe"}>
-        <button className="inline-flex lg:hidden text-sm font-semibold text-[#f4b73f]">
+        <button className="cursor-pointer inline-flex lg:hidden text-sm font-semibold text-[#f4b73f]">
           Subscribe
         </button>
       </Link>
@@ -152,13 +152,13 @@ export function SignInButton() {
   return (
     <>
       <Link href={"/login"} className="inline-flex items-center gap-2">
-        <button className="hidden lg:inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
+        <button className="cursor-pointer hidden lg:inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
           <FontAwesomeIcon icon={faUser} />
           <span>Sign In</span>
         </button>
       </Link>
       <Link href={"/login"}>
-      <button className="inline-flex lg:hidden text-sm font-semibold text-white">
+      <button className="cursor-pointer inline-flex lg:hidden text-sm font-semibold text-white">
           Sign In
         </button>
       </Link>
@@ -309,7 +309,7 @@ export function MenuAction() {
     <div>
       <button 
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="flex items-center gap-2 text-sm font-semibold transition-colors duration-200 hover:text-white/70"
+        className="cursor-pointer flex items-center gap-2 text-sm font-semibold transition-colors duration-200 hover:text-white/70"
       >
         <span className="hidden lg:flex h-8 w-8 items-center justify-center rounded-full bg-white text-black transition-all duration-200">
           <FontAwesomeIcon icon={faBars} />
@@ -338,7 +338,7 @@ export function MenuAction() {
               <span className="font-serif text-xl font-bold text-white">Menu</span>
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="cursor-pointer p-2 hover:bg-white/10 rounded-lg transition-colors"
               >
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -400,7 +400,7 @@ export function MenuAction() {
               {/* Subscribe Section */}
               <Link
                 href="/subscribe"
-                className="block px-3 py-3 mt-4 text-base font-semibold text-black bg-[#f4b73f] hover:bg-[#f5c549] rounded-lg transition-colors duration-200 text-center"
+                className="cursor-pointer block px-3 py-3 mt-4 text-base font-semibold text-black bg-[#f4b73f] hover:bg-[#f5c549] rounded-lg transition-colors duration-200 text-center"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Subscribe
