@@ -96,7 +96,7 @@ export async function getArticleBySlug(articleSlug: string): Promise<Article | n
   }
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://the-collectors-press-b-git-79febd-motifstudiosnz-4127s-projects.vercel.app/";
     const response = await fetch(
       `${baseUrl}/api/articles/slug/${encodeURIComponent(articleSlug)}`
     );
