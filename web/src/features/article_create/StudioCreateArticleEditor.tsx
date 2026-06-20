@@ -39,8 +39,12 @@ export function StudioCreateArticleEditor({
         ...current,
         lastSavedLabel: "Just now",
       }));
-
-      window.open(`/studio/articles/${form.id}/preview`, "_blank", "noopener,noreferrer");
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+      window.open(
+        `${baseUrl}/studio/preview/${form.id}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
     } catch {
       setForm((current) => ({
         ...current,
