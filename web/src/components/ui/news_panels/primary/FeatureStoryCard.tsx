@@ -36,7 +36,7 @@ export function FeatureStoryCard({
             <span className="text-[14px] font-bold text-[#111]">{type}</span>
           )}
           {section && (
-            <span className="text-[14px] font-bold text-[#5b83c4]">
+            <span className="text-[14px] font-bold text-[#B8860B]">
               {section}
             </span>
           )}

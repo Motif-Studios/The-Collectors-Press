@@ -15,7 +15,7 @@ export function StoryCard({
 }: StoryCardProps) {
   const content = (
     <>
-      {kicker && <span className="block mb-2 text-[13px] font-bold text-[#5b83c4]">{kicker}</span>}
+      {kicker && <span className="block mb-2 text-[13px] font-bold text-[#B8860B]">{kicker}</span>}
 
       <h2 className="mb-3 font-serif text-[28px] leading-[1.02] wrap-break-word font-bold tracking-[-0.4px] text-[#111]">
         {title}
