@@ -1,7 +1,7 @@
 import type { Article } from "./types";
 import { getArticleSecondaryPanelData } from "@/lib/api/article";
 import { getMockArticleBySlug, getMockArticleSecondaryPanelData } from "@/lib/api/mock/article";
-import { env } from "@/lib/env";
+import { API_BASE_URL_SERVER, env } from "@/lib/env";
 
 type ApiArticle = {
   article_id?: string;
@@ -96,25 +96,35 @@ export async function getArticleBySlug(articleSlug: string): Promise<Article | n
   }
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://the-collectors-press-b-git-79febd-motifstudiosnz-4127s-projects.vercel.app/";
-    const response = await fetch(
-      `${baseUrl}/api/articles/slug/${encodeURIComponent(articleSlug)}`
-    );
-
-    if (!response.ok) return null;
-
-    const articleRaw = (await response.json()) as ApiArticle;
-
-    if (!articleRaw || typeof articleRaw !== "object") {
-      return null;
-    }
-
-    const normalized = normaliseArticle(articleRaw);
-
-    return normalized;
-  } catch {
-    return null;
-  }
+    // const baseUrl = process.env.API_BASE_URL_SERVER ?? "https://thecollectorspress.com/";
+    const response = await fetch(`${API_BASE_URL_SERVER}/articles/slug/${encodeURIComponent(articleSlug)}`);
+    
+        const contentType = response.headers.get("content-type") ?? "";
+    
+        if (!contentType.includes("application/json")) {
+          const body = await response.text();
+    
+          console.error("Error fetching article page data: non-JSON response", {
+            status: response.status,
+            contentType,
+            preview: body.slice(0, 120),
+          });
+    
+          return null;
+        }
+    
+        const data = await response.json();
+    
+        if (!response.ok || data?.error) {
+          console.error("Error fetching article page data:", data?.error ?? response.statusText);
+          return null;
+        }
+    
+        return data;
+      } catch (error) {
+        console.error("Error fetching article page data:", error);
+        return null;
+      }
 }
 
 export async function getArticlePageData(articleCategory: string) {
