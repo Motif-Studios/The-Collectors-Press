@@ -18,8 +18,8 @@ const footerSections: FooterSection[] = [
     title: "The Collectors Press",
     links: [
       { label: "About The Collectors Press", href: "/about" },
-      { label: "Write for us", href: "#" },
-      { label: "Contact us", href: "#" },
+      { label: "Write for us", href: "/write-for-us" },
+      { label: "Contact us", href: "/contact-us" },
       { label: "Privacy Policy", href: "#" },
       { label: "Terms of use", href: "#" },
     ],
