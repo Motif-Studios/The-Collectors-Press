@@ -6,15 +6,15 @@ import { SearchInput } from "@/components/ui/search/SearchInput";
 
 export function SearchBar() {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "/";
   const searchParams = useSearchParams();
 
-  const currentQuery = searchParams.get("q") ?? "";
+  const currentQuery = searchParams?.get("q") ?? "";
   const [value, setValue] = useState(currentQuery);
 
   function handleSubmit(submittedValue: string) {
     const trimmedValue = submittedValue.trim();
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
 
     if (trimmedValue) {
       params.set("q", trimmedValue);
@@ -28,7 +28,7 @@ export function SearchBar() {
   function handleClear() {
     setValue("");
 
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
     params.delete("q");
 
     const queryString = params.toString();

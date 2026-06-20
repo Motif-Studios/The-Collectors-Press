@@ -7,17 +7,32 @@ if (!stripeSecretKey) {
 }
 const stripe = new Stripe(stripeSecretKey);
 
-export async function makeCustomerSubscriber(customerId: string, subscriptionId: string, priceId: string) {
+export async function makeCustomerSubscriber(customerId: string | undefined, subscriptionId: string, priceId: string, userId?: string) {
     const plan_type = priceId === "price_1TM6yzAcAGiNxdHjxrlslPCK" ? "monthly" : "yearly";
 
-    const { data, error } = await supabase
+    let query = supabase
         .from("subscription")
-        .update({ subscription_status: "active", plan_type: plan_type, stripe_subscription_id: subscriptionId, updated_at: new Date() })
-        .eq("stripe_customer_id", customerId)
+        .update({ subscription_status: "active", plan_type: plan_type, stripe_subscription_id: subscriptionId, updated_at: new Date() });
+
+    if (customerId) {
+        query = query.eq("stripe_customer_id", customerId);
+    } else if (userId) {
+        query = query.eq("user_id", userId);
+    } else {
+        throw new Error("Cannot activate subscription without customerId or userId");
+    }
+
+    const { data, error } = await query
+        .select("id, user_id, stripe_customer_id, subscription_status")
+        .maybeSingle();
         
     if(error) {
         console.error("Error updating subscription status:", error);
         throw new Error("Failed to update subscription status");
+    }
+
+    if (!data) {
+        throw new Error("No subscription row found to activate");
     }
 
     return data;
@@ -55,7 +70,7 @@ export async function createStripeCustomer(email: string) {
 export async function handleSubscriptionCancellation(subscription: string) {
     const { data, error } = await supabase
         .from("subscription")
-        .update({ subscription_status: "cancelled", updated_at: new Date() })
+        .update({ subscription_status: "canceled", updated_at: new Date() })
         .eq("stripe_subscription_id", subscription);
     
     if (error) {

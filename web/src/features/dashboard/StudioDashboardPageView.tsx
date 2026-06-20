@@ -6,15 +6,7 @@ import { ArticleStatsCard } from "@/components/ui/article_stats_card/ArticleStat
 import { Table } from "@/components/ui/table/Table";
 import { ArticleStatusBadge } from "@/components/ui/article_status_badge/ArticleStatusBadge";
 import { getStudioDashboardData } from "./queries";
-import { deleteArticle } from "./queries/deleteArticle";
 import { DeleteArticleButton } from "./DeleteArticleButton";
-
-
-async function deleteArticleAction(articleId: string) {
-  "use server";
-
-  await deleteArticle(articleId);
-}
 
 
 export async function StudioDashboardPageView() {
@@ -55,10 +47,10 @@ export async function StudioDashboardPageView() {
 
           <SelectInput>
             <option value="all-categories">All categories</option>
-            <option value="news">News</option>
-            <option value="opinion">Opinion</option>
-            <option value="culture">Culture</option>
-            <option value="technology">Technology</option>
+            <option value="news">Pokémon</option>
+            <option value="opinion">One Piece</option>
+            <option value="culture">Basketball</option>
+            <option value="technology">Other</option>
           </SelectInput>
 
           <SelectInput>
@@ -92,9 +84,9 @@ export async function StudioDashboardPageView() {
             <th className="border-b border-neutral-300 px-4.5 py-4 text-left text-xs uppercase tracking-[0.06em] text-neutral-600">
               Category
             </th>
-            <th className="border-b border-neutral-300 px-4.5 py-4 text-left text-xs uppercase tracking-[0.06em] text-neutral-600">
+            {/* <th className="border-b border-neutral-300 px-4.5 py-4 text-left text-xs uppercase tracking-[0.06em] text-neutral-600">
               Updated
-            </th>
+            </th> */}
             <th className="border-b border-neutral-300 px-4.5 py-4 text-left text-xs uppercase tracking-[0.06em] text-neutral-600">
               Author
             </th>
@@ -127,16 +119,18 @@ export async function StudioDashboardPageView() {
                 {article.category}
               </td>
 
-              <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
+              {/* <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
                 <span className="inline-block max-w-[90px] leading-[1.45]">
                   {article.updatedAtLabel}
                 </span>
-              </td>
+              </td> */}
 
               <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
-                <span className="inline-block max-w-[70px] leading-[1.45]">
-                  {article.authorName}
-                </span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="block max-w-[140px] truncate leading-[1.45]">
+                    {article.authorName}
+                  </span>
+                </div>
               </td>
 
               <td className="border-b border-[#e3ddd4] px-[18px] py-[18px] align-top text-sm text-black">
@@ -149,7 +143,7 @@ export async function StudioDashboardPageView() {
                     {article.secondaryActionLabel}
                   </button>
 
-                  <DeleteArticleButton action={deleteArticleAction.bind(null, article.id)} />
+                  <DeleteArticleButton articleId={article.id} />
                 </div>
               </td>
             </tr>

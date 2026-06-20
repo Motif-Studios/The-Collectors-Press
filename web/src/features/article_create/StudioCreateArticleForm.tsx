@@ -7,6 +7,7 @@ import { ArticleMetaCard } from "@/components/ui/article_meta_card/ArticleMetaCa
 import { ArticleStatusBadge } from "@/components/ui/article_status_badge/ArticleStatusBadge";
 import { classNameHelper } from "@/lib/utils/classNameHelper";
 import { StudioArticleBodyEditor } from "./StudioArticleBodyEditor";
+import { useLogoutFeedback } from "@/components/ui/logout_feedback/LogoutFeedback";
 import type {
   StudioCreateArticle,
   EditorJsContent,
@@ -55,7 +56,7 @@ type StudioCreateArticleFormProps = {
   authorName: string;
   categories: string[];
   article: StudioCreateArticle;
-  onChange: (article: StudioCreateArticle) => void;
+  onChange?: (article: StudioCreateArticle) => void;
 };
 
 export function StudioCreateArticleForm({
@@ -64,40 +65,72 @@ export function StudioCreateArticleForm({
   article,
   onChange,
 }: StudioCreateArticleFormProps) {
+  const { showSuccess, showError, clearMessage } = useLogoutFeedback();
+  const [localArticle, setLocalArticle] = React.useState<StudioCreateArticle>(article);
+
+  React.useEffect(() => {
+    if (!onChange) {
+      setLocalArticle(article);
+    }
+  }, [article, onChange]);
+
+  const currentArticle = onChange ? article : localArticle;
+
   function updateField<K extends keyof StudioCreateArticle>(
     key: K,
     value: StudioCreateArticle[K],
   ) {
-    onChange({
-      ...article,
+    const nextArticle = {
+      ...currentArticle,
       [key]: value,
-    });
+    };
+
+    if (onChange) {
+      onChange(nextArticle);
+      return;
+    }
+
+    setLocalArticle(nextArticle);
   }
 
   function handleBodyChange(body: EditorJsContent) {
-    onChange({
-      ...article,
+    const nextArticle = {
+      ...currentArticle,
       body,
-    });
+    };
+
+    if (onChange) {
+      onChange(nextArticle);
+      return;
+    }
+
+    setLocalArticle(nextArticle);
   }
 
   React.useEffect(() => {
-    console.log("current article form:", form);
-  }, [form]);
+    console.log("current article form:", currentArticle);
+  }, [currentArticle]);
 
   // debounce saving
   React.useEffect(() => {
     const timeout = setTimeout(async () => {
       try {
-        const response = await saveArticle(article.id, form);
+        if (!currentArticle.id) {
+          console.log("Article ID not set, skipping save");
+          return;
+        }
+        const response = await saveArticle(currentArticle.id, currentArticle);
         console.log("Article saved successfully:", response);
+        clearMessage();
+        showSuccess("Article saved successfully.");
       } catch (error) {
         console.error("Failed to save article:", error);
+        showError("We couldn't save your article right now. Please try again.");
       }
     }, 5000);
 
     return () => clearTimeout(timeout);
-  }, [form, article.id]);
+  }, [currentArticle, currentArticle.id]);
  
   return (
     <div className="flex flex-col gap-6">
@@ -108,7 +141,7 @@ export function StudioCreateArticleForm({
 
         <ArticleMetaCard label="Category">
           <select
-            value={article.category}
+            value={currentArticle.category}
             onChange={(e) => updateField("category", e.target.value)}
             className="w-full bg-transparent text-sm text-black outline-none"
           >
@@ -121,11 +154,11 @@ export function StudioCreateArticleForm({
         </ArticleMetaCard>
 
         <ArticleMetaCard label="Status">
-          <ArticleStatusBadge status={article.status} />
+          <ArticleStatusBadge status={currentArticle.status} />
         </ArticleMetaCard>
 
         <ArticleMetaCard label="Last saved">
-          <span>{article.lastSavedLabel}</span>
+          <span>{currentArticle.lastSavedLabel}</span>
         </ArticleMetaCard>
       </div>
 
@@ -134,7 +167,7 @@ export function StudioCreateArticleForm({
           <Label>Title</Label>
 
           <InputField
-            value={article.title}
+            value={currentArticle.title}
             onChange={(e) => updateField("title", e.target.value)}
             placeholder="Enter article title"
             className="mt-2 h-[72px] px-5 text-3xl font-normal text-[#8a8177] placeholder:text-[#8a8177] md:text-3xl"
@@ -145,7 +178,7 @@ export function StudioCreateArticleForm({
           <Label>Subtitle</Label>
 
           <TextAreaField
-            value={article.subtitle}
+            value={currentArticle.subtitle}
             onChange={(e) => updateField("subtitle", e.target.value)}
             placeholder="Add a short subtitle or standfirst"
             rows={3}
@@ -162,7 +195,7 @@ export function StudioCreateArticleForm({
             id="cover-image-upload"
             name="coverImage"
             className="mt-2"
-            article_id={form.id}
+            article_id={currentArticle.id}
           />
         </div>
 
@@ -170,7 +203,7 @@ export function StudioCreateArticleForm({
           <Label>Cover image annotation</Label>
 
           <TextAreaField
-            value={article.coverImageCaption}
+            value={currentArticle.coverImageCaption}
             onChange={(e) => updateField("coverImageCaption", e.target.value)}
             placeholder="Write a caption or credit for the cover image"
             rows={3}
@@ -193,7 +226,7 @@ export function StudioCreateArticleForm({
 
         <div className="article-editor min-h-[720px] border border-neutral-200 bg-white py-4">
           <StudioArticleBodyEditor
-            initialData={article.body}
+            initialData={currentArticle.body}
             onChange={handleBodyChange}
           />
         </div>

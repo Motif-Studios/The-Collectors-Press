@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { StudioPageHeader } from "@/components/ui/studio_page_header/StudioPageHeader";
 import { ActionButton } from "@/components/ui/action_button/ActionButton";
 
 import { StudioCreateArticleForm } from "./StudioCreateArticleForm";
-import { saveStudioCreateArticleDraft, publishStudioCreateArticle } from "./queries";
+import { saveArticle } from "./queries/saveArticle";
+import { publishArticle } from "./queries";
 import type { StudioCreateArticle } from "./types";
 
 type Props = {
@@ -22,22 +22,82 @@ export function StudioCreateArticleEditor({
   initialArticle,
 }: Props) {
   const [form, setForm] = useState<StudioCreateArticle>(initialArticle);
-  const router = useRouter();
-
-  async function handleSaveDraft() {
-    const saved = await saveStudioCreateArticleDraft(form);
-    setForm(saved);
-  }
 
   async function handlePreview() {
-    const saved = await saveStudioCreateArticleDraft(form);
-    setForm(saved);
-    router.push(`/studio/preview/${saved.id}`);
+    if (!form.id) {
+      setForm((current) => ({
+        ...current,
+        lastSavedLabel: "Could not preview. Missing article id.",
+      }));
+      return;
+    }
+
+    try {
+      await saveArticle(form.id, form);
+
+      setForm((current) => ({
+        ...current,
+        lastSavedLabel: "Just now",
+      }));
+
+      window.open(`/studio/articles/${form.id}/preview`, "_blank", "noopener,noreferrer");
+    } catch {
+      setForm((current) => ({
+        ...current,
+        lastSavedLabel: "Failed to open preview. Please try again.",
+      }));
+    }
+  }
+
+  async function handleSaveDraft() {
+    if (!form.id) {
+      setForm((current) => ({
+        ...current,
+        lastSavedLabel: "Could not save draft. Missing article id.",
+      }));
+      return;
+    }
+
+    try {
+      await saveArticle(form.id, form);
+
+      setForm((current) => ({
+        ...current,
+        lastSavedLabel: "Just now",
+      }));
+    } catch {
+      setForm((current) => ({
+        ...current,
+        lastSavedLabel: "Failed to save article. Please try again.",
+      }));
+    }
   }
 
   async function handlePublish() {
-    const saved = await publishStudioCreateArticle(form);
-    setForm(saved);
+    if (!form.id) {
+      setForm((current) => ({
+        ...current,
+        lastSavedLabel: "Could not publish. Missing article id.",
+      }));
+      return;
+    }
+
+    try {
+      await saveArticle(form.id, form);
+      const published = await publishArticle(form.id);
+
+      setForm((current) => ({
+        ...current,
+        id: published?.article_id ?? current.id,
+        status: "published",
+        lastSavedLabel: "Published just now",
+      }));
+    } catch {
+      setForm((current) => ({
+        ...current,
+        lastSavedLabel: "Failed to publish article. Please try again.",
+      }));
+    }
   }
 
   return (
@@ -47,13 +107,9 @@ export function StudioCreateArticleEditor({
         description="Draft, preview and prepare your story for publishing."
         actions={
           <>
-            <ActionButton onClick={handleSaveDraft}>
-              Save draft
-            </ActionButton>
+            <ActionButton onClick={handleSaveDraft}>Save draft</ActionButton>
 
-            <ActionButton onClick={handlePreview}>
-              Preview
-            </ActionButton>
+            <ActionButton onClick={handlePreview}>Preview</ActionButton>
 
             <ActionButton variant="primary" onClick={handlePublish}>
               Publish

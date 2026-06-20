@@ -2,79 +2,84 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 
-const footerSections = [
+interface FooterLink {
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+interface FooterSection {
+  title: string;
+  links: FooterLink[];
+}
+
+const footerSections: FooterSection[] = [
   {
-    title: "NZ Herald",
+    title: "The Collectors Press",
     links: [
-      { label: "About NZ Herald", href: "#" },
-      { label: "Meet the journalists", href: "#" },
-      { label: "Newsletters", href: "#" },
-      { label: "Classifieds", href: "#" },
-      { label: "Help & support", href: "#" },
+      { label: "About The Collectors Press", href: "/about" },
+      { label: "Write for us", href: "#" },
       { label: "Contact us", href: "#" },
-      { label: "House rules", href: "#", external: true },
-      { label: "Privacy Policy", href: "#", external: true },
-      { label: "Terms of use", href: "#", external: true },
-      { label: "Competition terms & conditions", href: "#", external: true },
-      { label: "Our use of AI", href: "#" },
+      { label: "Privacy Policy", href: "#" },
+      { label: "Terms of use", href: "#" },
     ],
   },
-  {
-    title: "Subscriber Services",
-    links: [
-      { label: "NZ Herald e-editions", href: "#" },
-      { label: "Daily puzzles & quizzes", href: "#" },
-      { label: "Manage your digital subscription", href: "#" },
-      { label: "Manage your print subscription", href: "#", external: true },
-      {
-        label: "Subscribe to the NZ Herald newspaper",
-        href: "#",
-        external: true,
-      },
-      { label: "Subscribe to Herald Premium", href: "#" },
-      { label: "Gift a subscription", href: "#", external: true },
-      { label: "Subscriber FAQs", href: "#" },
-      { label: "Subscription terms & conditions", href: "#", external: true },
-      { label: "Promotions and subscriber benefits", href: "#" },
-    ],
-  },
-  {
-    title: "NZME Network",
-    links: [
-      { label: "The New Zealand Herald", href: "#" },
-      { label: "The Northland Age", href: "#" },
-      { label: "The Northern Advocate", href: "#" },
-      { label: "Waikato Herald", href: "#" },
-      { label: "Bay of Plenty Times", href: "#" },
-      { label: "Rotorua Daily Post", href: "#" },
-      { label: "Hawke's Bay Today", href: "#" },
-      { label: "Whanganui Chronicle", href: "#" },
-      { label: "Viva", href: "#" },
-      { label: "NZ Listener", href: "#" },
-      { label: "Newstalk ZB", href: "#", external: true },
-      { label: "BusinessDesk", href: "#", external: true },
-      { label: "OneRoof", href: "#", external: true },
-      { label: "Driven Car Guide", href: "#", external: true },
-      { label: "iHeart Radio", href: "#", external: true },
-      { label: "Restaurant Hub", href: "#", external: true },
-    ],
-  },
-  {
-    title: "NZME",
-    links: [
-      { label: "About NZME", href: "#", external: true },
-      { label: "NZME careers", href: "#", external: true },
-      { label: "Advertise with NZME", href: "#", external: true },
-      {
-        label: "NZME Digital Performance Marketing",
-        href: "#",
-        external: true,
-      },
-      { label: "Book your classified ad", href: "#" },
-      { label: "Photo sales", href: "#" },
-      { label: "NZME Events", href: "#", external: true },
-    ],
-  },
+  // {
+  //   title: "Subscriber Services",
+  //   links: [
+  //     { label: "NZ Herald e-editions", href: "#" },
+  //     { label: "Daily puzzles & quizzes", href: "#" },
+  //     { label: "Manage your digital subscription", href: "#" },
+  //     { label: "Manage your print subscription", href: "#", external: true },
+  //     {
+  //       label: "Subscribe to the NZ Herald newspaper",
+  //       href: "#",
+  //       external: true,
+  //     },
+  //     { label: "Subscribe to Herald Premium", href: "#" },
+  //     { label: "Gift a subscription", href: "#", external: true },
+  //     { label: "Subscriber FAQs", href: "#" },
+  //     { label: "Subscription terms & conditions", href: "#", external: true },
+  //     { label: "Promotions and subscriber benefits", href: "#" },
+  //   ],
+  // },
+  // {
+  //   title: "NZME Network",
+  //   links: [
+  //     { label: "The New Zealand Herald", href: "#" },
+  //     { label: "The Northland Age", href: "#" },
+  //     { label: "The Northern Advocate", href: "#" },
+  //     { label: "Waikato Herald", href: "#" },
+  //     { label: "Bay of Plenty Times", href: "#" },
+  //     { label: "Rotorua Daily Post", href: "#" },
+  //     { label: "Hawke's Bay Today", href: "#" },
+  //     { label: "Whanganui Chronicle", href: "#" },
+  //     { label: "Viva", href: "#" },
+  //     { label: "NZ Listener", href: "#" },
+  //     { label: "Newstalk ZB", href: "#", external: true },
+  //     { label: "BusinessDesk", href: "#", external: true },
+  //     { label: "OneRoof", href: "#", external: true },
+  //     { label: "Driven Car Guide", href: "#", external: true },
+  //     { label: "iHeart Radio", href: "#", external: true },
+  //     { label: "Restaurant Hub", href: "#", external: true },
+  //   ],
+  // },
+  // {
+  //   title: "NZME",
+  //   links: [
+  //     { label: "About NZME", href: "#", external: true },
+  //     { label: "NZME careers", href: "#", external: true },
+  //     { label: "Advertise with NZME", href: "#", external: true },
+  //     {
+  //       label: "NZME Digital Performance Marketing",
+  //       href: "#",
+  //       external: true,
+  //     },
+  //     { label: "Book your classified ad", href: "#" },
+  //     { label: "Photo sales", href: "#" },
+  //     { label: "NZME Events", href: "#", external: true },
+  //   ],
+  // },
 ];
 
 const socialLinks = [
@@ -88,10 +93,18 @@ export function Footer() {
       <div className="mx-auto max-w-345">
         <div className="mb-20 flex items-start justify-between gap-8 max-[700px]:mb-12 max-[700px]:flex-col">
           <div className="whitespace-nowrap font-serif text-[28px] font-bold tracking-[0.3px] max-[700px]:text-2xl">
-            Kevin Wu
+            The Collectors Press
           </div>
 
           <div className="flex flex-wrap items-center gap-4.5">
+            <a
+              href="/subscribe"
+              aria-label="Subscribe"
+              className="rounded-sm bg-white px-4 py-2 text-black transition-opacity duration-200 hover:opacity-90"
+            >
+              Subscribe
+            </a>
+
             {socialLinks.map(({ href, label, icon }) => (
               <a
                 key={label}

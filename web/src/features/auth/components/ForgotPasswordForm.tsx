@@ -1,28 +1,30 @@
 "use client";
 
-import Link from "next/link";
 import React from "react";
 import { forgotPassword } from "@/features/auth/lib/client";
+import { useLogoutFeedback } from "@/components/ui/logout_feedback/LogoutFeedback";
 
 export function ForgotPasswordForm() {
     const [email, setEmail] = React.useState("");
     const [loading, setLoading] = React.useState(false);
-    const [ successCheckMessage, setSuccess ] = React.useState(false);
+    const { showSuccess, showError, clearMessage } = useLogoutFeedback();
 
     const handleForgotPassword = async () => {
         try {
             setLoading(true);
+            clearMessage();
             const response = await forgotPassword(email);
             console.log("Forgot password response:", response);
 
             if (response.error) {
-                alert("Forgot password failed: " + response.error);
+                showError(`Failed to send reset email: ${response.error}`);
                 return;
             }
-            setSuccess(true);
+            showSuccess("Password reset email sent.");
 
         } catch (err) {
             console.error(err);
+            showError("An unexpected error occurred. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -40,14 +42,6 @@ export function ForgotPasswordForm() {
                     Enter your email to reset your password.
                 </h1>
 
-                { successCheckMessage ? (
-                     <p className="mb-8 text-sm leading-6 text-[#00A82D] sm:text-[15px]">
-                        Success! Please check your email for instructions on how to reset your password. If you don't receive an email, please check your spam folder or try again.
-                    </p>
-                ) : (
-                   <></>
-                )}
-
                 <div className="space-y-4 text-left">
                     <label className="block text-sm font-medium text-[#111]" htmlFor="login-email">
                     Email address
@@ -59,24 +53,21 @@ export function ForgotPasswordForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     autoComplete="email"
-                    className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
+                    className="h-14 w-full border-0 bg-[#ffffff] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#000000]/40"
                     />
                 </div>
 
                 <button
                     onClick={handleForgotPassword}
                     disabled={loading}
-                    className="mt-6 inline-flex h-12 w-full items-center justify-center bg-[#3fa0cf] text-[15px] font-bold text-white transition hover:bg-[#3495c3] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="cursor-pointer mt-6 inline-flex h-12 w-full items-center justify-center bg-[#000000] text-[15px] font-bold text-white transition hover:bg-[#000000]/90 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     {loading ? "Loading..." : "Continue"}
                 </button>
 
-                {/* <p className="mt-6 text-sm text-[#6c7680]">
-                    Don’t have an account?{" "}
-                    <Link href="/register" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#3fa0cf]">
-                    Create one
-                    </Link>
-                </p> */}
+                <p className="mt-6 text-sm text-[#6c7680]">
+                    Didn’t get the email? Check your spam folder and try again.
+                </p>
                 </div>
             </div>
         </div>

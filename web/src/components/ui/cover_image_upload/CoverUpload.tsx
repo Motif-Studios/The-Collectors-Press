@@ -17,7 +17,7 @@ function classNameHelper(...classes: Array<string | undefined | false>) {
 const defaultOnChange = (id?: string, article_id?: string) => async (event: React.ChangeEvent<HTMLInputElement>) => {
   if (event.target.files && event.target.files[0]) {
     try {
-      const file = await uploadFile(event.target.files[0], article_id?.article_id || "");
+      const file = await uploadFile(event.target.files[0], article_id || "");
       const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/article%20images/${file.path}`;
       const label = id
         ? (document.querySelector(`label[for="${id}"]`) as HTMLLabelElement | null)
@@ -48,7 +48,7 @@ export function CoverUpload({
   article_id,
   onChange = defaultOnChange(id, article_id),
 }: CoverUploadProps) {
-  console.log("article_id", article_id?.article_id);
+  console.log("article_id", article_id);
   return (
     <label
       htmlFor={id}

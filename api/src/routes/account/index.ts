@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { cancelAccountSubscription } from "../../../controllers/account/controller";
+import { cancelAccountSubscription, isSubscribed } from "../../../controllers/account/controller";
 
 const router = Router();
 
@@ -83,10 +83,57 @@ router.post("/subscription/renew/:user_id", async (req, res) => {
     return res.json({ message: "Account Subscription Renewed" })
 })
 
-// router.get("/saved_stories", (req, res) => {
-//     res.json({ message: "Account Saved Stories" })
-// })
+/**
+ * @openapi
+ * /account/is_subscriber:
+ *   post:
+ *     tags: [Account]
+ *     summary: Check if user is a subscriber
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_id:
+ *                 type: string
+ *                 description: The ID of the user to check
+ *     responses:
+ *       200:
+ *         description: Subscription status
+ */
+router.post("/is_subscriber", async (req, res) => {
+    const { user_id } = req.body;
 
+    if (!user_id) {
+        return res.status(400).json({ error: "'user_id' is required" });
+    }
+
+    try {
+        const isSubscriber = await isSubscribed(user_id);
+
+        if (isSubscriber) {
+            return res.json({
+                is_subscriber: true,
+                account_message: "Thanks for subscribing! You have full access to subscriber-only content and can update your mailing preferences.",
+                can_change_mailing_address: true,
+            });
+        }
+
+        return res.json({
+            is_subscriber: false,
+            account_message: "You're currently not subscribed. To subscribe and receive printed issues, please visit /subscribe or contact support.",
+            can_change_mailing_address: false,
+        });
+    } catch (error) {
+        return res.status(500).json({ error: "Failed to check subscription status" });
+    }
+});
+
+router.post("/subscription/renew/:user_id", async (req, res) => {
+    return res.json({ message: "Account Subscription Renewed" })
+})
 /**
  * @openapi
  * /account/help:

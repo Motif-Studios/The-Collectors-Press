@@ -18,7 +18,9 @@ export async function CategoryPageView({
   categorySlug: string;
 }) {
   const title = slugToTitle(categorySlug);
-  const initialArticles = await getCategoryArticles(categorySlug, 10, 0);
+  console.log("CategoryPageView rendered with slug:", title);
+  const initialArticles = await getCategoryArticles(title, 10, 0);
+  console.log("Fetched initial articles for category:", initialArticles);
 
   return (
     <div className="mb-12">
@@ -27,7 +29,7 @@ export async function CategoryPageView({
         <div className="w-full max-w-4xl space-y-6">
           <CategoryTitle title="Latest" />
           <CategoryArticlesList
-            categorySlug={categorySlug}
+            categorySlug={title}
             initialArticles={initialArticles}
           />
         </div>

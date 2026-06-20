@@ -1,46 +1,47 @@
 "use client";
 
 import Link from "next/link";
-
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signup } from "@/features/auth/lib/client";
+import { useLogoutFeedback } from "@/components/ui/logout_feedback/LogoutFeedback";
 
 
 export function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [ passwordCheck, setPasswordCheck ] = useState("");
-  const [  errorMessage, setErrorMessage ] = useState<string>("");
-  const [  successCheckMessage, setSuccess ] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
+  const { showSuccess, showError, clearMessage } = useLogoutFeedback();
 
   const handleSignUp = async () => {
     if(password !== passwordCheck) {
-      setErrorMessage("Passwords do not match. Please check and try again.");
+      showError("Passwords do not match. Please check and try again.");
       return;
     }
 
     try {
       setLoading(true);
+      clearMessage();
       const response = await signup(email, password);
 
       console.log("Signup response:", response);
 
       if (response.error) {
-        setErrorMessage("Signup failed: " + response.error);
+        showError(`Signup failed: ${response.error}`);
         return;
       }
 
-      setSuccess(true);
-      router.push("/"); // Redirect to homepage after successful signup
+      showSuccess("Account created successfully.");
+      setTimeout(() => {
+        window.location.replace("/");
+      }, 500);
 
       return response;
 
     } catch (err) {
       console.error(err);
+      showError("An unexpected error occurred during signup. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -62,16 +63,6 @@ export function SignUpForm() {
             Sign up to save stories, manage your profile, and subscribe later with ease.
           </p>
 
-          { 
-            errorMessage ? (
-              <p className="mb-8 text-sm leading-6 text-[#ff4d4f] sm:text-[15px]">
-                {errorMessage}
-              </p>
-            ) 
-          : 
-            null
-          }
-
           <div className="space-y-4 text-left">
             <label className="block text-sm font-medium text-[#111]" htmlFor="signup-email">
               Email address
@@ -83,7 +74,7 @@ export function SignUpForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
-              className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
+              className="h-14 w-full border-0 bg-[#ffffff] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#000000]/40"
             />
 
             <label className="block text-sm font-medium text-[#111]" htmlFor="signup-password">
@@ -96,7 +87,7 @@ export function SignUpForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
-              className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
+              className="h-14 w-full border-0 bg-[#ffffff] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#000000]/40"
             />
 
             <label className="block text-sm font-medium text-[#111]" htmlFor="signup-password-check">
@@ -109,21 +100,21 @@ export function SignUpForm() {
               value={passwordCheck}
               onChange={(e) => setPasswordCheck(e.target.value)}
               autoComplete="new-password"
-              className="h-14 w-full border-0 bg-[#ececec] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#3fa0cf]/40"
+              className="h-14 w-full border-0 bg-[#ffffff] px-4 text-base text-[#111] outline-none ring-1 ring-transparent transition placeholder:text-[#6c7680] focus:bg-white focus:ring-2 focus:ring-[#000000]/40"
             />
           </div>
 
           <button
             onClick={handleSignUp}
             disabled={loading}
-            className="mt-6 inline-flex h-12 w-full items-center justify-center bg-[#3fa0cf] text-[15px] font-bold text-white transition hover:bg-[#3495c3] disabled:cursor-not-allowed disabled:opacity-50"
+            className="cursor-pointer mt-6 inline-flex h-12 w-full items-center justify-center bg-[#000000] text-[15px] font-bold text-white transition hover:bg-[#000000]/90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Creating account..." : "Continue"}
           </button>
 
           <p className="mt-6 text-sm text-[#6c7680]">
             Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#3fa0cf]">
+            <Link href="/login" className="font-semibold text-[#111] underline underline-offset-4 hover:text-[#000000]/70">
               Sign in
             </Link>
           </p>

@@ -22,6 +22,7 @@ export async function SavedStoriesPageView() {
                 author={story.author}
                 image={story.imageSrc}
                 imageAlt={story.imageAlt}
+                href={story.href}
               />
             ))}
           </PanelFooter>

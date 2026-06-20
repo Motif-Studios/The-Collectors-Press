@@ -1,5 +1,29 @@
 import { supabase } from "../../lib/supabase";
-import type { StudioCreateArticle } from "../../../web/src/features/article_create/types";
+
+// Local copy of the minimal `StudioCreateArticle` type used by the API.
+// Kept here to avoid importing types from the `web` package during API build.
+type EditorJsBlock = {
+    id?: string;
+    type: string;
+    data: Record<string, unknown>;
+};
+
+type EditorJsContent = {
+    time?: number;
+    blocks: EditorJsBlock[];
+    version?: string;
+};
+
+type StudioCreateArticle = {
+    id?: string;
+    title: string;
+    subtitle: string;
+    category: string;
+    status: "draft" | "published";
+    lastSavedLabel: string;
+    coverImageCaption: string;
+    body: EditorJsContent;
+};
 
 export async function getDashboardArticles(userId: string) {
     const { data, error } = await supabase

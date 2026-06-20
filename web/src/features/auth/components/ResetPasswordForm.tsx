@@ -3,13 +3,13 @@
 import React, { useEffect } from "react";
 import { resetPassword } from "@/features/auth/lib/client";
 import { supabase } from "@/lib/supabase/client";
+import { useLogoutFeedback } from "@/components/ui/logout_feedback/LogoutFeedback";
 
 export function ResetPasswordForm() {
     const [password, setPassword] = React.useState("");
     const [ passwordCheck, setPasswordCheck ] = React.useState("");
     const [loading, setLoading] = React.useState(false);
-    const [ successCheckMessage, setSuccess ] = React.useState(false);
-    const [ errorMessage, setErrorMessage ] = React.useState<string>("");
+    const { showSuccess, showError, clearMessage } = useLogoutFeedback();
 
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -24,16 +24,16 @@ export function ResetPasswordForm() {
     }, []);
 
     const handleResetPassword = async () => {
-        setErrorMessage("");
+        clearMessage();
 
         if(password !== passwordCheck) {
-            setErrorMessage("Passwords do not match. Please check and try again.");
+            showError("Passwords do not match. Please check and try again.");
             return;
         }
 
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
-            setErrorMessage("Your reset session is no longer valid. Please open the reset link from your email again.");
+            showError("Your reset session is no longer valid. Please open the reset link from your email again.");
             return;
         }
 
@@ -44,17 +44,18 @@ export function ResetPasswordForm() {
             console.log("Reset password response:", response);
 
             if (response.error) {
-                setErrorMessage("Reset password failed: " + response.error);
+                showError(`Reset password failed: ${response.error}`);
                 return;
             }
-            setSuccess(true);
+            showSuccess("Password updated successfully.");
 
             setTimeout(() => {
                 window.location.href = "/login"; // Redirect to login page after successful password reset
-            }, 1500); // Redirect after 1 second
+            }, 2000); // Redirect after 2 seconds
 
         } catch (err) {
             console.error(err);
+            showError("An unexpected error occurred. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -71,22 +72,6 @@ export function ResetPasswordForm() {
                 <h1 className="mb-3 text-2xl font-bold tracking-tight text-[#111] sm:text-[28px]">
                     Enter your new password.
                 </h1>
-
-                { successCheckMessage ? (
-                     <p className="mb-8 text-sm leading-6 text-[#00A82D] sm:text-[15px]">
-                        Success! Your password has been reset. You can now log in with your new password.
-                    </p>
-                ) : (
-                     <></>
-                )}
-
-                { errorMessage ? (
-                    <p className="mb-8 text-sm leading-6 text-[#FF0000] sm:text-[15px]">
-                        {errorMessage}
-                    </p>
-                ) : (
-                    <></>
-                )}
 
                 <div className="space-y-4 text-left">
                     <label className="block text-sm font-medium text-[#111]" htmlFor="login-password">
@@ -121,7 +106,7 @@ export function ResetPasswordForm() {
                     disabled={loading}
                     className="mt-6 inline-flex h-12 w-full items-center justify-center bg-[#3fa0cf] text-[15px] font-bold text-white transition hover:bg-[#3495c3] disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    {loading ? "Loading..." : "Continue"}
+                    {loading ? "Resetting..." : "Reset Password"}
                 </button>
 
                 {/* <p className="mt-6 text-sm text-[#6c7680]">

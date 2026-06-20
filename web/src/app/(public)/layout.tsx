@@ -3,13 +3,15 @@ import { Footer } from "@/components/ui/footer/Footer";
 import { ReactNode } from "react";
 
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
+import { getIsSubscriber } from "@/features/auth/queries/getIsSubscriber";
+import { LogoutFeedbackBanner, LogoutFeedbackProvider } from "@/components/ui/logout_feedback/LogoutFeedback";
 
 const homepageNavItems = [
   { label: "Home", isActive: true, href: "/" },
   { label: "Pokémon", href: "/category/pokemon" },
   { label: "One Piece", href: "/category/one-piece" },
   { label: "Basketball", href: "/category/basketball" },
-  { label: "American Football", href: "/category/american-football" },
+  // { label: "American Football", href: "/category/american-football" },
   { label: "Other", href: "/category/other" },
   // { label: "Magic" },
   // { label: "Yu-Gi-Oh" },
@@ -23,18 +25,24 @@ export default async function PublicLayout({
   children: ReactNode;
 }) {
   const handleUser = await getCurrentUser();
+  const subscriberInfo = await getIsSubscriber(handleUser?.id);
+  const isSubscriber = !!subscriberInfo?.is_subscriber;
 
   return (
-    <>
-      <Header
-        navItems={homepageNavItems}
-        user={handleUser}
-        isSubscriber={false}
-      />
+    <LogoutFeedbackProvider>
+      <div className="flex min-h-screen flex-col">
+        <Header
+          navItems={homepageNavItems}
+          user={handleUser}
+          isSubscriber={isSubscriber}
+        />
 
-      <main>{children}</main>
+        <LogoutFeedbackBanner />
 
-      <Footer />
-    </>
+        <main className="flex-1">{children}</main>
+
+        <Footer />
+      </div>
+    </LogoutFeedbackProvider>
   );
 }

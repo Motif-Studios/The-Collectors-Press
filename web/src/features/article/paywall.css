@@ -1,0 +1,208 @@
+.article-preview-paywall {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 24px 50px;
+}
+
+.article-preview {
+  max-width: 520px;
+  margin: 0 auto 94px;
+}
+
+.preview-paragraph {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.06rem;
+  line-height: 1.55;
+  color: #111;
+}
+
+.preview-paragraph + .preview-paragraph {
+  margin-top: 24px;
+}
+
+.preview-paragraph--lead::first-letter {
+  float: left;
+  font-size: 5.2rem;
+  line-height: 0.82;
+  padding-right: 10px;
+  padding-top: 3px;
+  font-weight: 700;
+}
+
+.preview-paragraph--lead {
+  text-indent: 0;
+}
+
+.preview-paragraph--faded {
+  color: #c4c4c4;
+}
+
+.preview-paragraph--faded a {
+  color: #9b9b9b;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.preview-paragraph--faded em {
+  font-style: italic;
+}
+
+.paywall-cta {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.paywall-kicker {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.7px;
+  color: #111;
+  margin-bottom: 26px;
+}
+
+.paywall-kicker em {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.paywall-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  font-weight: 500;
+  margin-bottom: 28px;
+}
+
+.paywall-old-price {
+  text-decoration: line-through;
+}
+
+.paywall-options {
+  display: grid;
+  grid-template-columns: 1fr 42px 1fr;
+  align-items: start;
+  gap: 18px;
+  max-width: 500px;
+  margin: 0 auto 28px;
+}
+
+.paywall-option {
+  text-align: center;
+}
+
+.paywall-option-text {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  margin-bottom: 18px;
+}
+
+.paywall-divider {
+  position: relative;
+  height: 100%;
+  min-height: 126px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paywall-divider::before,
+.paywall-divider::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  background: #111;
+  transform: translateX(-50%);
+}
+
+.paywall-divider::before {
+  top: 0;
+  height: calc(50% - 14px);
+}
+
+.paywall-divider::after {
+  bottom: 0;
+  height: calc(50% - 14px);
+}
+
+.paywall-divider span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.9rem;
+  text-transform: lowercase;
+  background: #f4f4f4;
+  padding: 4px 0;
+}
+
+.paywall-btn {
+  display: inline-block;
+  min-width: 142px;
+  padding: 11px 18px;
+  background: #d71920;
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 2px;
+}
+
+.paywall-signin {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+  color: #111;
+}
+
+.paywall-signin a {
+  color: #2a5c8a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .article-preview-paywall {
+    padding: 0 16px 64px;
+  }
+
+  .article-preview {
+    margin-bottom: 64px;
+  }
+
+  .preview-paragraph {
+    font-size: 1rem;
+  }
+
+  .preview-paragraph--lead::first-letter {
+    font-size: 4.3rem;
+    padding-right: 8px;
+  }
+
+  .paywall-options {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    max-width: 320px;
+  }
+
+  .paywall-divider {
+    min-height: 24px;
+  }
+
+  .paywall-divider::before,
+  .paywall-divider::after {
+    display: none;
+  }
+
+  .paywall-title {
+    font-size: 1.4rem;
+  }
+}

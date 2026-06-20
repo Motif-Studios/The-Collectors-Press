@@ -3,79 +3,62 @@ import { PricingCard } from "./PricingCard";
 
 export function PricingSection() {
   return (
-    <section className="min-h-10 bg-blue-600 py-10 px-6">
-      <div className="max-w-[1180px] mx-auto">
+    <section className="min-h-[calc(100vh-12rem)] flex items-center bg-black px-6 py-12">
+      <div className="mx-auto w-full max-w-[1180px]">
+        <div className="mb-12 text-center text-white">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70">
+            Subscription options
+          </p>
+          <h2 className="mt-3 font-[Georgia,'Times_New_Roman',serif] text-4xl font-bold md:text-5xl">
+            Unlimited access to The Collectors Press
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base text-white/70">
+            Choose the plan that works for you. Both options include unlimited
+            access to articles.
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 place-items-center">
-
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 place-items-center lg:grid-cols-2">
           <PricingCard
             id="monthly"
-            label="WEEKEND PAPER DELIVERY"
+            label=""
             title={
               <>
-                Premium
+                Unlimited
                 <br />
-                Weekend
+                Monthly
               </>
             }
             price="$18.75"
-            priceMeta={["per week", "billed monthly"]}
+            priceMeta={["per month", "billed monthly"]}
             features={[
-              "Saturday delivery of AFR Weekend",
-              "In-depth weekend sections",
-              "Includes Premium Digital access",
+              "Unlimited access to The Collectors Press",
+              "Cancel anytime",
             ]}
-            buttonLabel="Get Premium Weekend"
+            buttonLabel="Choose Monthly"
+            variant="silver"
           />
 
           <PricingCard
             id="yearly"
-            label="DIGITAL ACCESS"
+            label="BEST VALUE"
             title={
               <>
-                Premium
+                Unlimited
                 <br />
-                Digital
+                Annual
               </>
             }
-            price="$7"
-            priceMeta={["per week", "billed monthly"]}
-            extraText="for your first 3 months"
+            price="$99"
+            priceMeta={["per year", "billed yearly"]}
             features={[
-              "Unlimited access to afr.com and the app",
-              "Gift 5 articles each month",
-              "Curated daily newsletters from our expert newsroom",
+              "Unlimited access to The Collectors Press",
+              "Best value for regular readers",
             ]}
-            buttonLabel="Save over 50%"
+            buttonLabel="Choose Annual"
+            variant="gold"
             popular
           />
-
-          <PricingCard
-            id="business"
-            label="BUSINESS"
-            title={
-              <>
-                Team or
-                <br />
-                Enterprise
-              </>
-            }
-            variant="dark"
-            extraText={
-              <>
-                Subscription options tailored
-                <br />
-                for your organisation
-              </>
-            }
-            features={[
-              "Unlimited access for 3 or more subscribers",
-              "Volume discounts available",
-              "Personalised access on any device",
-            ]}
-            buttonLabel="Learn more"
-          />
-
         </div>
       </div>
     </section>

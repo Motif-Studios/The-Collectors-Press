@@ -9,5 +9,9 @@ export async function createSubscriber(userId: string|undefined, email: string, 
     });
     const newSubscriberData = await newSubscriberResponse.json();
 
+    if (!newSubscriberResponse.ok) {
+        return { error: newSubscriberData?.error ?? "Failed to create subscriber" };
+    }
+
     return newSubscriberData;
 }

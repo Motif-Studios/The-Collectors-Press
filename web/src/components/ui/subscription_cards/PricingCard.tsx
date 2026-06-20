@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
-import { API_BASE_URL } from "@/lib/env";
+import { API_BASE_URL, API_BASE_URL_SERVER } from "@/lib/env";
 
 type PricingCardProps = {
   id: string;
@@ -10,10 +10,11 @@ type PricingCardProps = {
   price?: string;
   priceMeta?: string[];
   offerText?: string;
+  extraText?: React.ReactNode;
   description?: React.ReactNode;
   features: string[];
   buttonLabel: string;
-  variant?: "blue" | "dark";
+  variant?: "blue" | "dark" | "silver" | "gold";
   popular?: boolean;
   footerText?: React.ReactNode;
   termsText?: string;
@@ -25,7 +26,8 @@ async function getCheckoutUrl(id: string, user: { id: string } | null) {
   if (!endpoint) return "/subscribe";
 
   try {
-    const response = await fetch(`${API_BASE_URL}/subscription/payment/${endpoint}`, {
+    const baseUrl = typeof window === "undefined" ? API_BASE_URL_SERVER : API_BASE_URL;
+    const response = await fetch(`${baseUrl}/subscription/payment/${endpoint}?userId=${encodeURIComponent(user.id)}`, {
       method: "GET",
     });
     if (!response.ok) return "/subscribe";
@@ -36,6 +38,53 @@ async function getCheckoutUrl(id: string, user: { id: string } | null) {
   }
 }
 
+const variantStyles = {
+  silver: {
+    card: "bg-gradient-to-br from-[#d8d8d8] via-[#e8e8e8] to-[#b8b8b8]",
+    title: "text-[#111]",
+    button: "bg-[#111] text-white hover:bg-[#333]",
+    label: "text-[#555]",
+    price: "text-[#111]",
+    priceMeta: "text-[#444]",
+    feature: "text-[#222]",
+    footerText: "text-[#444]",
+    checkmark: "text-[#111]",
+  },
+  gold: {
+    card: "bg-gradient-to-br from-[#d4a843] via-[#f0c060] to-[#a87820]",
+    title: "text-[#111]",
+    button: "bg-[#111] text-white hover:bg-[#333]",
+    label: "text-[#6b4a00]",
+    price: "text-[#111]",
+    priceMeta: "text-[#4a3000]",
+    feature: "text-[#1a1000]",
+    footerText: "text-[#4a3000]",
+    checkmark: "text-[#4a3000]",
+  },
+  blue: {
+    card: "bg-[#f2f2f2]",
+    title: "text-[#0a66c9]",
+    button: "bg-[#0a66c9] text-white",
+    label: "text-[#594d3f]",
+    price: "text-[#111]",
+    priceMeta: "text-[#111]",
+    feature: "text-[#111]",
+    footerText: "text-[#111]",
+    checkmark: "text-[#111]",
+  },
+  dark: {
+    card: "bg-[#f2f2f2]",
+    title: "text-[#111]",
+    button: "bg-[#666] text-white",
+    label: "text-[#594d3f]",
+    price: "text-[#111]",
+    priceMeta: "text-[#111]",
+    feature: "text-[#111]",
+    footerText: "text-[#111]",
+    checkmark: "text-[#111]",
+  },
+};
+
 export async function PricingCard({
   id,
   label,
@@ -43,6 +92,7 @@ export async function PricingCard({
   price,
   priceMeta,
   offerText,
+  extraText,
   description,
   features,
   buttonLabel,
@@ -53,40 +103,41 @@ export async function PricingCard({
 }: PricingCardProps) {
   const user = await getCurrentUser();
   const checkoutUrl = await getCheckoutUrl(id, user);
+  const styles = variantStyles[variant];
 
   return (
     <article
-      className={`w-full max-w-[360px] overflow-hidden rounded-md bg-[#f2f2f2] font-[Georgia,'Times_New_Roman',serif] shadow-[0_3px_10px_rgba(0,0,0,0.08)] ${
-        popular ? "lg:-mt-5" : ""
+      className={`w-full max-w-[400px] overflow-hidden rounded-xl font-[Georgia,'Times_New_Roman',serif] shadow-[0_8px_32px_rgba(0,0,0,0.4)] ${styles.card} ${
+        popular ? "lg:-mt-5 ring-2 ring-white/20" : ""
       }`}
     >
-      {popular && (
-        <div className="bg-black py-3 text-center font-sans text-xs font-bold tracking-[1px] text-white sm:text-[0.95rem]">
-          MOST POPULAR
+      {popular && label && (
+        <div className="py-2.5 text-center font-sans text-xs font-bold tracking-[2px] text-[#4a3000] bg-black/15">
+          {label}
         </div>
       )}
 
-      <div className="px-5 pt-8 pb-6 text-center sm:px-[34px] sm:pt-[44px] sm:pb-[30px]">
-        <p className="mb-2 font-sans text-[0.75rem] font-bold tracking-[1.5px] text-[#594d3f] sm:mb-[10px] sm:text-[0.85rem]">
-          {label}
-        </p>
+      <div className="px-8 pt-10 pb-8 text-center">
+        {label && !popular && (
+          <p className={`mb-2 font-sans text-[0.75rem] font-bold tracking-[2px] ${styles.label}`}>
+            {label}
+          </p>
+        )}
 
         <h2
-          className={`mb-4 text-center text-[2.4rem] leading-[0.95] font-medium break-words sm:text-[3rem] sm:leading-none ${
-            variant === "dark" ? "text-[#111]" : "text-[#0a66c9]"
-          }`}
+          className={`mb-6 text-center text-[2.8rem] leading-[0.95] font-bold break-words sm:text-[3.2rem] ${styles.title}`}
         >
           {title}
         </h2>
 
         {price && (
-          <div className="mb-3 flex items-start justify-center gap-2 sm:mb-2 sm:gap-[10px]">
-            <span className="text-[2.9rem] font-bold leading-none text-[#111] sm:text-[3.7rem]">
+          <div className="mb-4 flex items-start justify-center gap-3">
+            <span className={`text-[3.5rem] font-bold leading-none sm:text-[4rem] ${styles.price}`}>
               {price}
             </span>
 
             {priceMeta && (
-              <div className="mt-1 flex flex-col text-left text-[0.85rem] leading-[1.1] text-[#111] sm:mt-[6px] sm:text-[0.95rem] sm:leading-[1.2]">
+              <div className={`mt-2 flex flex-col text-left text-[0.85rem] leading-[1.2] ${styles.priceMeta}`}>
                 {priceMeta.map((m) => (
                   <span key={m}>{m}</span>
                 ))}
@@ -95,25 +146,31 @@ export async function PricingCard({
           </div>
         )}
 
-        {offerText ? (
-          <p className="mb-5 text-center text-[0.92rem] leading-[1.35] text-[#111] sm:mb-[22px] sm:text-[0.95rem] sm:leading-[1.4]">
+        {extraText && (
+          <p className={`mb-3 text-center text-[0.9rem] leading-[1.3] ${styles.priceMeta}`}>
+            {extraText}
+          </p>
+        )}
+
+        {offerText && (
+          <p className={`mb-5 text-center text-[0.92rem] leading-[1.35] ${styles.feature}`}>
             {offerText}
           </p>
-        ) : null}
+        )}
 
-        {description ? (
-          <p className="mb-5 text-center text-[0.92rem] leading-[1.35] text-[#111] sm:mb-[22px] sm:text-[0.95rem] sm:leading-[1.4]">
+        {description && (
+          <p className={`mb-5 text-center text-[0.92rem] leading-[1.35] ${styles.feature}`}>
             {description}
           </p>
-        ) : null}
+        )}
 
-        <ul className="my-6 text-left sm:my-[30px]">
+        <ul className="my-6 text-left">
           {features.map((feature) => (
             <li
               key={feature}
-              className="relative mb-3 pl-6 text-[0.95rem] leading-[1.35] text-[#111] last:mb-0 sm:mb-4 sm:pl-[26px] sm:text-[1rem]"
+              className={`relative mb-4 pl-7 text-[0.95rem] leading-[1.4] last:mb-0 ${styles.feature}`}
             >
-              <span className="absolute left-0 top-0 font-bold">✓</span>
+              <span className={`absolute left-0 top-0 font-bold ${styles.checkmark}`}>✓</span>
               {feature}
             </li>
           ))}
@@ -121,24 +178,22 @@ export async function PricingCard({
 
         <Link
           href={checkoutUrl}
-          className={`mb-4 block w-full rounded-[4px] px-4 py-3 font-sans text-[0.95rem] font-bold sm:px-[18px] sm:py-[14px] sm:text-[1rem] text-center ${
-            variant === "dark" ? "bg-[#666] text-white" : "bg-[#0a66c9] text-white"
-          }`}
+          className={`mb-4 block w-full rounded-[4px] px-4 py-3.5 font-sans text-[1rem] font-bold text-center transition-colors ${styles.button}`}
         >
           {buttonLabel}
         </Link>
 
-        {footerText ? (
-          <p className="mb-5 text-center text-[0.9rem] leading-[1.4] text-[#111] sm:mb-6 sm:text-[0.92rem] sm:leading-[1.45]">
+        {footerText && (
+          <p className={`mb-4 text-center text-[0.88rem] leading-[1.4] ${styles.footerText}`}>
             {footerText}
           </p>
-        ) : null}
+        )}
 
-        {termsText ? (
-          <a href="#" className="block text-center text-[0.9rem] text-[#555] underline sm:text-[0.95rem]">
+        {termsText && (
+          <a href="#" className={`block text-center text-[0.88rem] underline ${styles.footerText}`}>
             {termsText}
           </a>
-        ) : null}
+        )}
       </div>
     </article>
   );

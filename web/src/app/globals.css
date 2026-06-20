@@ -33,6 +33,10 @@ body {
   --font-alice: var(--font-alice);
 }
 
+body {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
 .font-space {
   font-family: var(--font-space-grotesk);
 }

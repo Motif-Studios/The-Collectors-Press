@@ -33,8 +33,19 @@ export const signup = async (email: string, password: string) => {
     console.log("Signup successful:", data);
 
     const stripeCustomerData = await createStripeCustomer(email);
+    if (stripeCustomerData?.error || !stripeCustomerData?.id) {
+        return { error: stripeCustomerData?.error ?? "Failed to create subscription customer" };
+    }
+
     const newProfileData = await newProfile(data.user?.id);
+    if (newProfileData?.error) {
+        return { error: newProfileData.error };
+    }
+
     const newSubscriberData = await createSubscriber(data.user?.id, email, stripeCustomerData.id);
+    if (newSubscriberData?.error) {
+        return { error: newSubscriberData.error };
+    }
     
     return { user: data.user, session: data.session, subscription: newSubscriberData, profile: newProfileData };
 }
@@ -48,7 +59,6 @@ export const logout = async () => {
     }
 
     console.log("User logged out");
-    window.location.href = "/"; // Redirect to homepage after logout
 
     return { message: "Logged out successfully" };
 }

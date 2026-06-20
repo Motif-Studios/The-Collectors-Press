@@ -1,5 +1,4 @@
 import { getHomePageDataNormalised } from "@/lib/api/home";
-import { getMockHomePageData } from "@/lib/api/mock/home";
 
 
 export async function getHomePageData() {

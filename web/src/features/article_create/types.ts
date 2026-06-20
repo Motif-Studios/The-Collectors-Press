@@ -15,7 +15,6 @@ export type EditorJsContent = {
 export type StudioCreateArticle = {
   id?: string;
   title: string;
-  id: string;
   subtitle: string;
   category: string;
   status: StudioCreateArticleStatus;

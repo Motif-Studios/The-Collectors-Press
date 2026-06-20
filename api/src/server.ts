@@ -14,7 +14,15 @@ import subscription from "./routes/subscription/index";
 import upload from "./routes/upload/index";
 
 const app = express();
-app.use(express.json());
+app.use(
+    express.json({
+        verify: (req: any, _res, buf) => {
+            if (req.originalUrl === "/subscription/payment/webhook") {
+                req.rawBody = buf;
+            }
+        },
+    }),
+);
 
 const openApiOptions: swaggerJSDoc.Options = {
     definition: {
@@ -47,7 +55,7 @@ app.use((req, res, next) => {
     next();
 });
 
-const PORT = 5001;
+const PORT = process.env.PORT || 5001;
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/home", home);
@@ -67,3 +75,5 @@ app.get("/", (req, res) =>{
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 }) 
+
+// export default app;
