@@ -110,20 +110,20 @@ export async function getArticleBySlug(articleSlug: string): Promise<Article | n
             preview: body.slice(0, 120),
           });
     
-          return { error: "Failed to fetch article data" };
+          return null;
         }
     
         const data = await response.json();
     
         if (!response.ok || data?.error) {
           console.error("Error fetching article page data:", data?.error ?? response.statusText);
-          return { error: "Failed to fetch article data" };
+          return null;
         }
     
         return data;
       } catch (error) {
         console.error("Error fetching article page data:", error);
-        return { error: "Failed to fetch article data" };
+        return null;
       }
 }
 
