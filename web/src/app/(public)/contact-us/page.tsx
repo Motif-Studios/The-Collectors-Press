@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { Wrapper } from "@/components/layout/wrapper/Wrapper";
 
-export function ContactPage() {
+export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -23,14 +24,15 @@ export function ContactPage() {
   };
 
   return (
+    <Wrapper>
     <main className="bg-white font-[Georgia,'Times_New_Roman',serif]">
       {/* Page header */}
       <div className="border-b border-black/10 px-6 py-10 text-center">
         <p className="mb-2 font-sans text-[0.7rem] font-bold uppercase tracking-[2.5px] text-[#888]">
           Get in touch
         </p>
-        <h1 className="text-[2.8rem] font-bold leading-[1.05] text-black md:text-[3.6rem]">
-          Contact Us
+        <h1 className="text-[2.8rem] font-bold leading-[1.05] text-black md:text-[3rem]">
+          CONTACT US
         </h1>
       </div>
 
@@ -199,5 +201,6 @@ export function ContactPage() {
         </div>
       </div>
     </main>
+    </Wrapper>
   );
 }

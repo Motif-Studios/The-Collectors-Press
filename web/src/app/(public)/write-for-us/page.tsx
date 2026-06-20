@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { Wrapper } from "@/components/layout/wrapper/Wrapper";
 
 const WRITING_CRITERIA = [
   {
@@ -25,7 +26,7 @@ const WRITING_CRITERIA = [
   },
 ];
 
-export function WriteForUsPage() {
+export default function WriteForUsPage() {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -52,6 +53,7 @@ export function WriteForUsPage() {
   };
 
   return (
+    <Wrapper className="py-10 sm:py-14">
     <main className="bg-white font-[Georgia,'Times_New_Roman',serif]">
 
       {/* Hero — full-width editorial statement */}
@@ -59,7 +61,7 @@ export function WriteForUsPage() {
         <p className="mb-3 font-sans text-[0.68rem] font-bold uppercase tracking-[2.5px] text-white/50">
           Contributor applications
         </p>
-        <h1 className="mx-auto max-w-3xl text-[2.6rem] font-bold leading-[1.05] md:text-[4rem]">
+        <h1 className="mx-auto max-w-3xl text-[2.6rem] font-bold leading-[1.05] md:text-[3rem]">
           Write for The Collectors Press
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-[1.05rem] leading-[1.7] text-white/70">
@@ -263,5 +265,6 @@ export function WriteForUsPage() {
         </div>
       </div>
     </main>
+    </Wrapper>
   );
 }
