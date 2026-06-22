@@ -30,7 +30,7 @@ export function SecondaryMiniCard({
       )}
 
       {category && (
-        <div className="mb-2 text-[12px] font-bold text-[#6b90d6]">
+        <div className="mb-2 text-[12px] font-bold text-[#B8860B]">
           {category}
         </div>
       )}

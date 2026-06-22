@@ -24,7 +24,7 @@ export const mockArticle: Article = {
     id: "author-1",
     name: "Kevin Wu",
     description:
-      "Charlie Warzel is a staff writer at The Atlantic and the author of its newsletter Galaxy Brain, about technology, media, and big ideas. He can be reached via email.",
+      "Charlie Warzel is a staff writer at The Collectors Press and the author of its newsletter Galaxy Brain, about technology, media, and big ideas. He can be reached via email.",
     avatarSrc: "https://eu.ui-avatars.com/api/?name=Kevin+Wu&size=250",
     moreTopics: ["Donald Trump", "Iran", "Middle East"],
   },
