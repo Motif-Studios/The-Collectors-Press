@@ -22,7 +22,7 @@ export const Default: Story = {
             <a href="#" className="underline">
               Charlie Warzel
             </a>{" "}
-            is a staff writer at <em>The Atlantic</em> and the author of its
+            is a staff writer at <em>The Collectors Press</em> and the author of its
             newsletter{" "}
             <a href="#" className="underline">
               Galaxy Brain

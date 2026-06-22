@@ -13,7 +13,7 @@ function PaywallSection() {
   return (
     <section className="article-preview-paywall">
       <section className="paywall-cta">
-        <p className="paywall-kicker">Keep reading <em>the Atlantic.</em></p>
+        <p className="paywall-kicker">Keep reading <em>the Collectors Press.</em></p>
 
         <h2 className="paywall-title">
           Get essential journalism for historic times.<br />
@@ -38,7 +38,7 @@ function PaywallSection() {
           <div className="paywall-option">
             <p className="paywall-option-text">
               Try 30 days free and see how<br />
-              <em>The Atlantic</em> fits into your<br />
+              <em>The Collectors Press</em> fits into your<br />
               daily routine.
             </p>
             <a href="/subscribe" className="paywall-btn">Start free trial</a>

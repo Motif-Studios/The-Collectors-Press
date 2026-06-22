@@ -21,7 +21,7 @@ export const Default: Story = {
         date="March 16, 2026"
         imageSrc="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=900&q=80"
         imageAlt="Politics article image"
-        caption="Illustration by The Atlantic. Sources: Al D..."
+        caption="Illustration by The Collectors Press. Sources: Al D..."
         href="/articles/kristi-noem-warehouses"
       />
 
@@ -32,7 +32,7 @@ export const Default: Story = {
         date="March 16, 2026"
         imageSrc="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=900&q=80"
         imageAlt="Politics article image"
-        caption="Illustration by The Atlantic. Sources: Al D..."
+        caption="Illustration by The Collectors Press. Sources: Al D..."
         href="/articles/kristi-noem-warehouses"
       />
 
@@ -43,7 +43,7 @@ export const Default: Story = {
         date="March 16, 2026"
         imageSrc="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=900&q=80"
         imageAlt="Politics article image"
-        caption="Illustration by The Atlantic. Sources: Al D..."
+        caption="Illustration by The Collectors Press. Sources: Al D..."
         href="/articles/kristi-noem-warehouses"
       />
 
@@ -54,7 +54,7 @@ export const Default: Story = {
         date="March 16, 2026"
         imageSrc="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=900&q=80"
         imageAlt="Politics article image"
-        caption="Illustration by The Atlantic. Sources: Al D..."
+        caption="Illustration by The Collectors Press. Sources: Al D..."
         href="/articles/kristi-noem-warehouses"
       />
 
@@ -65,7 +65,7 @@ export const Default: Story = {
         date="March 16, 2026"
         imageSrc="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=900&q=80"
         imageAlt="Politics article image"
-        caption="Illustration by The Atlantic. Sources: Al D..."
+        caption="Illustration by The Collectors Press. Sources: Al D..."
         href="/articles/kristi-noem-warehouses"
       />
     </div>
