@@ -7,7 +7,7 @@ const mockArticles: SearchPageData["articles"] = [
     summary: "Urban planning is shifting toward greener systems.",
     author: "Amelia Hart",
     date: "March 14, 2026",
-    caption: "Illustration by The Atlantic. Sources: Al D...",
+    caption: "Illustration by The Collectors Press. Sources: Al D...",
     imageSrc:
       "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=900&q=80",
     imageAlt: "City",
@@ -19,7 +19,7 @@ const mockArticles: SearchPageData["articles"] = [
     summary: "People are slowing down and reading more deeply.",
     author: "Daniel Cho",
     date: "March 12, 2026",
-    caption: "Illustration by The Atlantic. Sources: Al D...",
+    caption: "Illustration by The Collectors Press. Sources: Al D...",
     imageSrc:
       "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80",
     imageAlt: "Writing",
@@ -31,7 +31,7 @@ const mockArticles: SearchPageData["articles"] = [
     summary: "Reusable UI is shaping modern editorial platforms.",
     author: "Priya Shah",
     date: "March 10, 2026",
-    caption: "Illustration by The Atlantic. Sources: Al D...",
+    caption: "Illustration by The Collectors Press. Sources: Al D...",
     imageSrc:
       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
     imageAlt: "Design",

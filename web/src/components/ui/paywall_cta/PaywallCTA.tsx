@@ -14,7 +14,7 @@ export function PaywallCTA({ className }: PaywallCTAProps) {
       )}
     >
       <p className="mb-6 font-sans text-[12px] font-bold uppercase tracking-[1.7px] text-[#111] sm:mb-[26px]">
-        Keep reading <em className="font-serif normal-case tracking-normal">the Atlantic.</em>
+        Keep reading <em className="font-serif normal-case tracking-normal">The Collectors Press.</em>
       </p>
 
       <h2 className="mb-7 font-serif text-[1.4rem] leading-[1.35] font-medium sm:text-[1.05rem]">
@@ -54,7 +54,7 @@ export function PaywallCTA({ className }: PaywallCTAProps) {
           <p className="mb-[18px] font-serif text-[0.98rem] leading-[1.45]">
             Try 30 days free and see how
             <br />
-            <em>The Atlantic</em> fits into your
+            <em>The Collectors Press</em> fits into your
             <br />
             daily routine.
           </p>
