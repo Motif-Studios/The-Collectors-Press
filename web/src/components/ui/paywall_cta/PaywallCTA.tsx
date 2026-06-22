@@ -70,7 +70,7 @@ export function PaywallCTA({ className }: PaywallCTAProps) {
 
       <p className="font-sans text-[12px] font-bold uppercase tracking-[1.3px] text-[#111]">
         Already have an account?{" "}
-        <a href="#" className="text-[#2a5c8a] underline underline-offset-[2px]">
+        <a href="#" className="text-[#B8860B] underline underline-offset-[2px]">
           Sign in
         </a>
       </p>

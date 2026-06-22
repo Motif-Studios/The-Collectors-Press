@@ -143,7 +143,7 @@
   display: inline-block;
   min-width: 142px;
   padding: 11px 18px;
-  background: #d71920;
+  background: #B8860B;
   color: #fff;
   text-decoration: none;
   text-transform: uppercase;
@@ -164,7 +164,7 @@
 }
 
 .paywall-signin a {
-  color: #2a5c8a;
+  color: #B8860B;
   text-decoration: underline;
   text-underline-offset: 2px;
 }

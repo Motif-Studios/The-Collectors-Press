@@ -17,7 +17,7 @@ export function CategoryRow({
   return (
     <div
       className={classNameHelper(
-        "mb-2.5 flex flex-wrap items-center gap-2 text-[12px] font-bold leading-none text-[#6b90d6]",
+        "mb-2.5 flex flex-wrap items-center gap-2 text-[12px] font-bold leading-none text-[#B8860B]",
         className
       )}
     >
