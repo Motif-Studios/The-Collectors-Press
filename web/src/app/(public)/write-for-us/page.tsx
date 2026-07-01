@@ -40,17 +40,38 @@ export default function WriteForUsPage() {
   });
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
+      setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+   
+  
+      try{
+          const response = await fetch("http://localhost:5001/email/write-for-us", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(form),
+          });
+  
+      const result = await response.json();
+        
+      if (result.success) {
+          console.log("Email sent successfully");
+      } else {
+          console.error("Error sending email:", result.error);
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  
+       setSubmitted(true);
+  }
+  
 
   return (
     <Wrapper className="py-10 sm:py-14">
