@@ -18,10 +18,32 @@ export default function ContactPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-  };
+ 
+
+    try{
+        const response = await fetch("http://localhost:5001/email/contact-us", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
+
+    const result = await response.json();
+      
+    if (result.success) {
+        console.log("Email sent successfully");
+    } else {
+        console.error("Error sending email:", result.error);
+    }
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+
+     setSubmitted(true);
+}
 
   return (
     <Wrapper>

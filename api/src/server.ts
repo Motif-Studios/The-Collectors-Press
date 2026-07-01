@@ -12,6 +12,7 @@ import dashboard from "./routes/dashboard/index";
 import search from "./routes/search/index";
 import subscription from "./routes/subscription/index";
 import upload from "./routes/upload/index";
+import email from "./routes/email/index";
 
 const app = express();
 app.use(
@@ -67,6 +68,7 @@ app.use("/dashboard", dashboard);
 app.use("/search", search);
 app.use("/subscription", subscription);
 app.use("/upload", upload);
+app.use("/email", email);
 
 app.get("/", (req, res) =>{
     res.status(200).json({ message:"API RUNNING" });
