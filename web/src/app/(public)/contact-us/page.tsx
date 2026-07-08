@@ -65,7 +65,7 @@ export default function ContactPage() {
         <div className="mb-14 lg:mb-0">
           <div className="border-l-[3px] border-black pl-5">
             <p className="text-[1.08rem] leading-[1.7] text-[#222]">
-              We read every message. Whether you have a story tip, a correction
+              We read every message. Whether you have an article suggestion, a correction
               to flag, or a general enquiry, the right person will see it.
             </p>
           </div>
@@ -76,7 +76,7 @@ export default function ContactPage() {
                 Editorial
               </p>
               <p className="text-[0.95rem] leading-[1.6] text-[#222]">
-                Story tips, corrections, and feedback on our coverage.
+                Article suggestions, corrections, and feedback on our coverage.
               </p>
               <a
                 href="mailto:editorial@thecollectorspress.com"

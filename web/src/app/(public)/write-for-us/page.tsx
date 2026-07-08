@@ -7,17 +7,17 @@ const WRITING_CRITERIA = [
   {
     label: "Original reporting",
     detail:
-      "We value fresh angles, primary sources, and ideas that haven't been covered to death elsewhere.",
+      "We value new angles and ideas about collectible topics.",
   },
   {
     label: "A distinct voice",
     detail:
-      "Our readers are smart. Write as if you're talking to a well-read friend, not filing a press release.",
+      "Our readers are true collectors themselves. Write as if you're talking to a fellow hobby friend, not writing a scientific journal.",
   },
   {
     label: "Collector's world knowledge",
     detail:
-      "Deep familiarity with markets, culture, sport, or business — ideally where they intersect.",
+      "Deep familiarity with the collectible content that you wish to write about.",
   },
   {
     label: "Reliable facts",
@@ -86,8 +86,7 @@ export default function WriteForUsPage() {
           Write for The Collectors Press
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-[1.05rem] leading-[1.7] text-white/70">
-          We commission writers, analysts, and experts who have something
-          genuinely worth saying. Here&apos;s what we look for.
+          We commish collectors who have a genuine interest in spreading knowledge, information, advice and a passion for all things collectible
         </p>
       </div>
 
@@ -124,8 +123,8 @@ export default function WriteForUsPage() {
             Submit your application
           </h2>
           <p className="mb-10 text-[0.95rem] leading-[1.7] text-[#555]">
-            Tell us about yourself and pitch your first story. We review all
-            applications and respond within two weeks.
+            Tell us about yourself and pitch what you would like to write about. We review all
+            applications and will be in touch within one week.
           </p>
 
           {submitted ? (
