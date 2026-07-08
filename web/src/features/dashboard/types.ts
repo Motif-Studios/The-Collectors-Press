@@ -1,6 +1,6 @@
 // export type ArticleStatus = "draft" | "published";
 
-export type ArticleStatus = "draft" | "published";
+export type ArticleStatus = "draft" | "submitted" | "published";
 
 export type StudioArticleRow = {
   id: string;

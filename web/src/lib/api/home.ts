@@ -31,8 +31,7 @@ type HomeDataShape = {
   };
 };
 
-export async function normalisedPrimaryPanelFeaturedArticles(): Promise<FeatureStoryItem> {
-  const homeData = (await getHomePageDataApi()) as HomeDataShape;
+function normalisePrimaryPanelFeaturedArticles(homeData: HomeDataShape): FeatureStoryItem {
   const featurePrimary = homeData?.primaryPanel?.feature as RawPrimaryFeature | undefined;
 
   if (!featurePrimary) {
@@ -62,8 +61,7 @@ export async function normalisedPrimaryPanelFeaturedArticles(): Promise<FeatureS
   return normalisedJson;
 }
 
-export async function normalisedPrimaryPanelStories(): Promise<StoryCardItem[]> {
-  const homeData = (await getHomePageDataApi()) as HomeDataShape;
+function normalisePrimaryPanelStories(homeData: HomeDataShape): StoryCardItem[] {
   const primaryStories = homeData?.primaryPanel?.stories as RawPrimaryFeature[] | undefined;
 
   if (!primaryStories) {
@@ -85,8 +83,7 @@ export async function normalisedPrimaryPanelStories(): Promise<StoryCardItem[]> 
   }));
 }
 
-export async function normalisedSecondaryPanelTopStories(): Promise<SecondaryTopStoryItem[]> {
-  const homeData = (await getHomePageDataApi()) as HomeDataShape;
+function normaliseSecondaryPanelTopStories(homeData: HomeDataShape): SecondaryTopStoryItem[] {
   const secondaryTopStories = homeData?.secondaryPanel?.topStories as RawPrimaryFeature[] | undefined;
 
   if (!secondaryTopStories) {
@@ -113,8 +110,7 @@ export async function normalisedSecondaryPanelTopStories(): Promise<SecondaryTop
   }));
 }
 
-export async function normalisedSecondaryPanelStories(): Promise<SecondaryTextStoryItem[]> {
-  const homeData = (await getHomePageDataApi()) as HomeDataShape;
+function normaliseSecondaryPanelStories(homeData: HomeDataShape): SecondaryTextStoryItem[] {
   const secondaryStories = homeData?.secondaryPanel?.stories as RawPrimaryFeature[] | undefined;
 
   if (!secondaryStories) {
@@ -130,8 +126,7 @@ export async function normalisedSecondaryPanelStories(): Promise<SecondaryTextSt
   }));
 }
 
-export async function normalisedSecondaryPanelMiniCards(): Promise<SecondaryMiniCardItem[]> {
-  const homeData = (await getHomePageDataApi()) as HomeDataShape;
+function normaliseSecondaryPanelMiniCards(homeData: HomeDataShape): SecondaryMiniCardItem[] {
   const secondaryMiniCards = homeData?.secondaryPanel?.miniCards as RawPrimaryFeature[] | undefined;
 
   if (!secondaryMiniCards) {
@@ -162,21 +157,17 @@ export async function getHomePageDataApi() {
 }
 
 export async function getHomePageDataNormalised(){
-  const primaryPanelFeaturedArticles = await normalisedPrimaryPanelFeaturedArticles();
-  const primaryPanelStories = await normalisedPrimaryPanelStories();
-  const secondaryPanelTopStories = await normalisedSecondaryPanelTopStories();
-  const secondaryPanelStories = await normalisedSecondaryPanelStories();
-  const secondaryPanelMiniCards = await normalisedSecondaryPanelMiniCards();
-
+  const homeData = (await getHomePageDataApi()) as HomeDataShape;
+  
   return {
     primaryPanel: {
-      feature: primaryPanelFeaturedArticles,
-      stories: primaryPanelStories,
+      feature: normalisePrimaryPanelFeaturedArticles(homeData),
+      stories: normalisePrimaryPanelStories(homeData),
     },
     secondaryPanel: {
-      topStories: secondaryPanelTopStories,
-      stories: secondaryPanelStories,
-      miniCards: secondaryPanelMiniCards,
+      topStories: normaliseSecondaryPanelTopStories(homeData),
+      stories: normaliseSecondaryPanelStories(homeData),
+      miniCards: normaliseSecondaryPanelMiniCards(homeData),
     },
   };
 }

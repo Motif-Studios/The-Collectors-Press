@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const navItems = [
+const baseNavItems = [
   { href: "/studio", label: "Studio", exact: true },
   { href: "/studio/create", label: "Create" },
 ];
+
+const adminNavItem = { href: "/studio/admin", label: "Admin" };
 
 function isActivePath(pathname: string | null, href: string, exact?: boolean) {
   if (!pathname) {
@@ -20,8 +22,13 @@ function isActivePath(pathname: string | null, href: string, exact?: boolean) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function StudioSidebarNav() {
+type StudioSidebarNavProps = {
+  isAdmin?: boolean;
+};
+
+export function StudioSidebarNav({ isAdmin = false }: StudioSidebarNavProps) {
   const pathname = usePathname();
+  const navItems = isAdmin ? [...baseNavItems, adminNavItem] : baseNavItems;
 
   return (
     <nav className="flex flex-row flex-wrap gap-x-6 gap-y-[18px] lg:flex-col lg:gap-[18px]">

@@ -1,6 +1,6 @@
 import { classNameHelper } from "@/lib/utils/classNameHelper";
 
-type ArticleStatus = "draft" | "published";
+type ArticleStatus = "draft" | "submitted" | "published";
 
 type ArticleStatusBadgeProps = {
   status: ArticleStatus;
@@ -9,11 +9,13 @@ type ArticleStatusBadgeProps = {
 
 const statusStyles: Record<ArticleStatus, string> = {
   draft: "bg-neutral-200 text-black border border-neutral-100",
+  submitted: "bg-amber-50 text-amber-900 border border-amber-100",
   published: "bg-green-50 text-green-800 border border-green-100",
 };
 
 const statusLabels: Record<ArticleStatus, string> = {
   draft: "Draft",
+  submitted: "Submitted",
   published: "Published",
 };
 

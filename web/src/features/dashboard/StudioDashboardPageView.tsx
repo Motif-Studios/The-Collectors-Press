@@ -7,6 +7,7 @@ import { Table } from "@/components/ui/table/Table";
 import { ArticleStatusBadge } from "@/components/ui/article_status_badge/ArticleStatusBadge";
 import { getStudioDashboardData } from "./queries";
 import { DeleteArticleButton } from "./DeleteArticleButton";
+import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
 
 
 export async function StudioDashboardPageView() {
@@ -18,6 +19,8 @@ export async function StudioDashboardPageView() {
   // - article actions (edit, preview, restore, delete)
 
   const { summary, articles } = await getStudioDashboardData();
+  const user = await getCurrentUser();
+  const isAdmin = user?.userType === "admin";
 
   return (
     <div className="flex flex-col gap-6">
@@ -26,6 +29,23 @@ export async function StudioDashboardPageView() {
         description="Manage drafts, published stories and archived articles."
         actions={<ActionButton variant="primary" href="/studio/create">Create article</ActionButton>}
       />
+
+      {isAdmin ? (
+        <section className="rounded-md border border-neutral-200 bg-white px-5 py-4">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-black">Admin tools</h2>
+              <p className="mt-1 text-sm text-neutral-600">
+                Review submitted articles and manage the home page panels.
+              </p>
+            </div>
+
+            <ActionButton variant="primary" href="/studio/admin">
+              Open admin page
+            </ActionButton>
+          </div>
+        </section>
+      ) : null}
 
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
         <div className="min-w-0 flex-1">

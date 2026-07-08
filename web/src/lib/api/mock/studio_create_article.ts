@@ -41,12 +41,12 @@ export async function saveMockStudioCreateArticleDraft(article: StudioCreateArti
 }
 
 export async function publishMockStudioCreateArticle(article: StudioCreateArticle): Promise<StudioCreateArticle> {
-  console.log("PUBLISH:", article);
+  console.log("SUBMIT FOR REVIEW:", article);
 
   return {
     ...article,
     id: "342sfsoi5423sfjo",
-    status: "published",
-    lastSavedLabel: "Published just now",
+    status: "submitted",
+    lastSavedLabel: "Submitted just now",
   };
 }

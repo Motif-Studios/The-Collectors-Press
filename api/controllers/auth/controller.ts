@@ -17,3 +17,18 @@ export async function createProfile(userId: string) {
     
     return data;
 }
+
+export async function getProfileByUserId(userId: string) {
+    const { data, error } = await supabase
+        .from("profiles")
+        .select("id, user_type")
+        .eq("id", userId)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Error fetching profile:", error);
+        throw new Error("Failed to load profile");
+    }
+
+    return data;
+}

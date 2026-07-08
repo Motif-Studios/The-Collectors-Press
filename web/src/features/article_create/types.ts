@@ -1,4 +1,4 @@
-export type StudioCreateArticleStatus = "draft" | "published";
+export type StudioCreateArticleStatus = "draft" | "submitted" | "published";
 
 export type EditorJsBlock = {
   id?: string;

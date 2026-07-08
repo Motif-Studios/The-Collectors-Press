@@ -1,6 +1,13 @@
 import { Router } from "express";
-import { createArticle, deleteArticle, getArticlesByStatus, getDashboardArticles, publishArticle, saveArticle } from "../../../controllers/dashboard/controller";
+import { assignArticleToPanel, approveArticle, createArticle, deleteArticle, getAdminPublishedArticles, getAdminQueuedArticles, getArticlesByStatus, getDashboardArticles, publishArticle, removeArticleFromPanel, saveArticle } from "../../../controllers/dashboard/controller";
 const router = Router();
+
+type AdminPanelName =
+  | "primary_feature"
+  | "primary_stories"
+  | "secondary_top_stories"
+  | "secondary_stories"
+  | "secondary_mini_cards";
 
 /**
  * @openapi
@@ -179,6 +186,137 @@ router.put("/save_article/:article_id", async (req, res) => {
     res.json(response);
   }catch (error) {
     const message = error instanceof Error ? error.message : "Failed to save article";
+    res.status(500).json({ error: message });
+  }
+});
+
+/**
+ * @openapi
+ * /dashboard/admin/queued_articles:
+ *   get:
+ *     tags: [Dashboard]
+ *     summary: Admin queued articles
+ *     responses:
+ *       200:
+ *         description: Articles awaiting approval
+ */
+router.get("/admin/queued_articles", async (_req, res) => {
+  try {
+    const articles = await getAdminQueuedArticles();
+    res.json(articles);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to load admin queue";
+    res.status(500).json({ error: message });
+  }
+});
+
+/**
+ * @openapi
+ * /dashboard/admin/published_articles:
+ *   get:
+ *     tags: [Dashboard]
+ *     summary: Admin published articles
+ *     responses:
+ *       200:
+ *         description: Published articles available for homepage panels
+ */
+router.get("/admin/published_articles", async (_req, res) => {
+  try {
+    const articles = await getAdminPublishedArticles();
+    res.json(articles);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to load published articles";
+    res.status(500).json({ error: message });
+  }
+});
+
+/**
+ * @openapi
+ * /dashboard/admin/approve_article/{article_id}:
+ *   post:
+ *     tags: [Dashboard]
+ *     summary: Approve article
+ *     parameters:
+ *       - in: path
+ *         name: article_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Approved article response
+ */
+router.post("/admin/approve_article/:article_id", async (req, res) => {
+  try {
+    const { article_id } = req.params;
+    const response = await approveArticle(article_id);
+    res.json(response);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to approve article";
+    res.status(500).json({ error: message });
+  }
+});
+
+/**
+ * @openapi
+ * /dashboard/admin/panel/{panel_name}/{article_id}:
+ *   post:
+ *     tags: [Dashboard]
+ *     summary: Assign article to a homepage panel
+ *     parameters:
+ *       - in: path
+ *         name: panel_name
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: article_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Panel assignment response
+ */
+router.post("/admin/panel/:panel_name/:article_id", async (req, res) => {
+  try {
+    const { panel_name, article_id } = req.params;
+    const response = await assignArticleToPanel(panel_name as AdminPanelName, article_id);
+    res.json(response);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to assign article to panel";
+    res.status(500).json({ error: message });
+  }
+});
+
+/**
+ * @openapi
+ * /dashboard/admin/panel/{panel_name}/{article_id}:
+ *   delete:
+ *     tags: [Dashboard]
+ *     summary: Remove article from a homepage panel
+ *     parameters:
+ *       - in: path
+ *         name: panel_name
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: article_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Panel removal response
+ */
+router.delete("/admin/panel/:panel_name/:article_id", async (req, res) => {
+  try {
+    const { panel_name, article_id } = req.params;
+    const response = await removeArticleFromPanel(panel_name as AdminPanelName, article_id);
+    res.json(response);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to remove article from panel";
     res.status(500).json({ error: message });
   }
 });
