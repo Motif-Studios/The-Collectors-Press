@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const navItems = [
+const navItems: {href: string; label: string; exact?: boolean }[] = [
   { href: "/my-account", label: "Account", exact: true },
   { href: "/my-account/subscription", label: "Subscription" },
   { href: "/my-account/saved_stories", label: "Saved Stories" },

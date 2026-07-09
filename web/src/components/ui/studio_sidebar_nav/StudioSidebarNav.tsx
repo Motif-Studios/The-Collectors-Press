@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const baseNavItems = [
+const baseNavItems: {href: string; label: string; exact?: boolean }[] = [
   { href: "/studio", label: "Studio", exact: true },
   { href: "/studio/create", label: "Create" },
 ];
 
-const adminNavItem = { href: "/studio/admin", label: "Admin" };
+const adminNavItem: {href: string; label: string; exact?: boolean } = { href: "/studio/admin", label: "Admin" };
 
 function isActivePath(pathname: string | null, href: string, exact?: boolean) {
   if (!pathname) {
