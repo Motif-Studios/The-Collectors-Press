@@ -21,7 +21,7 @@ export default async function SubscribeLayout({
 
   return (
     <LogoutFeedbackProvider>
-      <SubscribeHeader user={user} />
+      <SubscribeHeader user={user} isSubscriber={isSubscriber} />
       <LogoutFeedbackBanner />
 
       <main>{children}</main>
