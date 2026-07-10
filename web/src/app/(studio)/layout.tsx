@@ -4,10 +4,17 @@ import { AccountFooter } from "@/components/ui/account_footer/AccountFooter";
 import { StudioSidebarNav } from "@/components/ui/studio_sidebar_nav/StudioSidebarNav";
 import { LogoutFeedbackBanner, LogoutFeedbackProvider } from "@/components/ui/logout_feedback/LogoutFeedback";
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
+import { getIsSubscribed } from "@/features/auth/queries/getIsSubscriber";
+import { redirect } from "next/navigation";
 
 export default async function StudioLayout({ children }: { children: ReactNode }) {
   const user = (await getCurrentUser()) ?? { name: "User", id: "", userType: "normal" };
   const isAdmin = user.userType === "admin";
+  const isSubscriber = await getIsSubscribed(user?.id);
+
+  if (!isSubscriber || isSubscriber.is_subscribed === false) {
+    redirect("/");
+  }
 
   return (
     <LogoutFeedbackProvider>

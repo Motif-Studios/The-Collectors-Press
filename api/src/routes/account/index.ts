@@ -148,5 +148,56 @@ router.get("/help", (req, res) => {
     res.json({ message: "Account Help" })
 })
 
+/**
+ * @openapi
+ * /account/is_subscribed:
+ * get:
+ * tags: [Account]
+ * summary: Check if user is a subscriber (GET)
+ * parameters:
+ * - in: query
+ * name: user_id
+ * required: true
+ * schema:
+ * type: string
+ * description: The ID of the user to check
+ * responses:
+ * 200:
+ * description: Subscription status
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * is_subscribed:
+ * type: boolean
+ * 400:
+ * description: Missing user_id
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * error:
+ * type: string
+ * 500:
+ * description: Internal server error
+ */
+router.get("/is_subscribed", async (req, res) => {
+    const userId = req.query.user_id as string;
+
+    if (!userId) {
+        return res.status(400).json({ error: "'user_id' query parameter is required" });
+    }
+
+    try {
+        const isSubscribedStatus = !!(await isSubscribed(userId));
+
+        return res.json({ is_subscribed: isSubscribedStatus });
+    } catch (error) {
+        return res.status(500).json({ error: "Failed to check subscription status" });
+    }
+});
+
 
 export default router;

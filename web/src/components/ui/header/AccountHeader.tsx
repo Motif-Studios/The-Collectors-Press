@@ -36,7 +36,7 @@ export function AccountHeader({
 
         <HeaderRight>
           {!isSubscriber ? <SubscribeButton /> : null}
-          <AccountAction name={user.name} />
+          <AccountAction name={user.name} isSubscriber={isSubscriber} />
         </HeaderRight>
       </HeaderTopBar>
     </Header>

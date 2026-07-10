@@ -30,6 +30,7 @@ type HeaderProps = {
 
 type AccountActionProps = {
   name: string;
+  isSubscriber: boolean;
 };
 
 export function Header({
@@ -57,7 +58,7 @@ export function Header({
           <HeaderRight>
             {!isSubscriber ? <SubscribeButton /> : null}
 
-            {user ? <AccountAction name={user.name} /> : <SignInButton />}
+            {user ? <AccountAction name={user.name} isSubscriber={isSubscriber} /> : <SignInButton />}
           </HeaderRight>
         </HeaderTopBar>
       </div>
@@ -166,7 +167,7 @@ export function SignInButton() {
   );
 }
 
-export function AccountAction({ name }: AccountActionProps) {
+export function AccountAction({ name, isSubscriber }: AccountActionProps) {
   const { showSuccess, showError, clearMessage } = useLogoutFeedback();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
@@ -241,6 +242,8 @@ export function AccountAction({ name }: AccountActionProps) {
           <div className="absolute right-0 top-full mt-2 w-48 rounded-lg bg-neutral-900 border border-white/20 shadow-lg z-50">
             <div className="py-2">
               {/* Studio Link */}
+              {isSubscriber && (
+               
               <Link
                 href="/studio"
                 className="block px-4 py-2 text-sm text-white hover:bg-neutral-800 transition"
@@ -248,6 +251,7 @@ export function AccountAction({ name }: AccountActionProps) {
               >
                 Studio
               </Link>
+              )}
 
               {/* Account Link */}
               <Link
