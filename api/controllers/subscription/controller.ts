@@ -39,21 +39,21 @@ export async function makeCustomerSubscriber(customerId: string | undefined, sub
 }
 
 export async function createNewSubscriber(userId: string, email: string, customerId: string) {
+    // Use upsert so re-subscribing users update their existing row instead of inserting a duplicate
     const { data, error } = await supabase
         .from("subscription")
-        .insert({
+        .upsert({
             user_id: userId,
             email,
             subscription_status: "incomplete",
             stripe_customer_id: customerId,
-            created_at: new Date(),
             updated_at: new Date(),
-        })
+        }, { onConflict: "user_id" })
         .select()
         .single();
 
     if (error) {
-        console.error("Error creating subscription record:", error);
+        console.error("Error creating/updating subscription record:", error);
         throw new Error("Failed to create subscription record");
     }
 
@@ -93,6 +93,25 @@ export async function handleSubscriptionRenewal(subscription: string) {
     }
 
     return data;
+}
+
+export async function createBillingPortalSession(userId: string, returnUrl: string) {
+    const { data: subscriptionRow, error } = await supabase
+        .from("subscription")
+        .select("stripe_customer_id")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+    if (error || !subscriptionRow?.stripe_customer_id) {
+        throw new Error("No Stripe customer found for this user");
+    }
+
+    const session = await stripe.billingPortal.sessions.create({
+        customer: subscriptionRow.stripe_customer_id,
+        return_url: returnUrl,
+    });
+
+    return { url: session.url };
 }
 
 export async function handleSubscriptionPaymentFailed(subscription: string) {

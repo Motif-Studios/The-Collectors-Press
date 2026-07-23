@@ -5,6 +5,24 @@ import {
 import { getCategoryArticles } from "./queries";
 import { CategoryArticlesList } from "./CategoryArticlesList";
 
+type InitialCategoryArticle = {
+  id?: string;
+  article_id?: string;
+  title?: string;
+  summary?: string;
+  preview_text?: string;
+  author?: string;
+  date?: string;
+  created_at?: string;
+  caption?: string;
+  image_alt?: string;
+  imageSrc?: string;
+  cover_image_url?: string;
+  imageAlt?: string;
+  href?: string;
+  slug?: string;
+};
+
 export function slugToTitle(str: string) {
   return str
     .split("-")
@@ -18,9 +36,18 @@ export async function CategoryPageView({
   categorySlug: string;
 }) {
   const title = slugToTitle(categorySlug);
-  console.log("CategoryPageView rendered with slug:", title);
-  const initialArticles = await getCategoryArticles(title, 10, 0);
-  console.log("Fetched initial articles for category:", initialArticles);
+  const result = await getCategoryArticles(title, 10, 0);
+  
+  let initialArticles: InitialCategoryArticle[] = [];
+  let totalCount = 0;
+  
+  if (Array.isArray(result)) {
+    initialArticles = result;
+    totalCount = result.length;
+  } else if (result && typeof result === 'object' && 'articles' in result) {
+    initialArticles = (result as { articles: InitialCategoryArticle[] }).articles ?? [];
+    totalCount = (result as { total?: number }).total ?? initialArticles.length;
+  }
 
   return (
     <div className="mb-12">
@@ -31,6 +58,7 @@ export async function CategoryPageView({
           <CategoryArticlesList
             categorySlug={title}
             initialArticles={initialArticles}
+            totalCount={totalCount}
           />
         </div>
       </div>

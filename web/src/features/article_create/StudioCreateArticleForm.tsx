@@ -107,30 +107,24 @@ export function StudioCreateArticleForm({
     setLocalArticle(nextArticle);
   }
 
-  React.useEffect(() => {
-    console.log("current article form:", currentArticle);
-  }, [currentArticle]);
-
-  // debounce saving
+  // debounce saving (12 seconds)
   React.useEffect(() => {
     const timeout = setTimeout(async () => {
       try {
         if (!currentArticle.id) {
-          console.log("Article ID not set, skipping save");
           return;
         }
         const response = await saveArticle(currentArticle.id, currentArticle);
-        console.log("Article saved successfully:", response);
         clearMessage();
         showSuccess("Article saved successfully.");
       } catch (error) {
         console.error("Failed to save article:", error);
         showError("We couldn't save your article right now. Please try again.");
       }
-    }, 5000);
+    }, 12000);
 
     return () => clearTimeout(timeout);
-  }, [currentArticle, currentArticle.id]);
+  }, [clearMessage, currentArticle, currentArticle.id, showError, showSuccess]);
  
   return (
     <div className="flex flex-col gap-6">
@@ -161,6 +155,15 @@ export function StudioCreateArticleForm({
           <span>{currentArticle.lastSavedLabel}</span>
         </ArticleMetaCard>
       </div>
+
+      {currentArticle.status === "rejected" ? (
+        <div className="border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+          <strong className="block font-semibold">Rejected</strong>
+          <span className="mt-1 block">
+            {currentArticle.rejectionReason?.trim() || "This article was rejected. Please review the feedback before resubmitting."}
+          </span>
+        </div>
+      ) : null}
 
       <EditorCard className="space-y-6">
         <div className="space-y-2">
@@ -196,7 +199,11 @@ export function StudioCreateArticleForm({
             name="coverImage"
             className="mt-2"
             article_id={currentArticle.id}
+            previewUrl={currentArticle.coverImageUrl}
+            onUploaded={({ publicUrl }) => updateField("coverImageUrl", publicUrl)}
           />
+
+          <p className="text-xs uppercase tracking-[0.08em] text-neutral-500">Cover image</p>
         </div>
 
         <div className="space-y-2">
@@ -227,6 +234,7 @@ export function StudioCreateArticleForm({
         <div className="article-editor min-h-[720px] border border-neutral-200 bg-white py-4">
           <StudioArticleBodyEditor
             initialData={currentArticle.body}
+            articleId={currentArticle.id}
             onChange={handleBodyChange}
           />
         </div>

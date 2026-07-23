@@ -21,39 +21,27 @@ const router = Router();
  */
 router.get("/category/:category_name", async (req, res) => {
   const { category_name } = req.params;
-  const articles = await getArticleByCategoryName(category_name);
+  const { search, sort } = req.query;
+  const articles = await getArticleByCategoryName(
+    category_name,
+    undefined,
+    undefined,
+    search as string | undefined,
+    sort as string | undefined
+  );
   res.json(articles);
 });
 
-/**
- * @openapi
- * /articles/category/{category_name}/{limit}/{offset}:
- *   get:
- *     tags: [Articles]
- *     summary: Get paginated articles by category
- *     parameters:
- *       - in: path
- *         name: category_name
- *         required: true
- *         schema:
- *           type: string
- *       - in: path
- *         name: limit
- *         required: true
- *         schema:
- *           type: integer
- *       - in: path
- *         name: offset
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Paginated list of articles
- */
 router.get("/category/:category_name/:limit/:offset", async (req, res) => {
   const { category_name, limit, offset } = req.params;
-  const articles = await getArticleByCategoryName(category_name, parseInt(limit), parseInt(offset));
+  const { search, sort } = req.query;
+  const articles = await getArticleByCategoryName(
+    category_name,
+    parseInt(limit),
+    parseInt(offset),
+    search as string | undefined,
+    sort as string | undefined
+  );
   res.json(articles);
 });
 

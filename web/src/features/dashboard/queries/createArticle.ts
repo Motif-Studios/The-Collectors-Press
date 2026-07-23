@@ -16,7 +16,11 @@ export async function createArticle() {
         return { error: "Failed to create article" };
     }
 
-    return response.json();
+        const data = await response.json();
+        return {
+            article_id: data.article_id,
+            slug: data.slug,
+        };
     } catch (error) {
         console.error("Error creating article:", error);
         return { error: error instanceof Error ? error.message : "Failed to create article" };

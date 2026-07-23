@@ -17,7 +17,7 @@ type SubscribeHeaderProps = {
   user?: SubscribeHeaderUser | null;
 };
 
-export function SubscribeHeader({ user = null }: SubscribeHeaderProps) {
+export function SubscribeHeader({ user }: SubscribeHeaderProps) {
   return (
     <Header>
       <HeaderTopBar>

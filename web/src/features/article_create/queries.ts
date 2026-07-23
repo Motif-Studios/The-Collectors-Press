@@ -50,9 +50,9 @@ export async function publishStudioCreateArticle(article: StudioCreateArticle) {
   return publishStudioCreateArticleApi(article);
 }
 
-export async function publishArticle(articleId: string) {
-  const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/publish_article/${articleId}`, {
-    method: "POST",
+export async function submitArticleForReview(articleId: string) {
+  const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/submit_article/${articleId}`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
@@ -60,8 +60,12 @@ export async function publishArticle(articleId: string) {
 
   if (!response.ok) {
     const errorBody = await response.text();
-    throw new Error(`Failed to publish article: ${response.status} ${errorBody}`);
+    throw new Error(`Failed to submit article: ${response.status} ${errorBody}`);
   }
 
   return response.json();
+}
+
+export async function publishArticle(articleId: string) {
+  return submitArticleForReview(articleId);
 }

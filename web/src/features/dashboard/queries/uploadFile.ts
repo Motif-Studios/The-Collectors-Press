@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/lib/env";
+import { API_BASE_URL_SERVER } from "@/lib/env";
 
 export async function uploadFile(file: File, article_id: string) {
   const formData = new FormData();
@@ -7,7 +7,7 @@ export async function uploadFile(file: File, article_id: string) {
   let response: Response;
 
   try {
-    response = await fetch(`${API_BASE_URL}/upload/${article_id}`, {
+    response = await fetch(`${API_BASE_URL_SERVER}/upload/${article_id}`, {
       method: "POST",
       body: formData,
     });
@@ -23,20 +23,6 @@ export async function uploadFile(file: File, article_id: string) {
 
   const result = await response.json();
   console.log("File uploaded successfully:", result);
-
-  try{
-    const saveImageToArticle = await fetch(`${API_BASE_URL}/upload/save-image/${article_id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ path: result.path }),
-    });
-
-    if (!saveImageToArticle.ok) {
-      throw new Error(`Failed to save image to article: ${saveImageToArticle.statusText}`);
-    }
-  } catch (error) {
-    console.error("Error saving image to article:", error);
-  }
 
   return result;
 }

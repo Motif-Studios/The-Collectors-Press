@@ -7,7 +7,7 @@ import { ActionButton } from "@/components/ui/action_button/ActionButton";
 
 import { StudioCreateArticleForm } from "./StudioCreateArticleForm";
 import { saveArticle } from "./queries/saveArticle";
-import { publishArticle } from "./queries";
+import { submitArticleForReview } from "./queries";
 import type { StudioCreateArticle } from "./types";
 
 type Props = {
@@ -22,6 +22,7 @@ export function StudioCreateArticleEditor({
   initialArticle,
 }: Props) {
   const [form, setForm] = useState<StudioCreateArticle>(initialArticle);
+  const isRejected = form.status === "rejected";
 
   async function handlePreview() {
     if (!form.id) {
@@ -81,25 +82,28 @@ export function StudioCreateArticleEditor({
     if (!form.id) {
       setForm((current) => ({
         ...current,
-        lastSavedLabel: "Could not publish. Missing article id.",
+        lastSavedLabel: "Could not submit. Missing article id.",
       }));
       return;
     }
 
     try {
-      await saveArticle(form.id, form);
-      const published = await publishArticle(form.id);
+      await saveArticle(form.id, {
+        ...form,
+        status: "submitted",
+      });
+      const submitted = await submitArticleForReview(form.id);
 
       setForm((current) => ({
         ...current,
-        id: published?.article_id ?? current.id,
-        status: "published",
-        lastSavedLabel: "Published just now",
+        id: submitted?.article_id ?? current.id,
+        status: "submitted",
+        lastSavedLabel: "Submitted just now",
       }));
     } catch {
       setForm((current) => ({
         ...current,
-        lastSavedLabel: "Failed to publish article. Please try again.",
+        lastSavedLabel: "Failed to submit article. Please try again.",
       }));
     }
   }
@@ -108,7 +112,7 @@ export function StudioCreateArticleEditor({
     <div className="flex flex-col gap-6">
       <StudioPageHeader
         title="Create article"
-        description="Draft, preview and prepare your story for publishing."
+        description={isRejected ? "This article was rejected. Review the feedback, edit the story and resubmit when ready." : "Draft, preview and prepare your story for publishing."}
         actions={
           <>
             <ActionButton onClick={handleSaveDraft}>Save draft</ActionButton>
@@ -116,7 +120,7 @@ export function StudioCreateArticleEditor({
             <ActionButton onClick={handlePreview}>Preview</ActionButton>
 
             <ActionButton variant="primary" onClick={handlePublish}>
-              Publish
+              {isRejected ? "Resubmit for review" : "Submit for review"}
             </ActionButton>
           </>
         }

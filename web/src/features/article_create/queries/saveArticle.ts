@@ -2,8 +2,6 @@ import { StudioCreateArticle } from "../types";
 import { API_BASE_URL_SERVER } from "@/lib/env";
 
 export async function saveArticle(articleId: string, content: StudioCreateArticle) {
-    console.log("article data: ", { articleId, content });
-    
     const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/save_article/${articleId}`, {
         method: "PUT",
         headers: {

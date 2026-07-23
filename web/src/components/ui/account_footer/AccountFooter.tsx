@@ -7,18 +7,18 @@ type FooterLink = {
 };
 
 const links: FooterLink[] = [
-  {
-    label: "Terms & Conditions",
-    href: "https://www.nzme.co.nz/hubfs/NZME_November2024/pdf/digital-subscription-terms.pdf?hsLang=en-nz",
-    external: true,
-  },
-  {
-    label: "FAQs",
-    href: "/help-and-support/",
-  },
+  // {
+  //   label: "Terms & Conditions",
+  //   href: "https://www.nzme.co.nz/hubfs/NZME_November2024/pdf/digital-subscription-terms.pdf?hsLang=en-nz",
+  //   external: true,
+  // },
+  // {
+  //   label: "FAQs",
+  //   href: "/help-and-support/",
+  // },
   {
     label: "Contact Us",
-    href: "/help-and-support/contact-us/",
+    href: "/contact-us",
   },
 ];
 

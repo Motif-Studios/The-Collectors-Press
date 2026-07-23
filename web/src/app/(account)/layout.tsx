@@ -5,9 +5,14 @@ import { AccountSidebarNav } from "@/components/ui/account_sidebar_nav/AccountSi
 import { LogoutFeedbackBanner, LogoutFeedbackProvider } from "@/components/ui/logout_feedback/LogoutFeedback";
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
 import { getIsSubscriber } from "@/features/auth/queries/getIsSubscriber";
+import { redirect } from "next/navigation";
 
 export default async function AccountLayout({ children }: { children: ReactNode }) {
-  const user = (await getCurrentUser()) ?? { name: "User", id: "" };
+  const currentUserResult = await getCurrentUser();
+  if (!currentUserResult) {
+    redirect("/login");
+  }
+  const user = currentUserResult ?? { name: "User", id: "" };
   const subscriberInfo = await getIsSubscriber(user?.id);
   const isSubscriber = !!subscriberInfo?.is_subscriber;
 
@@ -20,7 +25,7 @@ export default async function AccountLayout({ children }: { children: ReactNode 
         <main className="flex-1 px-5 pt-6 pb-16 md:px-8 md:pt-7 md:pb-20">
           <div className="mx-auto grid max-w-[1220px] grid-cols-1 items-start gap-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-20">
             <aside className="pt-1">
-              <AccountSidebarNav />
+              <AccountSidebarNav isSubscriber={isSubscriber} />
             </aside>
 
             <section className="max-w-full min-w-0 lg:max-w-[700px]">

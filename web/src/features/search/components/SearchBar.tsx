@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { SearchInput } from "@/components/ui/search/SearchInput";
 
@@ -11,6 +11,10 @@ export function SearchBar() {
 
   const currentQuery = searchParams?.get("q") ?? "";
   const [value, setValue] = useState(currentQuery);
+
+  useEffect(() => {
+    setValue(currentQuery);
+  }, [currentQuery]);
 
   function handleSubmit(submittedValue: string) {
     const trimmedValue = submittedValue.trim();

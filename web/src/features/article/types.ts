@@ -10,7 +10,7 @@ export type Article = {
 
   category?: string;
 
-  status: "draft" | "published" | "archived";
+  status: "draft" | "submitted" | "rejected" | "published" | "archived";
 
   publishedAt?: string;
   updatedAt?: string;

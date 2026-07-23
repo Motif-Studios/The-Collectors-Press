@@ -12,6 +12,7 @@ import dashboard from "./routes/dashboard/index";
 import search from "./routes/search/index";
 import subscription from "./routes/subscription/index";
 import upload from "./routes/upload/index";
+import email from "./routes/email/index";
 
 const app = express();
 app.use(
@@ -45,7 +46,7 @@ const swaggerDocument = swaggerJSDoc(openApiOptions);
 // cors setup
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
     if (req.method === "OPTIONS") {
@@ -67,6 +68,7 @@ app.use("/dashboard", dashboard);
 app.use("/search", search);
 app.use("/subscription", subscription);
 app.use("/upload", upload);
+app.use("/email", email);
 
 app.get("/", (req, res) =>{
     res.status(200).json({ message:"API RUNNING" });

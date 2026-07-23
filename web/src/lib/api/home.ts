@@ -17,6 +17,7 @@ type RawPrimaryFeature = {
   href?: string;
   type?: string;
   section?: string;
+  position?: number | string;
 };
 
 type HomeDataShape = {
@@ -31,8 +32,26 @@ type HomeDataShape = {
   };
 };
 
-export async function normalisedPrimaryPanelFeaturedArticles(): Promise<FeatureStoryItem> {
-  const homeData = (await getHomePageDataApi()) as HomeDataShape;
+function sortStoriesByPosition<T extends RawPrimaryFeature>(stories: T[] | undefined) {
+  if (!stories) {
+    return [] as T[];
+  }
+
+  return [...stories].sort((left, right) => {
+    const leftPosition = typeof left.position === "number" ? left.position : Number(left.position ?? Number.MAX_SAFE_INTEGER);
+    const rightPosition = typeof right.position === "number" ? right.position : Number(right.position ?? Number.MAX_SAFE_INTEGER);
+
+    if (Number.isFinite(leftPosition) && Number.isFinite(rightPosition)) {
+      return leftPosition - rightPosition;
+    }
+
+    if (Number.isFinite(leftPosition)) return -1;
+    if (Number.isFinite(rightPosition)) return 1;
+    return 0;
+  });
+}
+
+function normalisePrimaryPanelFeaturedArticles(homeData: HomeDataShape): FeatureStoryItem {
   const featurePrimary = homeData?.primaryPanel?.feature as RawPrimaryFeature | undefined;
 
   if (!featurePrimary) {
@@ -62,11 +81,10 @@ export async function normalisedPrimaryPanelFeaturedArticles(): Promise<FeatureS
   return normalisedJson;
 }
 
-export async function normalisedPrimaryPanelStories(): Promise<StoryCardItem[]> {
-  const homeData = (await getHomePageDataApi()) as HomeDataShape;
-  const primaryStories = homeData?.primaryPanel?.stories as RawPrimaryFeature[] | undefined;
+function normalisePrimaryPanelStories(homeData: HomeDataShape): StoryCardItem[] {
+  const primaryStories = sortStoriesByPosition(homeData?.primaryPanel?.stories as RawPrimaryFeature[] | undefined);
 
-  if (!primaryStories) {
+  if (!primaryStories.length) {
     return [{
       id: "",
       kicker: "",
@@ -85,11 +103,10 @@ export async function normalisedPrimaryPanelStories(): Promise<StoryCardItem[]> 
   }));
 }
 
-export async function normalisedSecondaryPanelTopStories(): Promise<SecondaryTopStoryItem[]> {
-  const homeData = (await getHomePageDataApi()) as HomeDataShape;
-  const secondaryTopStories = homeData?.secondaryPanel?.topStories as RawPrimaryFeature[] | undefined;
+function normaliseSecondaryPanelTopStories(homeData: HomeDataShape): SecondaryTopStoryItem[] {
+  const secondaryTopStories = sortStoriesByPosition(homeData?.secondaryPanel?.topStories as RawPrimaryFeature[] | undefined);
 
-  if (!secondaryTopStories) {
+  if (!secondaryTopStories.length) {
     return [{
       id: "",
       categories: [],
@@ -113,8 +130,7 @@ export async function normalisedSecondaryPanelTopStories(): Promise<SecondaryTop
   }));
 }
 
-export async function normalisedSecondaryPanelStories(): Promise<SecondaryTextStoryItem[]> {
-  const homeData = (await getHomePageDataApi()) as HomeDataShape;
+function normaliseSecondaryPanelStories(homeData: HomeDataShape): SecondaryTextStoryItem[] {
   const secondaryStories = homeData?.secondaryPanel?.stories as RawPrimaryFeature[] | undefined;
 
   if (!secondaryStories) {
@@ -130,8 +146,7 @@ export async function normalisedSecondaryPanelStories(): Promise<SecondaryTextSt
   }));
 }
 
-export async function normalisedSecondaryPanelMiniCards(): Promise<SecondaryMiniCardItem[]> {
-  const homeData = (await getHomePageDataApi()) as HomeDataShape;
+function normaliseSecondaryPanelMiniCards(homeData: HomeDataShape): SecondaryMiniCardItem[] {
   const secondaryMiniCards = homeData?.secondaryPanel?.miniCards as RawPrimaryFeature[] | undefined;
 
   if (!secondaryMiniCards) {
@@ -150,7 +165,7 @@ export async function normalisedSecondaryPanelMiniCards(): Promise<SecondaryMini
 
 export async function getHomePageDataApi() {
   try {
-    const homeDataResponse = await fetch(`${API_BASE_URL_SERVER}/articles/home-data`);
+    const homeDataResponse = await fetch(`${API_BASE_URL_SERVER}/articles/home-data`, { cache: "no-store" });
     if (!homeDataResponse.ok) {
       return {};
     }
@@ -162,21 +177,17 @@ export async function getHomePageDataApi() {
 }
 
 export async function getHomePageDataNormalised(){
-  const primaryPanelFeaturedArticles = await normalisedPrimaryPanelFeaturedArticles();
-  const primaryPanelStories = await normalisedPrimaryPanelStories();
-  const secondaryPanelTopStories = await normalisedSecondaryPanelTopStories();
-  const secondaryPanelStories = await normalisedSecondaryPanelStories();
-  const secondaryPanelMiniCards = await normalisedSecondaryPanelMiniCards();
-
+  const homeData = (await getHomePageDataApi()) as HomeDataShape;
+  
   return {
     primaryPanel: {
-      feature: primaryPanelFeaturedArticles,
-      stories: primaryPanelStories,
+      feature: normalisePrimaryPanelFeaturedArticles(homeData),
+      stories: normalisePrimaryPanelStories(homeData),
     },
     secondaryPanel: {
-      topStories: secondaryPanelTopStories,
-      stories: secondaryPanelStories,
-      miniCards: secondaryPanelMiniCards,
+      topStories: normaliseSecondaryPanelTopStories(homeData),
+      stories: normaliseSecondaryPanelStories(homeData),
+      miniCards: normaliseSecondaryPanelMiniCards(homeData),
     },
   };
 }

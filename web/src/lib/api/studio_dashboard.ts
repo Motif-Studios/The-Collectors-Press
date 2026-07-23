@@ -60,6 +60,8 @@ export async function getStudioDashboardSummary(articles: DashboardArticle[]): P
         totalArticles: 0,
         published: 0,
         drafts: 0,
+        submitted: 0,
+        rejected: 0,
         archived: 0,
       };
     }
@@ -69,12 +71,16 @@ export async function getStudioDashboardSummary(articles: DashboardArticle[]): P
     const totalArticles = articleArray.length;
     const publishedArticles = articleArray.filter(article => article.status === "published").length;
     const draftArticles = articleArray.filter(article => article.status === "draft").length;
+    const submittedArticles = articleArray.filter(article => article.status === "submitted").length;
+    const rejectedArticles = articleArray.filter(article => article.status === "rejected").length;
     const archivedArticles = articleArray.filter(article => article.status === "archived").length;
 
     return {
       totalArticles,
       published: publishedArticles,
       drafts: draftArticles,
+      submitted: submittedArticles,
+      rejected: rejectedArticles,
       archived: archivedArticles,
     };
   } catch (error) {
@@ -83,6 +89,8 @@ export async function getStudioDashboardSummary(articles: DashboardArticle[]): P
       totalArticles: 0,
       published: 0,
       drafts: 0,
+      submitted: 0,
+      rejected: 0,
       archived: 0,
     };
   }
@@ -98,7 +106,7 @@ export async function getStudioDashboardDataApi(): Promise<StudioDashboardData> 
 
     if (!user) {
       return {
-        summary: { totalArticles: 0, published: 0, drafts: 0, archived: 0 },
+        summary: { totalArticles: 0, published: 0, drafts: 0, submitted: 0, rejected: 0, archived: 0 },
         articles: [],
       };
     }
@@ -108,7 +116,7 @@ export async function getStudioDashboardDataApi(): Promise<StudioDashboardData> 
     if (!getUserArticles.ok) {
       console.error("Failed to fetch dashboard articles:", getUserArticles.status, getUserArticles.statusText);
       return {
-        summary: { totalArticles: 0, published: 0, drafts: 0, archived: 0 },
+        summary: { totalArticles: 0, published: 0, drafts: 0, submitted: 0, rejected: 0, archived: 0 },
         articles: [],
       };
     }
@@ -130,7 +138,7 @@ export async function getStudioDashboardDataApi(): Promise<StudioDashboardData> 
   } catch (error) {
     console.error("Error fetching studio dashboard data:", error);
     return {
-      summary: { totalArticles: 0, published: 0, drafts: 0, archived: 0 },
+      summary: { totalArticles: 0, published: 0, drafts: 0, submitted: 0, rejected: 0, archived: 0 },
       articles: [],
     };
   }

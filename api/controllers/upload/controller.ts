@@ -1,8 +1,18 @@
 import { supabase } from "../../lib/supabase";
 
-export async function uploadFile(file: Express.Multer.File, article_id: string): Promise<{ message: string; path: string }> {
+type UploadedFileResult = {
+    message: string;
+    path: string;
+    publicUrl: string;
+};
+
+export async function uploadFile(file: Express.Multer.File, article_id: string): Promise<UploadedFileResult> {
     if (!file?.buffer || !file.originalname) {
         throw new Error("No file provided");
+    }
+
+    if (!article_id || article_id === "undefined") {
+        throw new Error("No article ID provided");
     }
 
     const filePath = `${article_id}/${Date.now()}-${file.originalname}`;
@@ -19,15 +29,25 @@ export async function uploadFile(file: Express.Multer.File, article_id: string):
         throw new Error("File upload failed");
     }
 
-    return { message: "File uploaded successfully", path: filePath };
+    const { data } = supabase.storage.from("article images").getPublicUrl(filePath);
+
+    return {
+        message: "File uploaded successfully",
+        path: filePath,
+        publicUrl: data.publicUrl,
+    };
 }
 
 export async function saveImage(path: string, article_id: string): Promise<{ message: string }> {
+    if (!article_id || article_id === "undefined") {
+        throw new Error("No article ID provided");
+    }
+
     const { error } = await supabase
         .from("article")
         .update({ cover_image_url: path })
-        .select("*")
         .eq("article_id", article_id)
+        .select("*")
         .single();
         
     if (error) {

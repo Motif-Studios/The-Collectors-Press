@@ -10,8 +10,25 @@ type ArticleType = {
     status?: string;
     updated_at?: string;
     image_alt?: string;
-    content?: string;
+    cover_image_url?: string;
+    rejection_reason?: string;
+    content?: unknown;
+    body?: unknown;
 };
+
+function parseMaybeJson(value: unknown): unknown {
+    if (typeof value !== "string") return value;
+
+    try {
+        return JSON.parse(value);
+    } catch {
+        return value;
+    }
+}
+
+function isEditorJsContent(value: unknown): value is { time?: number; version?: string; blocks: Array<{ type: string; data: Record<string, unknown> }> } {
+    return typeof value === "object" && value !== null && Array.isArray((value as { blocks?: unknown }).blocks);
+}
 
 export async function normaliseArticleData(data: unknown) {
     const article = (data ?? {}) as ArticleType;
@@ -24,11 +41,34 @@ export async function normaliseArticleData(data: unknown) {
     const allCategories = await getAllCategoriesResponse.json();
     const categoryNames = allCategories.map((cat: { category_name: string }) => cat.category_name);
     
-    const getCategory = await fetch(`${API_BASE_URL_SERVER}/categories/article/${articleId}`);
-    const articleCategoryData = await getCategory.json();
-    const category = articleCategoryData?.[0]?.category_name ?? "Uncategorized";
+    let category = "Uncategorized";
+    if (articleId && articleId !== "undefined") {
+        const getCategory = await fetch(`${API_BASE_URL_SERVER}/categories/article/${articleId}`);
+        const articleCategoryData = await getCategory.json();
+        category = articleCategoryData?.[0]?.category_name ?? "Uncategorized";
+    }
 
     console.log("category:", category);
+
+    const parsedContent = parseMaybeJson(article.content ?? article.body);
+    const safeBody = isEditorJsContent(parsedContent)
+        ? {
+            time: parsedContent.time,
+            version: parsedContent.version,
+            blocks: parsedContent.blocks,
+          }
+        : {
+            time: Date.now(),
+            version: "2.30.0",
+            blocks: [
+                {
+                    type: "paragraph",
+                    data: {
+                        text: "",
+                    },
+                },
+            ],
+          };
 
     return {
         authorName,
@@ -41,18 +81,9 @@ export async function normaliseArticleData(data: unknown) {
             status: (article.status as StudioCreateArticleStatus) || "draft",
             lastSavedLabel: article.updated_at || "",
             coverImageCaption: article.image_alt || "",
-            body: {
-                time: Date.now(),
-                version: "2.30.0",
-                blocks: [
-                    {
-                        type: "paragraph",
-                        data: {
-                            text: article.content || "Start writing your story here...",
-                        },
-                    },
-                ],
-            },
+            coverImageUrl: article.cover_image_url || "",
+            rejectionReason: article.rejection_reason || "",
+            body: safeBody,
         },
     };
 }

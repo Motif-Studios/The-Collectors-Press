@@ -19,7 +19,7 @@ export function SecondaryNewsPanel({
           <div className="border-t-0 pt-0 pr-[18px] pb-[28px] max-[900px]:pr-0">
             <SecondaryTopStoryCard {...topStories[0]} />
           </div>
-
+         
           <div className="border-t-0 pt-0 pl-[18px] pb-[28px] max-[900px]:pl-0">
             <SecondaryTopStoryCard {...topStories[1]} />
           </div>
@@ -43,6 +43,14 @@ export function SecondaryNewsPanel({
           })}
         </div>
 
+        <div className="mb-10 border-t border-[#d7d7d7] pt-20">
+          <h2 className="text-2xl font-bold tracking-tight text-black">
+            Recently Added
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            The latest articles added to the collectors space.
+          </p>
+        </div>
         <div className="mt-3 grid grid-cols-4 gap-4.5 max-[900px]:grid-cols-2 max-[560px]:grid-cols-1">
           {miniCards.map((card) => (
             <SecondaryMiniCard key={card.id} {...card} />

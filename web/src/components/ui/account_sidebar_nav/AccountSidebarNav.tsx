@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const navItems = [
+const baseNavItems: { href: string; label: string; exact?: boolean }[] = [
   { href: "/my-account", label: "Account", exact: true },
-  { href: "/my-account/subscription", label: "Subscription" },
   { href: "/my-account/saved_stories", label: "Saved Stories" },
   { href: "/my-account/help", label: "Help" },
 ];
@@ -22,8 +21,16 @@ function isActivePath(pathname: string | null, href: string, exact?: boolean) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function AccountSidebarNav() {
+export function AccountSidebarNav({ isSubscriber }: { isSubscriber?: boolean }) {
   const pathname = usePathname();
+
+  const navItems = isSubscriber
+    ? [
+        baseNavItems[0],
+        { href: "/my-account/subscription", label: "Billing" },
+        ...baseNavItems.slice(1),
+      ]
+    : baseNavItems;
 
   return (
     <nav className="flex flex-row flex-wrap gap-x-6 gap-y-[18px] lg:flex-col lg:gap-[18px]">

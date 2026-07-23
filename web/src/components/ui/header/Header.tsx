@@ -25,17 +25,20 @@ type HeaderProps = {
   navItems?: NavItem[];
   user?: { name: string } | null;
   isSubscriber?: boolean;
+  canAccessStudio?: boolean;
   children?: React.ReactNode;
 };
 
 type AccountActionProps = {
   name: string;
+  canAccessStudio?: boolean;
 };
 
 export function Header({
   navItems = [],
   user = null,
   isSubscriber = false,
+  canAccessStudio = false,
   children,
 }: HeaderProps) {
   
@@ -57,7 +60,7 @@ export function Header({
           <HeaderRight>
             {!isSubscriber ? <SubscribeButton /> : null}
 
-            {user ? <AccountAction name={user.name} /> : <SignInButton />}
+            {user ? <AccountAction name={user.name} canAccessStudio={canAccessStudio} /> : <SignInButton />}
           </HeaderRight>
         </HeaderTopBar>
       </div>
@@ -81,7 +84,7 @@ export function HeaderLeft({ children }: { children?: React.ReactNode }) {
 
 export function HeaderRight({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-end lg:gap-2 sm:gap-4">
+    <div className="flex items-center justify-end gap-2 sm:gap-3">
       {children}
     </div>
   );
@@ -131,42 +134,27 @@ export function HeaderNav({ items }: { items: NavItem[] }) {
 
 export function SubscribeButton() {
   return (
-    <>
-      <Link href={"/subscribe"}>
-        <button className="cursor-pointer hidden lg:inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-[#d4a843] via-[#f0c060] to-[#a87820] px-4 py-2 text-sm font-semibold text-black">
-          <FontAwesomeIcon icon={faReadme} className="text-sm" />
-          <span>Subscribe</span>
-        </button>
-      </Link>
-
-      <Link href={"/subscribe"}>
-        <button className="cursor-pointer inline-flex lg:hidden text-sm font-semibold text-[#f4b73f]">
-          Subscribe
-        </button>
-      </Link>
-    </>
+    <Link href={"/subscribe"}>
+      <button className="cursor-pointer inline-flex items-center gap-1.5 rounded-full bg-gradient-to-br from-[#d4a843] via-[#f0c060] to-[#a87820] px-3 py-1.5 text-xs font-semibold text-black sm:px-4 sm:py-2 sm:text-sm">
+        <FontAwesomeIcon icon={faReadme} className="text-xs sm:text-sm" />
+        <span className="hidden sm:inline">Subscribe</span>
+      </button>
+    </Link>
   );
 }
 
 export function SignInButton() {
   return (
-    <>
-      <Link href={"/login"} className="inline-flex items-center gap-2">
-        <button className="cursor-pointer hidden lg:inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
-          <FontAwesomeIcon icon={faUser} />
-          <span>Sign In</span>
-        </button>
-      </Link>
-      <Link href={"/login"}>
-      <button className="cursor-pointer inline-flex lg:hidden text-sm font-semibold text-white">
-          Sign In
-        </button>
-      </Link>
-    </>
+    <Link href={"/login"} className="inline-flex items-center gap-2">
+      <button className="cursor-pointer inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-black sm:px-4 sm:py-2 sm:text-sm">
+        <FontAwesomeIcon icon={faUser} className="text-xs sm:text-sm" />
+        <span className="hidden sm:inline">Sign In</span>
+      </button>
+    </Link>
   );
 }
 
-export function AccountAction({ name }: AccountActionProps) {
+export function AccountAction({ name, canAccessStudio = false }: AccountActionProps) {
   const { showSuccess, showError, clearMessage } = useLogoutFeedback();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
@@ -213,7 +201,7 @@ export function AccountAction({ name }: AccountActionProps) {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div>
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -241,13 +229,15 @@ export function AccountAction({ name }: AccountActionProps) {
           <div className="absolute right-0 top-full mt-2 w-48 rounded-lg bg-neutral-900 border border-white/20 shadow-lg z-50">
             <div className="py-2">
               {/* Studio Link */}
-              <Link
-                href="/studio"
-                className="block px-4 py-2 text-sm text-white hover:bg-neutral-800 transition"
-                onClick={() => setIsDropdownOpen(false)}
-              >
-                Studio
-              </Link>
+              {canAccessStudio && (
+                <Link
+                  href="/studio"
+                  className="block px-4 py-2 text-sm text-white hover:bg-neutral-800 transition"
+                  onClick={() => setIsDropdownOpen(false)}
+                >
+                  Studio
+                </Link>
+              )}
 
               {/* Account Link */}
               <Link
@@ -257,19 +247,22 @@ export function AccountAction({ name }: AccountActionProps) {
               >
                 My Account
               </Link>
+
+              {/* Divider */}
+              <div className="my-1 border-t border-white/10" />
+
+              {/* Logout */}
+              <button
+                onClick={() => { setIsDropdownOpen(false); handleLogout(); }}
+                disabled={isLoggingOut}
+                className="block w-full text-left px-4 py-2 text-sm text-white/70 hover:bg-neutral-800 hover:text-white transition disabled:opacity-50"
+              >
+                {isLoggingOut ? "Logging out…" : "Log out"}
+              </button>
             </div>
           </div>
         )}
       </div>
-
-      {/* Logout Button - kept on the side */}
-      <button
-        onClick={handleLogout}
-        disabled={isLoggingOut}
-        className="text-sm font-semibold text-white hover:text-white/80 transition disabled:opacity-60"
-      >
-        {isLoggingOut ? "Logging out..." : "Logout"}
-      </button>
     </div>
   );
 }
@@ -293,17 +286,6 @@ export function MenuAction() {
       };
     }
   }, [isMenuOpen]);
-
-  const menuItems = [
-    { label: "Home", href: "/" },
-    { label: "Pokémon", href: "/category/pokemon" },
-    { label: "One Piece", href: "/category/one-piece" },
-    { label: "Basketball", href: "/category/basketball" },
-    { label: "Other", href: "/category/other" },
-    { label: "About The Collectors Press", href: "/about" },
-    { label: "Write for us", href: "#" },
-    { label: "Subscribe", href: "/subscribe" },
-  ];
 
   return (
     <div>

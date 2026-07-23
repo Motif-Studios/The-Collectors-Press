@@ -8,8 +8,5 @@ export default async function StudioCreateArticlePage() {
     redirect("/studio/create/error?feedback=create_failed");
   }
 
-  // console.log(data);
-  // console.log("Redirecting to article creation page with ID:", data.article_id.article_id);
-
-  redirect(`/studio/create/${data.article_id.article_id}/${data.article_id.slug}?feedback=created`);
+  redirect(`/studio/create/${data.article_id}/${data.slug}?feedback=created`);
 }
