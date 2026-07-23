@@ -42,6 +42,7 @@ export async function getAllArticles() {
     const { data, error } = await supabase
         .from("article")
         .select("*")
+        .eq("status", "published")
         .limit(200);
     if (error) {
         console.error("Error fetching all articles:", error);
@@ -50,27 +51,76 @@ export async function getAllArticles() {
     return data;
 }
 
-export async function getArticleByCategoryName(categoryName: string, limit?: number, offset?: number) {
-    // Optimized: Use JOINs instead of 3 separate queries
-    const { data, error } = await supabase
+export async function getArticleByCategoryName(
+    categoryName: string,
+    limit?: number,
+    offset?: number,
+    search?: string,
+    sort?: string
+) {
+    if (categoryName.toLowerCase() === "pokemon" || categoryName === "Pokemon") {
+        categoryName = "Pokémon";
+    }
+
+    // Look up the category ID first
+    const { data: categoryData, error: categoryError } = await supabase
+        .from("category")
+        .select("category_id")
+        .eq("category_name", categoryName)
+        .maybeSingle();
+
+    if (categoryError || !categoryData) {
+        return [];
+    }
+
+    let query = supabase
         .from("article_categories")
-        .select(`
-            article:article_id(*)
-        `)
-        .eq("category.category_name", categoryName);
+        .select(`article:article_id(*)`)
+        .eq("category_id", categoryData.category_id);
+
+    const { data, error } = await query;
 
     if (error) {
         console.error("Error fetching articles by category name:", error);
         return error;
     }
 
-    let articlesData = (data || []).map(item => item.article).filter(Boolean);
+    let articlesData = (data || []).map((item: any) => item.article).filter(Boolean);
+
+    // Filter by status = published
+    articlesData = articlesData.filter((a: any) => a.status === "published");
+
+    // Search filter
+    if (search) {
+        const term = search.toLowerCase();
+        articlesData = articlesData.filter(
+            (a: any) =>
+                (a.title ?? "").toLowerCase().includes(term) ||
+                (a.preview_text ?? "").toLowerCase().includes(term)
+        );
+    }
+
+    // Sort
+    if (sort === "oldest") {
+        articlesData.sort((a: any, b: any) =>
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+    } else if (sort === "az") {
+        articlesData.sort((a: any, b: any) => (a.title ?? "").localeCompare(b.title ?? ""));
+    } else {
+        // default: newest first
+        articlesData.sort((a: any, b: any) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+    }
+
+    const total = articlesData.length;
 
     if (typeof limit === "number" && typeof offset === "number") {
         articlesData = articlesData.slice(offset, offset + limit);
     }
 
-    return articlesData;
+    return { articles: articlesData, total };
 }
 
 export async function getArticleById(articleId: string) {
@@ -84,7 +134,21 @@ export async function getArticleById(articleId: string) {
         console.error("Error fetching article by ID:", error);
         return error;
     }
-    return data;
+
+    const authorId = data.author_id || "unknown-author";
+    const authorName = (await resolveUserEmail(authorId)) ?? "Unknown author";
+
+    return {
+        ...data,
+        author: {
+            id: authorId,
+            name: authorName,
+            description: "",
+            avatarSrc: `https://eu.ui-avatars.com/api/?name=${encodeURIComponent(String(authorName))}&size=250`,
+            moreTopics: [],
+        },
+        body: data.content || { blocks: [] },
+    };
 }
 
 export async function getArticleBySlug(articleSlug: string) {
@@ -186,7 +250,7 @@ export async function getLatestPrimaryArticle() {
         `)
         .eq("panel_id", panelId)
         .eq("article.status", "published")
-        .order("created_at", { ascending: false })
+        .order("position", { ascending: true })
         .limit(1)
         .single();
 
@@ -206,11 +270,12 @@ export async function getLatestPrimaryStories(limit?: number) {
     const { data, error } = await supabase
         .from("article_panels")
         .select(`
+            position,
             article:article_id(*)
         `)
         .eq("panel_id", panelId)
         .eq("article.status", "published")
-        .order("created_at", { ascending: false })
+        .order("position", { ascending: true })
         .limit(limit || 3);
 
     if (error) {
@@ -218,7 +283,9 @@ export async function getLatestPrimaryStories(limit?: number) {
         return [];
     }
 
-    return (data || []).map(item => item.article).filter(Boolean);
+    return (data || [])
+        .map(item => item.article ? ({ ...item.article, position: item.position }) : null)
+        .filter(Boolean);
 }
 
 export async function getLatestSecondaryTopStories(limit?: number) {
@@ -229,11 +296,12 @@ export async function getLatestSecondaryTopStories(limit?: number) {
     const { data, error } = await supabase
         .from("article_panels")
         .select(`
+            position,
             article:article_id(*)
         `)
         .eq("panel_id", panelId)
         .eq("article.status", "published")
-        .order("created_at", { ascending: false })
+        .order("position", { ascending: true })
         .limit(limit || 2);
 
     if (error) {
@@ -241,7 +309,9 @@ export async function getLatestSecondaryTopStories(limit?: number) {
         return [];
     }
 
-    return (data || []).map(item => item.article).filter(Boolean);
+    return (data || [])
+        .map(item => item.article ? ({ ...item.article, position: item.position }) : null)
+        .filter(Boolean);
 }
 
 export async function getLatestSecondaryStories(limit?: number) {
@@ -256,7 +326,7 @@ export async function getLatestSecondaryStories(limit?: number) {
         `)
         .eq("panel_id", panelId)
         .eq("article.status", "published")
-        .order("created_at", { ascending: false })
+        .order("position", { ascending: true })
         .limit(limit || 4);
 
     if (error) {
@@ -268,26 +338,19 @@ export async function getLatestSecondaryStories(limit?: number) {
 }
 
 export async function getLatestSecondaryMiniCards(limit?: number) {
-    // Optimized: Use cache for panel ID lookup, then single JOIN query
-    const panelId = await getPanelIdByName("secondary_mini_cards");
-    if (!panelId) return [];
-
-    const { data, error } = await supabase
-        .from("article_panels")
-        .select(`
-            article:article_id(*)
-        `)
-        .eq("panel_id", panelId)
-        .eq("article.status", "published")
+    const { data: fallback, error: fallbackError } = await supabase
+        .from("article")
+        .select("*")
+        .eq("status", "published")
         .order("created_at", { ascending: false })
         .limit(limit || 4);
 
-    if (error) {
-        console.error("Error fetching latest secondary mini cards:", error);
+    if (fallbackError) {
+        console.error("Error fetching fallback latest secondary mini cards:", fallbackError);
         return [];
     }
 
-    return (data || []).map(item => item.article).filter(Boolean);
+    return (fallback || []).filter(Boolean);
 }
 
 export async function getHomePageData() {
