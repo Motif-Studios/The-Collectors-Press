@@ -12,3 +12,16 @@ export async function deleteArticle(articleId: string) {
 
     return response.json();
 }
+
+export async function submitArticle(articleId: string) {
+    const response = await fetch(`${API_BASE_URL}/dashboard/submit_article/${articleId}`, {
+        method: "POST",
+    });
+
+    if (!response.ok) {
+        const errorBody = await response.text();
+        throw new Error(`Failed to submit article: ${response.status} ${errorBody}`);
+    }
+
+    return response.json();
+}

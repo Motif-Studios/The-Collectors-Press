@@ -7,11 +7,23 @@ type CurrentUser = {
     userType: string;
 };
 
+function normaliseUserType(raw: string | undefined) {
+    const value = (raw ?? "normal").toLowerCase().trim();
+
+    if (value === "author" || value === "aurthor") {
+        return "author";
+    }
+
+    if (value === "admin") {
+        return "admin";
+    }
+
+    return "normal";
+}
+
 export async function getCurrentUser() {
     const supabase = await createClient();
     const { data } = await supabase.auth.getUser();
-
-    console.log("Current user data:", data.user?.id);
 
     if (!data.user) {
         return null;
@@ -21,30 +33,23 @@ export async function getCurrentUser() {
 
     try {
         const profileUrl = `${API_BASE_URL_SERVER}/auth/profile/${data.user.id}`;
-        console.log("Fetching profile from:", profileUrl);
         const profileResponse = await fetch(profileUrl);
-
-        console.log("Profile response status:", profileResponse.status);
 
         if (profileResponse.ok) {
             const profile = await profileResponse.json() as { user_type?: string };
-            console.log("Profile data:", profile);
-            userType = profile?.user_type ?? "normal";
-        } else {
-            const errorText = await profileResponse.text();
-            console.error("Profile fetch error:", profileResponse.status, errorText);
+            userType = normaliseUserType(profile?.user_type);
         }
     } catch (error) {
         console.error("Error fetching current user profile:", error);
     }
-
-    console.log("Final user type:", userType);
 
     const currentUser: CurrentUser = {
         name: data.user.email || "User",
         id: data.user.id,
         userType,
     };
+
+    console.log("Current user:", currentUser.userType);
 
     return currentUser;
 }
