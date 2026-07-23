@@ -29,6 +29,10 @@ export async function getCategoryById(categoryId: number) {
 }
 
 export async function getCategoryByArticleId(articleId: string) {
+    if (!articleId || articleId === "undefined") {
+        return [];
+    }
+
     const { data, error } = await supabase
         .from("article_categories")
         .select("category_id")
