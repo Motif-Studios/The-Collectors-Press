@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createNewSubscriber, createStripeCustomer, handleSubscriptionCancellation, handleSubscriptionPaymentFailed, handleSubscriptionRenewal, makeCustomerSubscriber } from "../../../controllers/subscription/controller";
+import { createNewSubscriber, createStripeCustomer, createBillingPortalSession, handleSubscriptionCancellation, handleSubscriptionPaymentFailed, handleSubscriptionRenewal, makeCustomerSubscriber } from "../../../controllers/subscription/controller";
 import { supabase } from "../../../lib/supabase";
 
 const router = Router();
@@ -224,8 +224,7 @@ router.post("/payment/webhook", async (req, res) => {
   let event;
 
   try{
-    const rawBody = (req as any).rawBody ?? req.body;
-    event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     
   } catch (err) {
     console.error('Error verifying webhook signature:', err);
@@ -289,6 +288,28 @@ router.post("/payment/webhook", async (req, res) => {
   }
 
   res.json({ received: true });
+});
+
+/**
+ * POST /subscription/billing_portal
+ * body: { userId, returnUrl? }
+ * Creates a Stripe Billing Portal session for the user to manage their subscription.
+ */
+router.post("/billing_portal", async (req, res) => {
+  const userId = typeof req.body?.userId === "string" ? req.body.userId : undefined;
+  const returnUrl = typeof req.body?.returnUrl === "string" ? req.body.returnUrl : "http://localhost:3000/my-account";
+
+  if (!userId) {
+    return res.status(400).json({ error: "'userId' is required" });
+  }
+
+  try {
+    const result = await createBillingPortalSession(userId, returnUrl);
+    return res.json(result);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to create billing portal session";
+    return res.status(500).json({ error: message });
+  }
 });
 
 export default router;
