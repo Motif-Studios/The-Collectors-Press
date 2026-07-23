@@ -15,10 +15,9 @@ type StudioHeaderUser = {
 
 type StudioHeaderProps = {
   user: StudioHeaderUser;
-  isSubscriber: boolean;
 };
 
-export function StudioHeader({ user, isSubscriber }: StudioHeaderProps) {
+export function StudioHeader({ user }: StudioHeaderProps) {
   return (
     <Header>
       <HeaderTopBar>
@@ -34,7 +33,7 @@ export function StudioHeader({ user, isSubscriber }: StudioHeaderProps) {
         <HeaderCenter />
 
         <HeaderRight>
-          <AccountAction name={user.name} isSubscriber={true} />
+          <AccountAction name={user.name} />
         </HeaderRight>
       </HeaderTopBar>
     </Header>

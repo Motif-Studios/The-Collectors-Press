@@ -15,10 +15,9 @@ type SubscribeHeaderUser = {
 
 type SubscribeHeaderProps = {
   user?: SubscribeHeaderUser | null;
-  isSubscriber: boolean;
 };
 
-export function SubscribeHeader({ user, isSubscriber }: SubscribeHeaderProps) {
+export function SubscribeHeader({ user }: SubscribeHeaderProps) {
   return (
     <Header>
       <HeaderTopBar>
@@ -28,7 +27,7 @@ export function SubscribeHeader({ user, isSubscriber }: SubscribeHeaderProps) {
 
         <HeaderRight>
           {user ? (
-            <AccountAction name={user.name} isSubscriber={isSubscriber}/>
+            <AccountAction name={user.name} />
           ) : (
             <>
               <span className="hidden lg:inline text-sm font-semibold text-black">
