@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { login } from "@/features/auth/lib/client";
 import { useLogoutFeedback } from "@/components/ui/logout_feedback/LogoutFeedback";
 
@@ -10,6 +11,8 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams?.get("redirectTo") ?? "/";
 
   const { showSuccess, showError, clearMessage } = useLogoutFeedback();
 
@@ -19,8 +22,6 @@ export function LoginForm() {
       clearMessage();
       const response = await login(email, password);
 
-      console.log("Login response:", response);
-
       if (response.error) {
         showError(`Login failed: ${response.error}`);
         return;
@@ -28,7 +29,7 @@ export function LoginForm() {
 
       showSuccess("Login successful.");
       setTimeout(() => {
-        window.location.replace("/");
+        window.location.replace(redirectTo);
       }, 500);
 
       return response;

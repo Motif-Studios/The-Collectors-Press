@@ -1,6 +1,6 @@
 // export type ArticleStatus = "draft" | "published";
 
-export type ArticleStatus = "draft" | "submitted" | "published";
+export type ArticleStatus = "draft" | "submitted" | "rejected" | "published" | "archived";
 
 export type StudioArticleRow = {
   id: string;
@@ -16,6 +16,8 @@ export type StudioArticleRow = {
 export type StudioDashboardSummary = {
   totalArticles: number;
   drafts: number;
+  submitted: number;
+  rejected: number;
   published: number;
   archived: number;
 };

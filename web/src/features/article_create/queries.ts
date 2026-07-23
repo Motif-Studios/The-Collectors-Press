@@ -51,12 +51,11 @@ export async function publishStudioCreateArticle(article: StudioCreateArticle) {
 }
 
 export async function submitArticleForReview(articleId: string) {
-  const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/save_article/${articleId}`, {
+  const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/submit_article/${articleId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ status: "submitted" }),
   });
 
   if (!response.ok) {
