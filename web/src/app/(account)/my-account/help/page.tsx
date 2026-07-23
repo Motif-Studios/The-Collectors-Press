@@ -1,6 +1,14 @@
 import { Panel, PanelBody, PanelFooter } from "@/components/ui/panel/Panel";
+import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
+import { getIsSubscriber } from "@/features/auth/queries/getIsSubscriber";
 
-export default function AccountHelpPage() {
+
+export default async function AccountHelpPage() {
+  const currentUserResult = await getCurrentUser();
+  const user = currentUserResult ?? { name: "User", id: "" };
+  const subscriberInfo = await getIsSubscriber(user?.id);
+  const isSubscriber = !!subscriberInfo?.is_subscriber;
+
   return (
     <div>
       <div className="w-165 max-w-full">
@@ -9,12 +17,12 @@ export default function AccountHelpPage() {
             <h2>How can we help you?</h2>
 
             <p>
-              Here are some guides that other Atlantic readers have found
-              useful.
+              Here are some guides that other readers have found
+              useful...
             </p>
           </PanelBody>
 
-          <PanelFooter>
+          {/* <PanelFooter>
             <div className="flex w-full justify-between">
               <h3>Change your email address</h3>
               <p>{">"}</p>
@@ -25,9 +33,10 @@ export default function AccountHelpPage() {
               <h3>Change your mailing address</h3>
               <p>{">"}</p>
             </div>
-          </PanelFooter>
+          </PanelFooter> */}
         </Panel>
 
+        {isSubscriber && ( 
         <Panel className="mt-9">
           <PanelBody>
             <h2>Need more help?</h2>
@@ -49,6 +58,7 @@ export default function AccountHelpPage() {
             </div>
           </PanelFooter>
         </Panel>
+        )}
       </div>
     </div>
   );

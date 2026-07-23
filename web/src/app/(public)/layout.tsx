@@ -26,7 +26,9 @@ export default async function PublicLayout({
 }) {
   const handleUser = await getCurrentUser();
   const subscriberInfo = await getIsSubscriber(handleUser?.id);
-  const isSubscriber = !!subscriberInfo?.is_subscriber;
+  // Authors and admins always have Studio access, treat them as subscribers for nav purposes
+  const isAuthorOrAdmin = handleUser?.userType === "author" || handleUser?.userType === "admin";
+  const isSubscriber = !!subscriberInfo?.is_subscriber || isAuthorOrAdmin;
 
   return (
     <LogoutFeedbackProvider>
@@ -35,6 +37,7 @@ export default async function PublicLayout({
           navItems={homepageNavItems}
           user={handleUser}
           isSubscriber={isSubscriber}
+          canAccessStudio={isAuthorOrAdmin}
         />
 
         <LogoutFeedbackBanner />
