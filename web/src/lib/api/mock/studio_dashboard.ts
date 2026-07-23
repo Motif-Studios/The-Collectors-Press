@@ -51,6 +51,8 @@ const mockArticles: StudioArticleRow[] = [
 const mockSummary: StudioDashboardSummary = {
   totalArticles: 24,
   drafts: 8,
+  submitted: 0,
+  rejected: 0,
   published: 13,
   archived: 3,
 };

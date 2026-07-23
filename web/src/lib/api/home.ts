@@ -17,6 +17,7 @@ type RawPrimaryFeature = {
   href?: string;
   type?: string;
   section?: string;
+  position?: number | string;
 };
 
 type HomeDataShape = {
@@ -30,6 +31,25 @@ type HomeDataShape = {
     miniCards?: RawPrimaryFeature[];
   };
 };
+
+function sortStoriesByPosition<T extends RawPrimaryFeature>(stories: T[] | undefined) {
+  if (!stories) {
+    return [] as T[];
+  }
+
+  return [...stories].sort((left, right) => {
+    const leftPosition = typeof left.position === "number" ? left.position : Number(left.position ?? Number.MAX_SAFE_INTEGER);
+    const rightPosition = typeof right.position === "number" ? right.position : Number(right.position ?? Number.MAX_SAFE_INTEGER);
+
+    if (Number.isFinite(leftPosition) && Number.isFinite(rightPosition)) {
+      return leftPosition - rightPosition;
+    }
+
+    if (Number.isFinite(leftPosition)) return -1;
+    if (Number.isFinite(rightPosition)) return 1;
+    return 0;
+  });
+}
 
 function normalisePrimaryPanelFeaturedArticles(homeData: HomeDataShape): FeatureStoryItem {
   const featurePrimary = homeData?.primaryPanel?.feature as RawPrimaryFeature | undefined;
@@ -62,9 +82,9 @@ function normalisePrimaryPanelFeaturedArticles(homeData: HomeDataShape): Feature
 }
 
 function normalisePrimaryPanelStories(homeData: HomeDataShape): StoryCardItem[] {
-  const primaryStories = homeData?.primaryPanel?.stories as RawPrimaryFeature[] | undefined;
+  const primaryStories = sortStoriesByPosition(homeData?.primaryPanel?.stories as RawPrimaryFeature[] | undefined);
 
-  if (!primaryStories) {
+  if (!primaryStories.length) {
     return [{
       id: "",
       kicker: "",
@@ -84,9 +104,9 @@ function normalisePrimaryPanelStories(homeData: HomeDataShape): StoryCardItem[] 
 }
 
 function normaliseSecondaryPanelTopStories(homeData: HomeDataShape): SecondaryTopStoryItem[] {
-  const secondaryTopStories = homeData?.secondaryPanel?.topStories as RawPrimaryFeature[] | undefined;
+  const secondaryTopStories = sortStoriesByPosition(homeData?.secondaryPanel?.topStories as RawPrimaryFeature[] | undefined);
 
-  if (!secondaryTopStories) {
+  if (!secondaryTopStories.length) {
     return [{
       id: "",
       categories: [],
@@ -145,7 +165,7 @@ function normaliseSecondaryPanelMiniCards(homeData: HomeDataShape): SecondaryMin
 
 export async function getHomePageDataApi() {
   try {
-    const homeDataResponse = await fetch(`${API_BASE_URL_SERVER}/articles/home-data`);
+    const homeDataResponse = await fetch(`${API_BASE_URL_SERVER}/articles/home-data`, { cache: "no-store" });
     if (!homeDataResponse.ok) {
       return {};
     }
