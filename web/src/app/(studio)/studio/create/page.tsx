@@ -1,6 +1,8 @@
 import { createArticle } from "@/features/dashboard/queries/createArticle";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function StudioCreateArticlePage() {
   const data = await createArticle();
 
