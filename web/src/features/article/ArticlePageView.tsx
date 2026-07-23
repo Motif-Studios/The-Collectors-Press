@@ -2,11 +2,12 @@ import { Article } from "./types";
 import { Wrapper } from "@/components/layout/wrapper/Wrapper";
 import { ArticleAuthorSection } from "@/components/ui/article_author_section/ArticleAuthorSection";
 import { SecondaryNewsPanel } from "@/components/ui/news_panels/secondary";
-import { getArticlePageData } from "./queries";
 import { ArticleBodyRenderer } from "./ArticleBodyRenderer";
 import { ArticleHero } from "./ArticleHero";
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
 import { getIsSubscriber } from "@/features/auth/queries/getIsSubscriber";
+import { getHomePageDataNormalised } from "@/lib/api/home";
+import type { SecondaryTopStoryItem } from "@/components/ui/news_panels/secondary";
 import "./paywall.css";
 
 function PaywallSection() {
@@ -62,8 +63,13 @@ export async function ArticlePageView({ article }: { article: Article }) {
     hasSubscription = subscriptionData.is_subscriber === true;
   }
 
-  const data = await getArticlePageData(article.category ?? "");
-  const { secondaryPanel } = data;
+  const { secondaryPanel } = await getHomePageDataNormalised();
+  const relatedLinks = secondaryPanel.miniCards.map((card) => ({
+    title: card.title,
+    href: card.href,
+    imageSrc: card.imageSrc,
+    imageAlt: card.imageAlt,
+  }));
 
   return (
     <div>
@@ -81,16 +87,16 @@ export async function ArticlePageView({ article }: { article: Article }) {
             authorName={article.author.name}
             authorDescription={article.author.description}
             authorPhoto={article.author.avatarSrc ? article.author.avatarSrc : ""}
-            moreTopics={article.author.moreTopics || []}
+            moreTopics={relatedLinks.length ? relatedLinks : article.author.moreTopics || []}
           />
         )}
       </Wrapper>
-      <SecondaryNewsPanel
+      {/* <SecondaryNewsPanel
         className="mt-20"
-        topStories={secondaryPanel.topStories}
+        topStories={secondaryPanel.topStories as [SecondaryTopStoryItem, SecondaryTopStoryItem]}
         stories={secondaryPanel.stories}
         miniCards={secondaryPanel.miniCards}
-      />
+      /> */}
     </div>
   );
 }

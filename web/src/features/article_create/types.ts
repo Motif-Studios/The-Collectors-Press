@@ -1,4 +1,4 @@
-export type StudioCreateArticleStatus = "draft" | "submitted" | "published";
+export type StudioCreateArticleStatus = "draft" | "submitted" | "rejected" | "published" | "archived";
 
 export type EditorJsBlock = {
   id?: string;
@@ -20,6 +20,8 @@ export type StudioCreateArticle = {
   status: StudioCreateArticleStatus;
   lastSavedLabel: string;
   coverImageCaption: string;
+  coverImageUrl?: string;
+  rejectionReason?: string;
   body: EditorJsContent;
 };
 

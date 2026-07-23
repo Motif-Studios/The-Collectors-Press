@@ -22,6 +22,7 @@ export function StudioCreateArticleEditor({
   initialArticle,
 }: Props) {
   const [form, setForm] = useState<StudioCreateArticle>(initialArticle);
+  const isRejected = form.status === "rejected";
 
   async function handlePreview() {
     if (!form.id) {
@@ -111,7 +112,7 @@ export function StudioCreateArticleEditor({
     <div className="flex flex-col gap-6">
       <StudioPageHeader
         title="Create article"
-        description="Draft, preview and prepare your story for publishing."
+        description={isRejected ? "This article was rejected. Review the feedback, edit the story and resubmit when ready." : "Draft, preview and prepare your story for publishing."}
         actions={
           <>
             <ActionButton onClick={handleSaveDraft}>Save draft</ActionButton>
@@ -119,7 +120,7 @@ export function StudioCreateArticleEditor({
             <ActionButton onClick={handlePreview}>Preview</ActionButton>
 
             <ActionButton variant="primary" onClick={handlePublish}>
-              Submit for review
+              {isRejected ? "Resubmit for review" : "Submit for review"}
             </ActionButton>
           </>
         }
