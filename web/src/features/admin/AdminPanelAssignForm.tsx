@@ -15,9 +15,10 @@ type AdminPublishedArticle = {
 type AdminPanelAssignFormProps = {
   panelName: AdminPanelName;
   availableArticles: AdminPublishedArticle[];
+  position?: number;
 };
 
-export function AdminPanelAssignForm({ panelName, availableArticles }: AdminPanelAssignFormProps) {
+export function AdminPanelAssignForm({ panelName, availableArticles, position }: AdminPanelAssignFormProps) {
   const router = useRouter();
   const { showSuccess, showError, clearMessage } = useLogoutFeedback();
   const [pending, setPending] = useState(false);
@@ -84,7 +85,7 @@ export function AdminPanelAssignForm({ panelName, availableArticles }: AdminPane
     setPending(true);
 
     try {
-      await assignAdminArticleToPanelApi(panelName, articleId);
+      await assignAdminArticleToPanelApi(panelName, articleId, position);
       showSuccess(selectedArticle ? `Assigned ${selectedArticle.title} to the panel.` : "Assigned article to the panel.");
       window.setTimeout(() => {
         router.refresh();

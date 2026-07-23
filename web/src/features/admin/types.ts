@@ -13,19 +13,31 @@ export type AdminDashboardData = {
     id: string;
     title: string;
     slug: string;
-    status: "draft" | "submitted" | "published";
+    status: "draft" | "submitted" | "rejected" | "published" | "archived";
     category: string;
     updatedAtLabel: string;
     authorName: string;
+    rejectionReason?: string;
   }>;
   publishedArticles: Array<{
     id: string;
     title: string;
     slug: string;
-    status: "draft" | "submitted" | "published";
+    status: "draft" | "submitted" | "rejected" | "published" | "archived";
     category: string;
     updatedAtLabel: string;
     authorName: string;
+    rejectionReason?: string;
+  }>;
+  allArticles: Array<{
+    id: string;
+    title: string;
+    slug: string;
+    status: "draft" | "submitted" | "rejected" | "published" | "archived";
+    category: string;
+    updatedAtLabel: string;
+    authorName: string;
+    rejectionReason?: string;
   }>;
   homePage: {
     primaryPanel: {
