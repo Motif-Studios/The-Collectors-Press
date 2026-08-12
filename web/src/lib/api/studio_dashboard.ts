@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
 import { API_BASE_URL_SERVER } from "@/lib/env";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
 import type {
   StudioArticleRow,
   StudioDashboardData,
@@ -36,7 +37,9 @@ export async function normalisedDashboardArticles(articles: DashboardArticle[]):
       title: article.title,
       slug: article.slug,
       status: (article.status as ArticleStatus) || "draft",
-      category: await fetch(`${API_BASE_URL_SERVER}/categories/article/${article.article_id}`).then(res => res.json()).then(data => data.category_name || "Uncategorized").catch(() => "Uncategorized"),
+      category: await fetchWithTimeout(`${API_BASE_URL_SERVER}/categories/article/${article.article_id}`, { timeout: 5000 })
+        .then(res => (res && res.ok) ? res.json() : { category_name: "Uncategorized" })
+        .then(data => data.category_name || "Uncategorized").catch(() => "Uncategorized"),
       updatedAtLabel: article.updated_at,
       authorName: user.name,
       secondaryActionLabel: article.status === "draft" ? "Preview" : "View",
@@ -111,10 +114,10 @@ export async function getStudioDashboardDataApi(): Promise<StudioDashboardData> 
       };
     }
 
-    const getUserArticles = await fetch(`${API_BASE_URL_SERVER}/dashboard/articles/${user.id}`);
+    const getUserArticles = await fetchWithTimeout(`${API_BASE_URL_SERVER}/dashboard/articles/${user.id}`, { timeout: 5000 });
 
-    if (!getUserArticles.ok) {
-      console.error("Failed to fetch dashboard articles:", getUserArticles.status, getUserArticles.statusText);
+    if (!getUserArticles || !getUserArticles.ok) {
+      console.error("Failed to fetch dashboard articles:", getUserArticles?.status, getUserArticles?.statusText);
       return {
         summary: { totalArticles: 0, published: 0, drafts: 0, submitted: 0, rejected: 0, archived: 0 },
         articles: [],

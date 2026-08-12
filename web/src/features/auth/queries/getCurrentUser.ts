@@ -49,7 +49,7 @@ export async function getCurrentUser() {
         userType,
     };
 
-    console.log("Current user:", currentUser.userType);
+    // console.log("Current user:", currentUser.userType);
 
     return currentUser;
 }

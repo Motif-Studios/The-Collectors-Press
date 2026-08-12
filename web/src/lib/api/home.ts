@@ -1,6 +1,7 @@
 import type { FeatureStoryItem, StoryCardItem } from "@/components/ui/news_panels/primary/types";
 import type { SecondaryMiniCardItem, SecondaryTextStoryItem, SecondaryTopStoryItem } from "@/components/ui/news_panels/secondary";
 import { API_BASE_URL_SERVER } from "@/lib/env";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
 
 type RawPrimaryFeature = {
   article_id?: string;
@@ -165,13 +166,14 @@ function normaliseSecondaryPanelMiniCards(homeData: HomeDataShape): SecondaryMin
 
 export async function getHomePageDataApi() {
   try {
-    const homeDataResponse = await fetch(`${API_BASE_URL_SERVER}/articles/home-data`, { cache: "no-store" });
-    if (!homeDataResponse.ok) {
+    const homeDataResponse = await fetchWithTimeout(`${API_BASE_URL_SERVER}/articles/home-data`, { cache: "no-store", timeout: 5000 });
+    if (!homeDataResponse || !homeDataResponse.ok) {
       return {};
     }
     const homeData = await homeDataResponse.json();
     return homeData ?? {};
-  } catch {
+  } catch (err) {
+    // Abort or network errors fall through here — return a safe empty shape
     return {};
   }
 }

@@ -57,6 +57,8 @@ router.get("/category/:category_name/:limit/:offset", async (req, res) => {
  */
 router.get("/", async (req, res) => {
   const articles = await getAllArticles();
+  // short client cache for list endpoint
+  res.setHeader("Cache-Control", "public, max-age=30");
   res.json(articles);
 });
 
@@ -143,6 +145,8 @@ router.post("/save", async (req, res) => {
  */
 router.get("/home-data", async (req, res) => {
   const homeData = await getHomePageData();
+  // home data is relatively static; allow short caching
+  res.setHeader("Cache-Control", "public, max-age=15, stale-while-revalidate=30");
   res.json(homeData);
 });
 
@@ -165,6 +169,8 @@ router.get("/home-data", async (req, res) => {
 router.get("/slug/:article_slug", async (req, res) => {
   const { article_slug } = req.params;
   const data = await getArticleBySlug(article_slug);
+  // cache published article responses briefly
+  res.setHeader("Cache-Control", "public, max-age=60, stale-while-revalidate=120");
   res.json(data);
 });
 

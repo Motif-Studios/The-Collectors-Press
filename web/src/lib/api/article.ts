@@ -1,11 +1,12 @@
 import { getMockArticleBySlug, getMockArticleSecondaryPanelData } from "./mock/article";
 import { API_BASE_URL_SERVER } from "@/lib/env";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
 
 export async function getArticlePageDataApi(articleSlug: string) {
   try {
-    const response = await fetch(`${API_BASE_URL_SERVER}/articles/slug/${encodeURIComponent(articleSlug)}`);
+    const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/articles/slug/${encodeURIComponent(articleSlug)}`, { timeout: 5000 });
 
-    const contentType = response.headers.get("content-type") ?? "";
+    const contentType = response?.headers?.get("content-type") ?? "";
 
     if (!contentType.includes("application/json")) {
       const body = await response.text();

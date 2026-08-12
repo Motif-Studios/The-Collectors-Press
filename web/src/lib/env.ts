@@ -9,8 +9,9 @@ const baseUrlOverride = process.env.NEXT_PUBLIC_API_URL ?? "";
 export const API_BASE_URL = (baseUrlOverride || "/api").replace(/\/$/, "");
 
 // Server-side API base (absolute URL needed for server-side fetches)
-const serverBaseUrlDev = process.env.NEXT_PUBLIC_BASE_URL_DEV ?? "https://the-collectors-press-sglw.onrender.com";
-console.log("Using URL:",  serverBaseUrlDev);
+// Prefer a local API in development to avoid external network timeouts.
+const serverBaseUrlDev = process.env.NEXT_PUBLIC_BASE_URL_DEV ?? "http://localhost:3001";
+// console.log("Using URL:",  serverBaseUrlDev);
 const serverBaseUrlProd = process.env.NEXT_PUBLIC_BASE_URL_PROD ?? "";
 export const API_BASE_URL_SERVER = (baseUrlOverride || serverBaseUrlProd || serverBaseUrlDev).replace(/\/$/, "");
 

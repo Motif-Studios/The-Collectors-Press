@@ -31,12 +31,18 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: "http://localhost:5001/:path*",
-      },
-    ];
+    // Only add local API proxy when a dev API URL is configured and not in production
+    const devApi = process.env.NEXT_PUBLIC_BASE_URL_DEV;
+    if (devApi && process.env.NODE_ENV !== "production") {
+      return [
+        {
+          source: "/api/:path*",
+          destination: `${devApi}/:path*`,
+        },
+      ];
+    }
+
+    return [];
   },
 };
 

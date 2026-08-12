@@ -1,12 +1,13 @@
 import { API_BASE_URL_SERVER } from "@/lib/env";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
 
 export async function getSearchPageDataApi(searchQuery: string) {
     const query = searchQuery.trim();
 
     try {
         const [articlesRes, categoriesRes] = await Promise.all([
-            fetch(`${API_BASE_URL_SERVER}/search/${encodeURIComponent(query)}`),
-            fetch(`${API_BASE_URL_SERVER}/search/category`),
+            fetchWithTimeout(`${API_BASE_URL_SERVER}/search/${encodeURIComponent(query)}`, { timeout: 5000 }),
+            fetchWithTimeout(`${API_BASE_URL_SERVER}/search/category`, { timeout: 5000 }),
         ]);
 
         const articlesData = articlesRes.ok ? await articlesRes.json() : [];
