@@ -22,7 +22,7 @@ export async function uploadFile(file: File, article_id: string) {
   }
 
   const result = await response.json();
-  console.log("File uploaded successfully:", result);
+  // console.log("File uploaded successfully:", result);
 
   return result;
 }

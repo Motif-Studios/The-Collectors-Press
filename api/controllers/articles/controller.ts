@@ -1,5 +1,24 @@
 import { supabase } from "../../lib/supabase";
 
+// Simple in-memory TTL cache to reduce repeated DB work for expensive endpoints
+type CacheEntry<T> = { value: T; expiresAt: number };
+const CACHE_TTL_MS = 30 * 1000; // 30s default for hot endpoints (adjustable)
+const inMemoryCache = new Map<string, CacheEntry<any>>();
+
+function getCached<T>(key: string): T | null {
+    const entry = inMemoryCache.get(key);
+    if (!entry) return null;
+    if (Date.now() > entry.expiresAt) {
+        inMemoryCache.delete(key);
+        return null;
+    }
+    return entry.value as T;
+}
+
+function setCached<T>(key: string, value: T, ttl = CACHE_TTL_MS) {
+    inMemoryCache.set(key, { value, expiresAt: Date.now() + ttl });
+}
+
 // Simple in-memory cache for panel IDs
 const panelIdCache = new Map<string, Promise<string | null>>();
 
@@ -38,6 +57,11 @@ async function getPanelIdByName(panelName: string): Promise<string | null> {
 }
 
 export async function getAllArticles() {
+    // Try the cache first
+    const cacheKey = "all_articles_v1";
+    const cached = getCached<any[]>(cacheKey);
+    if (cached) return cached;
+
     // Optimized: Add limit to prevent loading entire database
     const { data, error } = await supabase
         .from("article")
@@ -48,6 +72,7 @@ export async function getAllArticles() {
         console.error("Error fetching all articles:", error);
         return error;
     }
+    setCached(cacheKey, data || [], 30 * 1000);
     return data;
 }
 
@@ -153,7 +178,10 @@ export async function getArticleById(articleId: string) {
 
 export async function getArticleBySlug(articleSlug: string) {
     const decodedSlug = decodeURIComponent(articleSlug);
-            
+    const cacheKey = `article_slug:${decodedSlug}`;
+    const cached = getCached<any>(cacheKey);
+    if (cached) return cached;
+
     const { data, error } = await supabase
         .from("article")
         .select("*")
@@ -173,7 +201,7 @@ export async function getArticleBySlug(articleSlug: string) {
     const authorId = data.author_id || "unknown-author";
     const authorName = (await resolveUserEmail(authorId)) ?? "Unknown author";
 
-    return {
+    const result = {
         ...data,
         author: {
             id: authorId,
@@ -184,10 +212,13 @@ export async function getArticleBySlug(articleSlug: string) {
         },
         body: data.content || { blocks: [] },
     };
+
+    setCached(cacheKey, result, 60 * 1000);
+    return result;
 }
 
 export async function getSavedArticles(userId: string) {
-    console.log("getSavedArticles called for userId:", userId);
+    // console.log("getSavedArticles called for userId:", userId);
     
     // Optimized: Use JOIN instead of fetching saved_articles IDs then fetching articles separately
     const { data: articlesData, error: articlesError } = await supabase
@@ -210,7 +241,7 @@ export async function getSavedArticles(userId: string) {
     }
 
     if (!articlesData || articlesData.length === 0) {
-        console.log("No saved_articles rows found for user", userId);
+        // console.log("No saved_articles rows found for user", userId);
         return [];
     }
 
@@ -233,7 +264,7 @@ export async function getSavedArticles(userId: string) {
         href: article.slug ? `/article/${encodeURIComponent(article.slug)}` : "#",
     }));
 
-    console.log(`Found ${articlesWithAuthor.length} saved articles for user ${userId}`);
+    // console.log(`Found ${articlesWithAuthor.length} saved articles for user ${userId}`);
 
     return articlesWithAuthor;
 }
@@ -354,13 +385,17 @@ export async function getLatestSecondaryMiniCards(limit?: number) {
 }
 
 export async function getHomePageData() {
+    const cacheKey = "home_page_data_v1";
+    const cached = getCached<any>(cacheKey);
+    if (cached) return cached;
+
     const primaryFeature = await getLatestPrimaryArticle();
     const primaryStories = await getLatestPrimaryStories();
     const secondaryTopStories = await getLatestSecondaryTopStories();
     const secondaryStories = await getLatestSecondaryStories();
     const secondaryMiniCards = await getLatestSecondaryMiniCards();
 
-    return {
+    const result = {
         primaryPanel: {
             feature: primaryFeature,
             stories: primaryStories,
@@ -370,7 +405,10 @@ export async function getHomePageData() {
             stories: secondaryStories,
             miniCards: secondaryMiniCards,
         }
-    };     
+    };
+
+    setCached(cacheKey, result, 15 * 1000);
+    return result;
 }
 
 export async function saveArticleToUser(userId: string, articleId: string) {

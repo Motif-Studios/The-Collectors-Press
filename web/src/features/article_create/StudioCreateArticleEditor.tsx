@@ -23,6 +23,8 @@ export function StudioCreateArticleEditor({
 }: Props) {
   const [form, setForm] = useState<StudioCreateArticle>(initialArticle);
   const isRejected = form.status === "rejected";
+  const [submitting, setSubmitting] = useState(false);
+  const [submittedFlag, setSubmittedFlag] = useState(false);
 
   async function handlePreview() {
     if (!form.id) {
@@ -86,7 +88,8 @@ export function StudioCreateArticleEditor({
       }));
       return;
     }
-
+    setSubmitting(true);
+    setSubmittedFlag(false);
     try {
       await saveArticle(form.id, {
         ...form,
@@ -100,11 +103,16 @@ export function StudioCreateArticleEditor({
         status: "submitted",
         lastSavedLabel: "Submitted just now",
       }));
+
+      setSubmittedFlag(true);
     } catch {
       setForm((current) => ({
         ...current,
         lastSavedLabel: "Failed to submit article. Please try again.",
       }));
+      setSubmittedFlag(false);
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -117,14 +125,21 @@ export function StudioCreateArticleEditor({
           <>
             <ActionButton onClick={handleSaveDraft}>Save draft</ActionButton>
 
-            <ActionButton onClick={handlePreview}>Preview</ActionButton>
+            <ActionButton onClick={handlePreview} disabled={submitting} loading={false}>Preview</ActionButton>
 
-            <ActionButton variant="primary" onClick={handlePublish}>
+            <ActionButton variant="primary" onClick={handlePublish} disabled={submitting} loading={submitting}>
               {isRejected ? "Resubmit for review" : "Submit for review"}
             </ActionButton>
           </>
         }
       />
+
+      {submittedFlag && (
+        <div role="status" aria-live="polite" className="rounded border-l-4 border-green-600 bg-green-50 p-4">
+          <strong className="block text-sm font-semibold">Submitted — thanks!</strong>
+          <p className="mt-1 text-sm">Your article has been submitted for review. We'll notify you when a decision is made.</p>
+        </div>
+      )}
 
       <StudioCreateArticleForm
         authorName={authorName}

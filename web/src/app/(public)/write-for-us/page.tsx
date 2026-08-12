@@ -50,7 +50,7 @@ export default function WriteForUsPage() {
    
   
       try{
-          const response = await fetch("http://localhost:5001/email/write-for-us", {
+          const response = await fetch(`/api/email/write-for-us`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -60,11 +60,11 @@ export default function WriteForUsPage() {
   
       const result = await response.json();
         
-      if (result.success) {
-          console.log("Email sent successfully");
-      } else {
+        if (result.success) {
+          // console.log("Email sent successfully");
+        } else {
           console.error("Error sending email:", result.error);
-      }
+        }
     } catch (error) {
       console.error("Error sending email:", error);
     }

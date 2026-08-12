@@ -1,4 +1,5 @@
 import { API_BASE_URL_SERVER } from "@/lib/env";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
 
 export type AdminPanelName =
   | "primary_feature"
@@ -42,7 +43,7 @@ async function readApiError(response: Response) {
 
 export async function getAdminQueuedArticlesApi(): Promise<AdminQueuedArticle[]> {
   try {
-    const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/admin/queued_articles`);
+    const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/dashboard/admin/queued_articles`, { timeout: 5000 });
 
     if (!response.ok) {
       console.error("Failed to fetch admin queue:", response.status, response.statusText);
@@ -59,7 +60,7 @@ export async function getAdminQueuedArticlesApi(): Promise<AdminQueuedArticle[]>
 
 export async function getAdminPublishedArticlesApi(): Promise<AdminPublishedArticle[]> {
   try {
-    const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/admin/published_articles`);
+    const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/dashboard/admin/published_articles`, { timeout: 5000 });
 
     if (!response.ok) {
       console.error("Failed to fetch published admin articles:", response.status, response.statusText);
@@ -76,7 +77,7 @@ export async function getAdminPublishedArticlesApi(): Promise<AdminPublishedArti
 
 export async function getAdminAllArticlesApi(): Promise<AdminAllArticle[]> {
   try {
-    const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/admin/all_articles`);
+    const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/dashboard/admin/all_articles`, { timeout: 5000 });
 
     if (!response.ok) {
       console.error("Failed to fetch all admin articles:", response.status, response.statusText);
@@ -92,7 +93,7 @@ export async function getAdminAllArticlesApi(): Promise<AdminAllArticle[]> {
 }
 
 export async function approveAdminArticleApi(articleId: string) {
-  const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/admin/approve_article/${articleId}`, {
+  const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/dashboard/admin/approve_article/${articleId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -107,7 +108,7 @@ export async function approveAdminArticleApi(articleId: string) {
 }
 
 export async function rejectAdminArticleApi(articleId: string, rejectionReason: string) {
-  const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/reject_article/${articleId}`, {
+  const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/dashboard/reject_article/${articleId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -123,7 +124,7 @@ export async function rejectAdminArticleApi(articleId: string, rejectionReason: 
 }
 
 export async function archiveAdminArticleApi(articleId: string) {
-  const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/archive_article/${articleId}`, {
+  const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/dashboard/archive_article/${articleId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -142,7 +143,7 @@ export async function updateAdminArticleStatusApi(
   status: AdminAllArticle["status"],
   rejectionReason?: string,
 ) {
-  const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/admin/article/${articleId}/status`, {
+  const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/dashboard/admin/article/${articleId}/status`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -163,7 +164,7 @@ export async function assignAdminArticleToPanelApi(panelName: AdminPanelName, ar
     url.searchParams.set("position", String(position));
   }
 
-  const response = await fetch(url.toString(), {
+  const response = await fetchWithTimeout(url.toString(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -182,12 +183,13 @@ export async function reorderAdminArticleInPanelApi(
   articleId: string,
   direction: "up" | "down"
 ) {
-  const response = await fetch(
+  const response = await fetchWithTimeout(
     `${API_BASE_URL_SERVER}/dashboard/admin/panel/${panelName}/${articleId}/reorder`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ direction }),
+      timeout: 5000,
     }
   );
 
@@ -199,7 +201,7 @@ export async function reorderAdminArticleInPanelApi(
 }
 
 export async function removeAdminArticleFromPanelApi(panelName: AdminPanelName, articleId: string) {
-  const response = await fetch(`${API_BASE_URL_SERVER}/dashboard/admin/panel/${panelName}/${articleId}`, {
+  const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/dashboard/admin/panel/${panelName}/${articleId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

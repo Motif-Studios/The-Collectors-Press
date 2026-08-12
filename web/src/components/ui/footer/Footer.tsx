@@ -21,7 +21,7 @@ const footerSections: FooterSection[] = [
       { label: "Write for us", href: "/write-for-us" },
       { label: "Contact us", href: "/contact-us" },
       { label: "Privacy Policy", href: "#" },
-      { label: "Terms of use", href: "#" },
+      { label: "Terms of use", href: "/terms" },
     ],
   },
   // {

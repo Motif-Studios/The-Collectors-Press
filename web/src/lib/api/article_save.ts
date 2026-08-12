@@ -1,9 +1,10 @@
 "use client";
 
 import { API_BASE_URL_SERVER } from "@/lib/env";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
 
 export async function saveArticleForUser(userId: string, articleId: string) {
-  const response = await fetch(`${API_BASE_URL_SERVER}/articles/save`, {
+  const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/articles/save`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -38,7 +39,7 @@ export async function isArticleSavedForUser(userId: string, articleId: string) {
     userId,
   )}&article_id=${encodeURIComponent(articleId)}`;
 
-  const resp = await fetch(url, { method: "GET" });
+  const resp = await fetchWithTimeout(url, { method: "GET", timeout: 4000 });
   if (!resp.ok) return false;
 
   try {
@@ -53,7 +54,7 @@ export async function isArticleSavedForUser(userId: string, articleId: string) {
   // Fallback: fetch the saved list and check if the article appears there
   try {
     const listUrl = `${API_BASE_URL_SERVER}/articles/saved?user_id=${encodeURIComponent(userId)}`;
-    const listResp = await fetch(listUrl, { method: "GET" });
+    const listResp = await fetchWithTimeout(listUrl, { method: "GET", timeout: 4000 });
     if (!listResp.ok) return false;
     const listBody = await listResp.json();
     if (Array.isArray(listBody)) {

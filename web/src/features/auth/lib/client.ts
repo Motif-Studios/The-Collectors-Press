@@ -14,7 +14,7 @@ export const login = async (email: string, password: string) => {
         return { error: error.message };
     }
 
-    console.log("Login successful:", data);
+    // console.log("Login successful:", data);
 
     return { user: data.user, session: data.session };
 };
@@ -30,7 +30,7 @@ export const signup = async (email: string, password: string) => {
         return { error: error.message };
     }
 
-    console.log("Signup successful:", data);
+    // console.log("Signup successful:", data);
 
     const stripeCustomerData = await createStripeCustomer(email);
     if (stripeCustomerData?.error || !stripeCustomerData?.id) {
@@ -58,7 +58,7 @@ export const logout = async () => {
         return { error: error.message };
     }
 
-    console.log("User logged out");
+    // console.log("User logged out");
 
     return { message: "Logged out successfully" };
 }
@@ -73,7 +73,7 @@ export const forgotPassword = async (email: string) => {
         return { error: error.message };
     }
 
-    console.log("Forgot password email sent:", data);
+    // console.log("Forgot password email sent:", data);
     return { message: "Password reset email sent" };
 }
 
@@ -87,6 +87,6 @@ export const resetPassword = async (newPassword: string) => {
         return { error: updateError.message };
     }
 
-    console.log("Password reset successful:", updateData);
+    // console.log("Password reset successful:", updateData);
     return { user: updateData.user };
 }

@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
 import { API_BASE_URL_SERVER } from "@/lib/env";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
 import type { SavedStoriesPageData } from "@/features/saved_stories/types";
 
 export async function getSavedStoriesPageDataApi(): Promise<SavedStoriesPageData> {
@@ -10,10 +11,10 @@ export async function getSavedStoriesPageDataApi(): Promise<SavedStoriesPageData
     return [];
   }
 
-  const response = await fetch(`${API_BASE_URL_SERVER}/articles/saved?user_id=${user.id}`);
+  const response = await fetchWithTimeout(`${API_BASE_URL_SERVER}/articles/saved?user_id=${encodeURIComponent(user.id)}`, { timeout: 5000 });
 
-  if (!response.ok) {
-    console.error("Failed to fetch saved stories:", response.statusText);
+  if (!response || !response.ok) {
+    console.error("Failed to fetch saved stories:", response?.statusText);
     return [];
   }
 

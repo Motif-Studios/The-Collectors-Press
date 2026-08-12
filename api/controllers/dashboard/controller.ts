@@ -361,7 +361,7 @@ export async function reorderArticleInPanel(panelName: string, articleId: string
     assertPanelIsManuallyManaged(panelName);
 
     const panelId = await getPanelIdByName(panelName);
-    console.log("panelId:", panelId, "panelName:", panelName);
+    // console.log("panelId:", panelId, "panelName:", panelName);
     if (!panelId) throw new Error(`Panel '${panelName}' not found`);
 
     const { data: rows } = await supabase
@@ -370,7 +370,7 @@ export async function reorderArticleInPanel(panelName: string, articleId: string
         .eq("panel_id", panelId)
         .order("position", { ascending: true });
 
-    console.log(rows);
+    // console.log(rows);
     if (!rows || rows.length < 2) return { success: false };
 
     const idx = rows.findIndex((r) => r.article_id === articleId);
@@ -381,8 +381,8 @@ export async function reorderArticleInPanel(panelName: string, articleId: string
 
     const current = rows[idx];
     const swap = rows[swapIdx];
-    console.log("current article:", current.article_id, "position:", current.position);
-    console.log("swap article:", swap.article_id, "position:", swap.position);
+    // console.log("current article:", current.article_id, "position:", current.position);
+    // console.log("swap article:", swap.article_id, "position:", swap.position);
 
     await Promise.all([
         supabase.from("article_panels").update({ position: swap.position }).eq("id", current.id),

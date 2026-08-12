@@ -48,7 +48,7 @@ export async function normaliseArticleData(data: unknown) {
         category = articleCategoryData?.[0]?.category_name ?? "Uncategorized";
     }
 
-    console.log("category:", category);
+    // console.log("category:", category);
 
     const parsedContent = parseMaybeJson(article.content ?? article.body);
     const safeBody = isEditorJsContent(parsedContent)
