@@ -166,7 +166,13 @@ function normaliseSecondaryPanelMiniCards(homeData: HomeDataShape): SecondaryMin
 
 export async function getHomePageDataApi() {
   try {
-    const homeDataResponse = await fetchWithTimeout(`${API_BASE_URL_SERVER}/articles/home-data`, { cache: "no-store", timeout: 5000 });
+    // Cached by Next and revalidated in the background, so visitors get the last good
+    // home page instantly even when the API is slow or waking up. Failed/aborted
+    // responses are never cached.
+    const homeDataResponse = await fetchWithTimeout(`${API_BASE_URL_SERVER}/articles/home-data`, {
+      next: { revalidate: 30 },
+      timeout: 8000,
+    });
     if (!homeDataResponse || !homeDataResponse.ok) {
       return {};
     }

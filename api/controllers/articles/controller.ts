@@ -22,6 +22,10 @@ function setCached<T>(key: string, value: T, ttl = CACHE_TTL_MS) {
 // Simple in-memory cache for panel IDs
 const panelIdCache = new Map<string, Promise<string | null>>();
 
+// Home page cards only need these fields. Skipping `content` (the Editor.js body)
+// keeps the home-data payload small.
+const HOME_ARTICLE_COLUMNS = "article_id, slug, title, summary, description, preview_text, cover_image_url, image_alt, status, is_premium, created_at";
+
 async function resolveUserEmail(userId: string) {
     try {
         const { data, error } = await supabase.auth.admin.getUserById(userId);
@@ -49,7 +53,10 @@ async function getPanelIdByName(panelName: string): Promise<string | null> {
             .select("id")
             .eq("name", panelName)
             .single();
-        return data?.id || null;
+        const panelId = data?.id || null;
+        // Don't cache a failed lookup, otherwise the panel stays empty until the API restarts
+        if (!panelId) panelIdCache.delete(panelName);
+        return panelId;
     })();
 
     panelIdCache.set(panelName, panelPromise);
@@ -277,7 +284,7 @@ export async function getLatestPrimaryArticle() {
     const { data, error } = await supabase
         .from("article_panels")
         .select(`
-            article:article_id(*)
+            article:article_id(${HOME_ARTICLE_COLUMNS})
         `)
         .eq("panel_id", panelId)
         .eq("article.status", "published")
@@ -302,7 +309,7 @@ export async function getLatestPrimaryStories(limit?: number) {
         .from("article_panels")
         .select(`
             position,
-            article:article_id(*)
+            article:article_id(${HOME_ARTICLE_COLUMNS})
         `)
         .eq("panel_id", panelId)
         .eq("article.status", "published")
@@ -328,7 +335,7 @@ export async function getLatestSecondaryTopStories(limit?: number) {
         .from("article_panels")
         .select(`
             position,
-            article:article_id(*)
+            article:article_id(${HOME_ARTICLE_COLUMNS})
         `)
         .eq("panel_id", panelId)
         .eq("article.status", "published")
@@ -353,7 +360,7 @@ export async function getLatestSecondaryStories(limit?: number) {
     const { data, error } = await supabase
         .from("article_panels")
         .select(`
-            article:article_id(*)
+            article:article_id(${HOME_ARTICLE_COLUMNS})
         `)
         .eq("panel_id", panelId)
         .eq("article.status", "published")
@@ -371,7 +378,7 @@ export async function getLatestSecondaryStories(limit?: number) {
 export async function getLatestSecondaryMiniCards(limit?: number) {
     const { data: fallback, error: fallbackError } = await supabase
         .from("article")
-        .select("*")
+        .select(HOME_ARTICLE_COLUMNS)
         .eq("status", "published")
         .order("created_at", { ascending: false })
         .limit(limit || 4);
@@ -384,16 +391,48 @@ export async function getLatestSecondaryMiniCards(limit?: number) {
     return (fallback || []).filter(Boolean);
 }
 
-export async function getHomePageData() {
-    const cacheKey = "home_page_data_v1";
-    const cached = getCached<any>(cacheKey);
-    if (cached) return cached;
+const HOME_DATA_TTL_MS = 15 * 1000;
+let homeDataCache: { value: any; expiresAt: number } | null = null;
+let homeDataInFlight: Promise<any> | null = null;
 
-    const primaryFeature = await getLatestPrimaryArticle();
-    const primaryStories = await getLatestPrimaryStories();
-    const secondaryTopStories = await getLatestSecondaryTopStories();
-    const secondaryStories = await getLatestSecondaryStories();
-    const secondaryMiniCards = await getLatestSecondaryMiniCards();
+// Stale-while-revalidate: once we have home data, always answer instantly from memory
+// and refresh in the background when it's older than the TTL. Only the very first
+// request after the API starts has to wait on Supabase.
+export async function getHomePageData() {
+    if (homeDataCache) {
+        if (Date.now() > homeDataCache.expiresAt) {
+            refreshHomePageData().catch((error) => console.error("Error refreshing home page data:", error));
+        }
+        return homeDataCache.value;
+    }
+
+    return refreshHomePageData();
+}
+
+function refreshHomePageData() {
+    if (!homeDataInFlight) {
+        homeDataInFlight = fetchHomePageData()
+            .then((result) => {
+                homeDataCache = { value: result, expiresAt: Date.now() + HOME_DATA_TTL_MS };
+                return result;
+            })
+            .finally(() => {
+                homeDataInFlight = null;
+            });
+    }
+
+    return homeDataInFlight;
+}
+
+async function fetchHomePageData() {
+    // Independent queries, so run them in parallel instead of one after another
+    const [primaryFeature, primaryStories, secondaryTopStories, secondaryStories, secondaryMiniCards] = await Promise.all([
+        getLatestPrimaryArticle(),
+        getLatestPrimaryStories(),
+        getLatestSecondaryTopStories(),
+        getLatestSecondaryStories(),
+        getLatestSecondaryMiniCards(),
+    ]);
 
     const result = {
         primaryPanel: {
@@ -407,7 +446,6 @@ export async function getHomePageData() {
         }
     };
 
-    setCached(cacheKey, result, 15 * 1000);
     return result;
 }
 

@@ -1,5 +1,7 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { API_BASE_URL_SERVER } from "@/lib/env";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
 
 type CurrentUser = {
     name: string;
@@ -21,7 +23,8 @@ function normaliseUserType(raw: string | undefined) {
     return "normal";
 }
 
-export async function getCurrentUser() {
+// cache() dedupes calls within one server render (layout + page often both need the user)
+export const getCurrentUser = cache(async () => {
     const supabase = await createClient();
     const { data } = await supabase.auth.getUser();
 
@@ -33,7 +36,7 @@ export async function getCurrentUser() {
 
     try {
         const profileUrl = `${API_BASE_URL_SERVER}/auth/profile/${data.user.id}`;
-        const profileResponse = await fetch(profileUrl);
+        const profileResponse = await fetchWithTimeout(profileUrl, { timeout: 5000 });
 
         if (profileResponse.ok) {
             const profile = await profileResponse.json() as { user_type?: string };
@@ -52,6 +55,6 @@ export async function getCurrentUser() {
     // console.log("Current user:", currentUser.userType);
 
     return currentUser;
-}
+});
 
 

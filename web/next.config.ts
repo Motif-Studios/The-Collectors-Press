@@ -1,3 +1,4 @@
+import path from "path";
 import type { NextConfig } from "next";
 
 function getSupabaseHostname() {
@@ -15,6 +16,13 @@ function getSupabaseHostname() {
 }
 
 const nextConfig: NextConfig = {
+  // Pin the project root. Without this Next picks up a stray lockfile higher up
+  // (e.g. in the user's home folder) and Turbopack scans/watches that whole tree,
+  // which makes the first dev load extremely slow.
+  turbopack: {
+    root: path.join(__dirname),
+  },
+  outputFileTracingRoot: path.join(__dirname),
   images: {
     remotePatterns: [
       {

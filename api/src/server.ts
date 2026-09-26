@@ -13,6 +13,7 @@ import search from "./routes/search/index";
 import subscription from "./routes/subscription/index";
 import upload from "./routes/upload/index";
 import email from "./routes/email/index";
+import { getHomePageData } from "../controllers/articles/controller";
 
 const app = express();
 app.use(
@@ -76,6 +77,8 @@ app.get("/", (req, res) =>{
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    // Warm the home page cache so the first visitor after a (cold) start doesn't wait on Supabase
+    getHomePageData().catch((error) => console.error("Failed to warm home page data:", error));
 }) 
 
 // export default app;
