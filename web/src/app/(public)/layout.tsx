@@ -1,8 +1,8 @@
 import { Header } from "@/components/ui/header/Header";
 import { Footer } from "@/components/ui/footer/Footer";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 
-import { getCurrentUser } from "@/features/auth/queries/getCurrentUser";
+import { getAuthUser, getCurrentUser } from "@/features/auth/queries/getCurrentUser";
 import { getIsSubscriber } from "@/features/auth/queries/getIsSubscriber";
 import { LogoutFeedbackBanner, LogoutFeedbackProvider } from "@/components/ui/logout_feedback/LogoutFeedback";
 
@@ -19,26 +19,40 @@ const homepageNavItems = [
   // { label: "Football" },
 ];
 
-export default async function PublicLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  const handleUser = await getCurrentUser();
-  const subscriberInfo = await getIsSubscriber(handleUser?.id);
+// Fetches the user-specific bits of the header. Lives in its own Suspense boundary so a
+// slow profile/subscription lookup never blocks the rest of the page from rendering.
+async function PublicHeader() {
+  const authUser = await getAuthUser();
+  // Profile and subscription lookups only need the user id, so run them side by side
+  const [handleUser, subscriberInfo] = await Promise.all([
+    getCurrentUser(),
+    getIsSubscriber(authUser?.id),
+  ]);
   // Authors and admins always have Studio access, treat them as subscribers for nav purposes
   const isAuthorOrAdmin = handleUser?.userType === "author" || handleUser?.userType === "admin";
   const isSubscriber = !!subscriberInfo?.is_subscriber || isAuthorOrAdmin;
 
   return (
+    <Header
+      navItems={homepageNavItems}
+      user={handleUser}
+      isSubscriber={isSubscriber}
+      canAccessStudio={isAuthorOrAdmin}
+    />
+  );
+}
+
+export default function PublicLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  return (
     <LogoutFeedbackProvider>
       <div className="flex min-h-screen flex-col">
-        <Header
-          navItems={homepageNavItems}
-          user={handleUser}
-          isSubscriber={isSubscriber}
-          canAccessStudio={isAuthorOrAdmin}
-        />
+        <Suspense fallback={<Header navItems={homepageNavItems} accountPending />}>
+          <PublicHeader />
+        </Suspense>
 
         <LogoutFeedbackBanner />
 

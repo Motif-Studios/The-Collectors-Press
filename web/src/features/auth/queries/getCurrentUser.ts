@@ -24,9 +24,17 @@ function normaliseUserType(raw: string | undefined) {
 }
 
 // cache() dedupes calls within one server render (layout + page often both need the user)
-export const getCurrentUser = cache(async () => {
+// Just the Supabase session check (no API call), so callers can start other
+// user-dependent requests in parallel with the profile lookup below
+export const getAuthUser = cache(async () => {
     const supabase = await createClient();
     const { data } = await supabase.auth.getUser();
+    return data.user;
+});
+
+export const getCurrentUser = cache(async () => {
+    const authUser = await getAuthUser();
+    const data = { user: authUser };
 
     if (!data.user) {
         return null;
@@ -43,7 +51,11 @@ export const getCurrentUser = cache(async () => {
             userType = normaliseUserType(profile?.user_type);
         }
     } catch (error) {
-        console.error("Error fetching current user profile:", error);
+        if (error instanceof Error && error.name === "AbortError") {
+            console.warn(`Profile lookup timed out (${API_BASE_URL_SERVER}), using default user type`);
+        } else {
+            console.error("Error fetching current user profile:", error);
+        }
     }
 
     const currentUser: CurrentUser = {

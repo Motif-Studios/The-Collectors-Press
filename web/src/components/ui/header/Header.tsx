@@ -26,6 +26,8 @@ type HeaderProps = {
   user?: { name: string } | null;
   isSubscriber?: boolean;
   canAccessStudio?: boolean;
+  // True while the user/subscription lookup is still streaming in
+  accountPending?: boolean;
   children?: React.ReactNode;
 };
 
@@ -39,6 +41,7 @@ export function Header({
   user = null,
   isSubscriber = false,
   canAccessStudio = false,
+  accountPending = false,
   children,
 }: HeaderProps) {
   
@@ -58,9 +61,15 @@ export function Header({
           <HeaderCenter />
 
           <HeaderRight>
-            {!isSubscriber ? <SubscribeButton /> : null}
+            {accountPending ? (
+              <AccountActionPlaceholder />
+            ) : (
+              <>
+                {!isSubscriber ? <SubscribeButton /> : null}
 
-            {user ? <AccountAction name={user.name} canAccessStudio={canAccessStudio} /> : <SignInButton />}
+                {user ? <AccountAction name={user.name} canAccessStudio={canAccessStudio} /> : <SignInButton />}
+              </>
+            )}
           </HeaderRight>
         </HeaderTopBar>
       </div>
@@ -130,6 +139,10 @@ export function HeaderNav({ items }: { items: NavItem[] }) {
       </div>
     </nav>
   );
+}
+
+export function AccountActionPlaceholder() {
+  return <div aria-hidden className="h-7 w-9 animate-pulse rounded-full bg-white/15 sm:h-9 sm:w-24" />;
 }
 
 export function SubscribeButton() {
